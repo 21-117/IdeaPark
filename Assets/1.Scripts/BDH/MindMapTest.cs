@@ -9,7 +9,7 @@ public class MindMapTest : MonoBehaviour
     void Start()
     {
         // MindMap 클래스의 MakeMindMapTree 메서드를 호출하여 마인드 맵을 만듭니다.
-        MindMapNode<string> root = MindMap.MakeMindMapTree();
+        MindMapNode root = MindMap.MakeMindMapTree();
 
         // 만들어진 마인드 맵을 출력합니다.
         Debug.Log("마인드 맵: 출력");

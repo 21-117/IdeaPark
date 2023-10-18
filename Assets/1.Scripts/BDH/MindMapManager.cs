@@ -41,13 +41,7 @@ namespace MindMapManager
             set { data = value; }
         }
 
-        // 게임 오브젝트에 대한 접근 프로퍼티
-        public GameObject NODEOBJECT
-        {
-            get { return nodeObject; }
-            set { nodeObject = value; } 
-        }
-
+   
         // 색에 대한 접근 프로퍼티
         public Color COLOR
         {
@@ -116,11 +110,11 @@ namespace MindMapManager
             Debug.Log(root.DATA);
 
             // 노드의 GameObject를 만든다.
-            root.NODEOBJECT = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //root.NODEOBJECT = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
             // 노드들의 색상, 위치, 회전은 랜덤하게 설정.
-            root.NODEOBJECT.transform.position = Random.onUnitSphere * Random.Range(3.0f, 5.0f); 
-            root.NODEOBJECT.transform.rotation = Random.rotation; 
+//root.NODEOBJECT.transform.position = Random.onUnitSphere * Random.Range(3.0f, 5.0f); 
+           // root.NODEOBJECT.transform.rotation = Random.rotation; 
 
             // 재귀적으로 자식들의 데이터 접근
             foreach (MindMapNode child in root.Children)
