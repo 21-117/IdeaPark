@@ -91,18 +91,28 @@ public class ObjectSaveLoad : MonoBehaviour
             /*
              
             {
-                "data" : [
+              "mindMapData" : [
                             {
-                                "type" : 2,
+                                "data" : "마인드맵 텍스트1"
+                                "type" : 1,
                                 "pos" : {"x":10, "y":20, "z":30 },
                                 "rot" : {"x":11, "y":22, "z":33 },
                                 "scale" : {"x":3, "y":3, "z":3 },
+                                "Color" : {"x":3, "y":3, "z":3 },
+                                "aiData" : "AI 마인드맵 텍스트1",
+                                "isSelected" : false,
+                                "Children" : [ {}, {}, {} ]
                             },
                             {
+                                "data" : "마인드맵 텍스트2"
                                 "type" : 2,
                                 "pos" : {"x":10, "y":20, "z":30 },
                                 "rot" : {"x":11, "y":22, "z":33 },
                                 "scale" : {"x":3, "y":3, "z":3 },
+                                "Color" : {"x":3, "y":3, "z":3 },
+                                "aiData" : "AI 마인드맵 텍스트2",
+                                "isSelected" : true,
+                                "Children" : [ {}, {}, {} ]
                             }
                     ]
             }
