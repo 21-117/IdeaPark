@@ -149,7 +149,7 @@ PrefabInstance:
     - target: {fileID: 5268460675038366902, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
       propertyPath: m_Name
-      value: Sphere (2)
+      value: Sphere_Yellow
       objectReference: {fileID: 0}
     - target: {fileID: 9171031756790316709, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
@@ -552,7 +552,7 @@ PrefabInstance:
     - target: {fileID: 5268460675038366902, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
       propertyPath: m_Name
-      value: Sphere (1)
+      value: Sphere_Blue
       objectReference: {fileID: 0}
     - target: {fileID: 9171031756790316709, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
@@ -1969,7 +1969,7 @@ PrefabInstance:
     - target: {fileID: 5268460675038366902, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
       propertyPath: m_Name
-      value: Sphere
+      value: Sphere_Magenta
       objectReference: {fileID: 0}
     - target: {fileID: 9171031756790316709, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
