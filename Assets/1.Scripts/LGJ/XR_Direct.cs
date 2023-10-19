@@ -6,18 +6,33 @@ using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
 
 public class XR_Direct : XRDirectInteractor
 {
+    public GameObject buttonMind;
+
     [System.Obsolete]
-    protected override void OnHoverEntered(HoverEnterEventArgs args)
+    protected override void OnHoverEntered(XRBaseInteractable interactable)
     {
-        base.OnHoverEntered(args);
+        base.OnHoverEntered(interactable);
         Debug.Log("hover entered");
     }
-    protected override void OnHoverExited(HoverExitEventArgs args)
+    protected override void OnHoverExited(XRBaseInteractable interactable)
     {
-        base.OnHoverExited(args);
+        base.OnHoverExited(interactable);
         Debug.Log("hover exited");
-    }
 
+        
+        if (!buttonMind.activeSelf)
+        {
+            buttonMind.SetActive(true);
+            buttonMind.transform.position = interactable.transform.position;
+        }
+        else
+        {
+            if (buttonMind.activeSelf)
+            {
+                buttonMind.SetActive(false);
+            }
+        }
+    }
 
     [System.Obsolete]
     protected override void OnSelectEntering(SelectEnterEventArgs args)
