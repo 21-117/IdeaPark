@@ -19,19 +19,7 @@ public class XR_Direct : XRDirectInteractor
         base.OnHoverExited(interactable);
         Debug.Log("hover exited");
 
-        
-        if (!buttonMind.activeSelf)
-        {
-            buttonMind.SetActive(true);
-            buttonMind.transform.position = interactable.transform.position;
-        }
-        else
-        {
-            if (buttonMind.activeSelf)
-            {
-                buttonMind.SetActive(false);
-            }
-        }
+       
     }
 
     [System.Obsolete]
