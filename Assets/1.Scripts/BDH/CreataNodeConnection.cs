@@ -16,7 +16,7 @@ public class CreataNodeConnection : MonoBehaviour
     {
         connection = (pos, indexObject) =>
         {
-            ConnectionNode(pos, indexObject);
+            ConnectionIndexNode(pos, indexObject);
         };
 
         destroyConnection = () =>
@@ -26,27 +26,38 @@ public class CreataNodeConnection : MonoBehaviour
 
     }
 
-    public void ConnectionNode(Transform endPos, bool indexObject)
+    public void ConnectionIndexNode(Transform endPos, bool indexObject)
     {
-
-        obj = Resources.Load<GameObject>("Prefabs/NodeConnectionLine");
-        GameObject LIneObject = Instantiate(obj, Vector3.zero, Quaternion.identity);
-        LIneObject.transform.SetParent(this.transform);
-        NodeConnectLine connectionLine = LIneObject.GetComponent<NodeConnectLine>();
-        // 연결할 노드의 연결 위치를 지정. 
-        connectionLine.STARTPOS = this.transform;
-        connectionLine.ENDPOS = endPos;
 
         if (indexObject)
         {
+            obj = Resources.Load<GameObject>("Prefabs/NodeConnectionLine");
+            GameObject LIneObject = Instantiate(obj, Vector3.zero, Quaternion.identity);
+            LIneObject.transform.SetParent(this.transform);
+            NodeConnectLine connectionLine = LIneObject.GetComponent<NodeConnectLine>();
+            // 연결할 노드의 연결 위치를 지정. 
+            connectionLine.STARTPOS = this.transform;
+            connectionLine.ENDPOS = endPos;
+
             // INDEXDISTAL과 연결된 라인렌더러를 식별하기 위해 True 
             connectionLine.INDEXDISTAL = true;
-
-
         }
-        
+        else
+        {
+            obj = Resources.Load<GameObject>("Prefabs/NodeConnectionLine");
+            GameObject LIneObject = Instantiate(obj, Vector3.zero, Quaternion.identity);
+            LIneObject.transform.SetParent(this.transform);
+            NodeConnectLine connectionLine = LIneObject.GetComponent<NodeConnectLine>();
+            // 연결할 노드의 연결 위치를 지정. 
+            connectionLine.STARTPOS = this.transform;
+            connectionLine.ENDPOS = endPos;
+
+            
+        }
 
     }
+
+    
 
     public void OnDestroyindexObject()
     {

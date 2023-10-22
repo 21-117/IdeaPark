@@ -11,8 +11,12 @@ public class NodeConnectLine : MonoBehaviour
     // 4. 만약에 라인렌더러를 삭제하고 싶다면,
     // 5. 부모인 노드를 찾아서 해당 삭제하고 싶은 라인렌더러 오브젝트를 삭제한다. 
 
+
+    [SerializeField]
+    private bool indexDistal;
+
     private LineRenderer lr;
-    private bool indexDistal; 
+ 
 
     // 시작 위치는 항상 부모의 오브젝트의 Pos를 가져온다. 
     private Transform startPos; 

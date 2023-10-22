@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 4529683747758146072}
   m_Layer: 0
   m_Name: Test_Node
-  m_TagString: Untagged
+  m_TagString: MindNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

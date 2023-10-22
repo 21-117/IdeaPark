@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MindMapController : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class MindMapController : MonoBehaviour
 
     [HideInInspector]
     public Transform R_indexTip;
+
+    // R_indexTip 연결 여부
+    private bool indexTip = true;
 
     // 핀치 여부 
     private bool isPinched;
@@ -33,7 +37,7 @@ public class MindMapController : MonoBehaviour
     public bool ISPINCHED
     {
         get { return isPinched; }
-        set { isPinched = value; }  
+        set { isPinched = value; }
     }
 
     // Hover에 대한 프로퍼티
@@ -42,6 +46,8 @@ public class MindMapController : MonoBehaviour
         get { return isHovered; }
         set { isHovered = value; }
     }
+
+
 
     public enum State
     {
@@ -65,6 +71,8 @@ public class MindMapController : MonoBehaviour
 
     void Start()
     {
+
+
         setHover = (x, hoverObject) =>
         {
             ISHOVERD = x;
@@ -73,8 +81,8 @@ public class MindMapController : MonoBehaviour
 
         setPinch = (x, pinchObject) =>
         {
-            ISPINCHED = x; 
-            this.target = pinchObject;  
+            ISPINCHED = x;
+            this.target = pinchObject;
         };
 
 
@@ -84,11 +92,11 @@ public class MindMapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    
+
         switch (state)
         {
             case State.IDLE:
-                break; 
+                break;
             case State.CREATE:
                 UpdateCreate();
                 break;
@@ -115,56 +123,59 @@ public class MindMapController : MonoBehaviour
         }
     }
 
+
+    CreataNodeConnection tempNodeCon;
     private void UpdateConnection()
     {
 
         //  마인드 연결(링크)
         // "선택하지 않은 마인드"를 PICH하면 링크가 활성화 된다.
 
-       
+
         // 자식 노드로 설정시 유의.
         // 루트 노드의 자식으로 지정. 
         // 로직 -> 자식은 부모보다 id 값이 클수가 없다(예외처리)
 
-       
-        if (isPinched && isHovered)
-        { 
-            //활성화된 "링크"를 허공에 끌어 당기면 자동으로 마인드가 생성되면, 자동으로 텍스트 입력 상태가된다.
-            CreataNodeConnection.connection(R_indexTip, true);
 
-          
+
+
+        if (isPinched && isHovered)
+        {
+            if (indexTip)
+            {
+                tempNodeCon = target.GetComponentInChildren<CreataNodeConnection>();
+                //활성화된 "링크"를 허공에 끌어 당기면 자동으로 마인드가 생성되면, 자동으로 텍스트 입력 상태가된다.
+                tempNodeCon.ConnectionIndexNode(R_indexTip, true);
+
+                indexTip = false;
+            }
+
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
 
-       
-        //if (hover != target)
-        //{
-           
-
-
-        //    if (hover == target && isPinched)
-        //    {
-        //        print("왜 여기는 실행이 안되냐 ");
-        //        CreataNodeConnection.destroyConnection();
-        //    }
-          
-        //}
-
-        // Target 오브젝트에 노드를 연결한 다음
-        //CreataNodeConnection.connection(targetPos, false);
+            tempNodeCon.ConnectionIndexNode(target.transform, false);
 
 
 
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            tempNodeCon.OnDestroyindexObject();
+            indexTip = true;
+        }
 
 
-
+        isPinched = false;
         //state = State.IDLE;
     }
 
     private void UpdateInputText()
     {
-        print("텍스트 입력창 실행,"); 
+        print("텍스트 입력창 실행,");
     }
 
     private void UpdateAiText()
@@ -192,20 +203,20 @@ public class MindMapController : MonoBehaviour
 
     private void UpdateCreate()
     {
-       
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            
+
             GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
             GameObject node = Instantiate(obj, R_indexTip.position, Quaternion.identity);
 
-            if(node.GetComponentInChildren<MindMapNodeInfo>().ID == 1)
+            if (node.GetComponentInChildren<MindMapNodeInfo>().ID == 1)
             {
                 // 루트 노드(주제)로 지정한다. 
-                node.GetComponentInChildren<MindMapNodeInfo>().ROOTNODE = true; 
+                node.GetComponentInChildren<MindMapNodeInfo>().ROOTNODE = true;
             }
 
-            state = State.CONNECTION;
+            //state = State.CONNECTION;
         }
 
 

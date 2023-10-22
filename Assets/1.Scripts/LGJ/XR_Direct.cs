@@ -8,6 +8,7 @@ public class XR_Direct : XRDirectInteractor
 {
     public Transform indexTip;
 
+
     [System.Obsolete]
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
@@ -27,14 +28,16 @@ public class XR_Direct : XRDirectInteractor
     protected override void OnSelectEntering(SelectEnterEventArgs args)
     {
         base.OnSelectEntering(args);
-        MindMapController.setPinch(true, args.interactableObject.transform.gameObject);
-        MindMapController.state = MindMapController.State.CONNECTION; 
+        // 2초 이상을 유지하면 마인드 노드를 생성할 수 있다. 
+     
         Debug.Log("select entered");
     }
     protected override void OnSelectExiting(SelectExitEventArgs args)
     {
         base.OnSelectExiting(args);
-        MindMapController.setPinch(false, null);
+        MindMapController.setPinch(true, args.interactableObject.transform.gameObject);
+        MindMapController.state = MindMapController.State.CONNECTION;
+       
         Debug.Log("select exited");
     }
 }
