@@ -106,11 +106,7 @@ public class MindMap : MonoBehaviour
         return root;
     }
 
-    // 마인드 맵을 전체를 LineRenderer에서 연결하는 메소드.
-    public void ConnectionNode()
-    {
-
-    }
+  
 
     // 마인드 맵의 root의 자식 리스트를 출력 
     public void RootPrintTree(MindMapNode root)

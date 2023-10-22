@@ -12,32 +12,49 @@ public class NodeConnectLine : MonoBehaviour
     // 5. 부모인 노드를 찾아서 해당 삭제하고 싶은 라인렌더러 오브젝트를 삭제한다. 
 
     private LineRenderer lr;
- 
-    public Transform pos2;
-    public Transform pos3;
+    private bool indexDistal; 
+
+    // 시작 위치는 항상 부모의 오브젝트의 Pos를 가져온다. 
+    private Transform startPos; 
+    private Transform endPos;
+
+    public bool INDEXDISTAL
+    {
+        get { return indexDistal; }
+        set { indexDistal = value; }
+    }
+
+    public Transform STARTPOS
+    {
+        get { return startPos; }
+        set { startPos = value; }   
+    }
+
+    public Transform ENDPOS
+    {
+        get { return endPos; }
+        set { endPos = value; }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         lr = GetComponent<LineRenderer>();
-        // 라인 렌더러 초기값 셋팅
+
+        //// 라인 렌더러 초기값 셋팅
         lr.positionCount = 2;
-        
-        lr.startColor = Color.black;
-        lr.startWidth = 0.05f;
-        lr.endWidth = 0.05f;
-        lr.endColor = Color.black ;
+        lr.startWidth = 0.01f;
+        lr.endWidth = 0.01f;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        // 라인을 지속적으로 연결 
+        lr.SetPosition(0, startPos.position);
+        lr.SetPosition(1, endPos.position);
 
-        lr.SetPosition(0, this.transform.position);
-        lr.SetPosition(1, pos2.position);
-        //lr.SetPosition(2, pos3.position);
-
-       
 
     }
 }

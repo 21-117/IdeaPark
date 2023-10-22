@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0007876151, g: 0.004127566, b: 0.0200601, a: 1}
+  m_IndirectSpecularColor: {r: 0.0008095468, g: 0.004161891, b: 0.02006406, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -635,6 +635,24 @@ Transform:
   - {fileID: 1788735935}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &631693292 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2468804214868727367, guid: 3221e99dadad90d41ba75d5f71472114,
+    type: 3}
+  m_PrefabInstance: {fileID: 1938202529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &631693297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631693292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa296a5bad07cb4fbda56bff83da9e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &802832938
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,6 +748,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1130756125 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2508536899063813491, guid: e1531f23224758b4380a33561fa4f7e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 2922221011979574165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1609775285 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3109407477087083072, guid: e1531f23224758b4380a33561fa4f7e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 2922221011979574165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1609775291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609775285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c385b5745cc93344b0bd222b256e0f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  R_indexTip: {fileID: 1130756125}
 --- !u!1 &1611007447 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3938857754304315174, guid: e1531f23224758b4380a33561fa4f7e8,
@@ -826,6 +869,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_PhysicsTriggerInteraction: 1
+  indexTip: {fileID: 1130756125}
 --- !u!1 &1638166667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,6 +1388,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1938202531}
+    - targetCorrespondingSourceObject: {fileID: 2468804214868727367, guid: 3221e99dadad90d41ba75d5f71472114,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 631693297}
   m_SourcePrefab: {fileID: 100100000, guid: 3221e99dadad90d41ba75d5f71472114, type: 3}
 --- !u!1 &1938202530 stripped
 GameObject:
@@ -1602,6 +1650,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 991557699481951552, guid: e1531f23224758b4380a33561fa4f7e8,
+        type: 3}
+      propertyPath: m_InteractorSource
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2754753586191299605, guid: e1531f23224758b4380a33561fa4f7e8,
         type: 3}
       propertyPath: m_PoseUpdated.m_PersistentCalls.m_Calls.Array.size
@@ -1782,11 +1835,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Interaction Hands Setup
       objectReference: {fileID: 0}
+    - target: {fileID: 7554435306193406652, guid: e1531f23224758b4380a33561fa4f7e8,
+        type: 3}
+      propertyPath: m_StartingGroupMembers.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4982408546333319066, guid: e1531f23224758b4380a33561fa4f7e8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3109407477087083072, guid: e1531f23224758b4380a33561fa4f7e8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1609775291}
     - targetCorrespondingSourceObject: {fileID: 3938857754304315174, guid: e1531f23224758b4380a33561fa4f7e8,
         type: 3}
       insertIndex: 1
