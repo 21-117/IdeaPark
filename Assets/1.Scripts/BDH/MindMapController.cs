@@ -21,17 +21,36 @@ public class MindMapController : MonoBehaviour
     // 핀치된 오브젝트  
     private GameObject target = null;
 
+    // 핀치된 target 오브젝트 CreataNodeConnection 스크립트
+    CreataNodeConnection tempNodeCon;
+
     // Hover 여부
     private bool isHovered;
 
     // Hover된 오브젝트 
     private GameObject hover = null;
 
-    // 핀치 변수, 오브젝트 설정
+    // Poke 여부
+    private bool isPoked;
+
+    // Poke된 오브젝트
+    private GameObject poke = null;
+
+    // 핀치된 셋팅 정보
     public static Action<bool, GameObject> setPinch;
 
-    // Hover된 오브젝트 정보 
+    // Hover된 셋팅 정보 
     public static Action<bool, GameObject> setHover;
+
+    // POKE된 셋팅 정보
+    public static Action<bool, GameObject> setPoke; 
+
+    // Poke에 대한 프로퍼티
+    public bool ISPOKED
+    {
+        get { return isPoked; }
+        set { isPoked = value;  }
+    }
 
     // 핀치에 대한 프로퍼티
     public bool ISPINCHED
@@ -46,8 +65,6 @@ public class MindMapController : MonoBehaviour
         get { return isHovered; }
         set { isHovered = value; }
     }
-
-
 
     public enum State
     {
@@ -72,7 +89,6 @@ public class MindMapController : MonoBehaviour
     void Start()
     {
 
-
         setHover = (x, hoverObject) =>
         {
             ISHOVERD = x;
@@ -83,6 +99,12 @@ public class MindMapController : MonoBehaviour
         {
             ISPINCHED = x;
             this.target = pinchObject;
+        };
+
+        setPoke = (x, pokeObject) =>
+        {
+            ISPOKED = x;
+            this.poke = pokeObject;
         };
 
 
@@ -123,22 +145,14 @@ public class MindMapController : MonoBehaviour
         }
     }
 
-
-    CreataNodeConnection tempNodeCon;
+    // 마인드 노드를 링크하고, 트리를 연결하는 메소드 
+    // 자식 노드로 설정시 유의.
+    // 루트 노드의 자식으로 지정. 
+    // 로직 -> 자식은 부모보다 id 값이 클수가 없다(예외처리)
     private void UpdateConnection()
     {
-
         //  마인드 연결(링크)
         // "선택하지 않은 마인드"를 PICH하면 링크가 활성화 된다.
-
-
-        // 자식 노드로 설정시 유의.
-        // 루트 노드의 자식으로 지정. 
-        // 로직 -> 자식은 부모보다 id 값이 클수가 없다(예외처리)
-
-
-
-
         if (isPinched && isHovered)
         {
             if (indexTip)
@@ -149,16 +163,11 @@ public class MindMapController : MonoBehaviour
 
                 indexTip = false;
             }
-
-
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-
             tempNodeCon.ConnectionIndexNode(target.transform, false);
-
-
 
         }
 
@@ -168,26 +177,29 @@ public class MindMapController : MonoBehaviour
             indexTip = true;
         }
 
-
         isPinched = false;
-        //state = State.IDLE;
+        
     }
 
+    // 사용자가 마인드 노드에 텍스트를 입력하는 메소드
     private void UpdateInputText()
     {
         print("텍스트 입력창 실행,");
     }
 
+    // 서버로 부터 AIText 정보를 받아 처리하는 메소드 
     private void UpdateAiText()
     {
         throw new NotImplementedException();
     }
 
+    // 마인드 노드의 색상을 변경하는 메소드. 
     private void UpdateColor()
     {
         throw new NotImplementedException();
     }
 
+    // 마인드 노드를 삭제하는 메소드 
     private void UpdateDelete()
     {
         // 마인드 삭제 
@@ -195,12 +207,14 @@ public class MindMapController : MonoBehaviour
         // 키보드 2번 키를 누르면 선택된 마인드 노드를 확인하고 삭제. 
     }
 
+    // 마인드 노드 선택하는 메소드 
     private void UpdateSeleted()
     {
         // 마인드 선택 
         // 검지의 TIP을 구체 POKE를 하면 마인드 선택 상태가 되면 마인드 UI가 실행된다.
     }
 
+    // 마인드 노드를 생성하는 메소드 
     private void UpdateCreate()
     {
 

@@ -8,7 +8,6 @@ public class XR_Direct : XRDirectInteractor
 {
     public Transform indexTip;
 
-
     [System.Obsolete]
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
