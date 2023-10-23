@@ -7,12 +7,15 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class XR_Bubble : XRGrabInteractable
 {
     public GameObject buttonMind;
+    private void Start()
+    {
+        buttonMind = PlayerInfo.instance.buttonMind;
+    }
 
     [System.Obsolete]
     protected override void OnHoverExited(XRBaseInteractor interactor)
     {
         base.OnHoverExited(interactor);
-
         if (!buttonMind.activeSelf && interactor.TryGetComponent(out XR_Direct xR_Direct))//)
         {
             buttonMind.SetActive(true);
@@ -25,8 +28,5 @@ public class XR_Bubble : XRGrabInteractable
                 buttonMind.SetActive(false);
             }
         }
-
     }
-
-    
 }

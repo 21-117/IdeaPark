@@ -218,10 +218,7 @@ public class MindMapController : MonoBehaviour
     private void UpdateCreate()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-
-            GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
+            GameObject obj = Resources.Load<GameObject>("Bubble");
             GameObject node = Instantiate(obj, R_indexTip.position, Quaternion.identity);
 
             if (node.GetComponentInChildren<MindMapNodeInfo>().ID == 1)
@@ -231,7 +228,6 @@ public class MindMapController : MonoBehaviour
             }
 
             //state = State.CONNECTION;
-        }
 
 
     }
