@@ -6,8 +6,7 @@ using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
 
 public class XR_Direct : XRDirectInteractor
 {
-    public Transform indexTip;
-
+   
     [System.Obsolete]
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
@@ -18,7 +17,7 @@ public class XR_Direct : XRDirectInteractor
     protected override void OnHoverExited(HoverExitEventArgs args)
     {
         base.OnHoverExited(args);
-        MindMapController.setHover(false, null);
+        //MindMapController.setHover(false, null);
         Debug.Log("hover exited");
     }
 
@@ -28,14 +27,13 @@ public class XR_Direct : XRDirectInteractor
     {
         base.OnSelectEntering(args);
         // 2초 이상을 유지하면 마인드 노드를 생성할 수 있다. 
-     
+        //MindMapController.state = MindMapController.State.CREATE;
+        //ndMapController.setPinch(true, args.interactableObject.transform.gameObject);
         Debug.Log("select entered");
     }
     protected override void OnSelectExiting(SelectExitEventArgs args)
     {
         base.OnSelectExiting(args);
-        MindMapController.setPinch(true, args.interactableObject.transform.gameObject);
-        MindMapController.state = MindMapController.State.CONNECTION;
        
         Debug.Log("select exited");
     }
