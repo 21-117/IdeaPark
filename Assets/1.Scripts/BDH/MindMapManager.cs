@@ -63,13 +63,15 @@ public class MindMap : MonoBehaviour
         // id != 0 ->  나머지 노드에서 상관 관계를 찾아 연결. 
       
 
-        // 삽입하는 메소드 구현 
+        // 삽입하고 마인드 노드를 생성하는 메소드 구현 
         // 자식은 부모보다 id 값이 클수가 없다(예외처리)
         // 1. 사용자가 노드를 생성한다. 
         // 2. 연결선을 연결할 노드(부모 노드)에 연결
-        // 2-1. 연결 시 id 값을 비교하여 id 값이 큰 노드가 부모 - 
+        // 2-1. 라인을 생성하는 스크립트를 생성할 오브젝트에 추가.        
+        // 2-2. 연결 시 id 값을 비교하여 id 값이 큰 노드가 부모 - 
         // 3. 연결 시 연결할 노드(부모 노드)의 정보를 가져온다, 
         // 4. 가져온 노드의 정보의 자식 리스트에 생성된 삽입한다. 
+        
 
         MindMapNode root = new MindMapNode() { DATA = "과학 실험" };
         {
@@ -104,11 +106,7 @@ public class MindMap : MonoBehaviour
         return root;
     }
 
-    // 마인드 맵을 전체를 LineRenderer에서 연결하는 메소드.
-    public void ConnectionNode()
-    {
-
-    }
+  
 
     // 마인드 맵의 root의 자식 리스트를 출력 
     public void RootPrintTree(MindMapNode root)
