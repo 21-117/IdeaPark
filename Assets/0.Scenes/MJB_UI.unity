@@ -6932,10 +6932,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 153584554779651062, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1974735008355282394, guid: 8ba6f88a5e295e547b4300ffbd892991,
         type: 3}
       propertyPath: m_Name
       value: ThinkWideKeyboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 2714467026679878473, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2973114766880193505, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3427301830736747113, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4424776587532359592, guid: 8ba6f88a5e295e547b4300ffbd892991,
         type: 3}
@@ -7035,6 +7055,21 @@ PrefabInstance:
     - target: {fileID: 4424776587532359592, guid: 8ba6f88a5e295e547b4300ffbd892991,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615747900759012221, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8486414562761399287, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925945737004287923, guid: 8ba6f88a5e295e547b4300ffbd892991,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
