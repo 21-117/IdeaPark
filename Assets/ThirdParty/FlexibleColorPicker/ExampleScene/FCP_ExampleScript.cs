@@ -5,6 +5,7 @@ public class FCP_ExampleScript : MonoBehaviour {
     public bool getStartingColorFromMaterial;
     public FlexibleColorPicker fcp;
     public Material material;
+    //public bub
 
     private void Start() {
         if(getStartingColorFromMaterial)
@@ -14,6 +15,6 @@ public class FCP_ExampleScript : MonoBehaviour {
     }
 
     private void OnChangeColor(Color co) {
-        material.color = co;
+        
     }
 }
