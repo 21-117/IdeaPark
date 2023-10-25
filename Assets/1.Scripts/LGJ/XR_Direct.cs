@@ -33,6 +33,7 @@ public class XR_Direct : XRDirectInteractor
         else
         {
             sampleBubble.SetActive(false);
+            curTime = 0f;
         }
     }
 
