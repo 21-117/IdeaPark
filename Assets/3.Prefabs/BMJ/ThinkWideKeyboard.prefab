@@ -9361,7 +9361,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &8708450291630414978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34598,6 +34598,7 @@ GameObject:
   - component: {fileID: 5023191686904960259}
   - component: {fileID: 344537972584918815}
   - component: {fileID: 135257975439283995}
+  - component: {fileID: 4703825717688680147}
   m_Layer: 0
   m_Name: Q_Button
   m_TagString: Untagged
@@ -34722,6 +34723,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Value: q
   ShiftValue: Q
+--- !u!114 &4703825717688680147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6876446458574254774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3638c2f5db5b479ff24c2859713d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PokeFollowTransform: {fileID: 0}
+  m_SmoothingSpeed: 16
+  m_ReturnToInitialPosition: 1
+  m_ApplyIfChildIsTarget: 1
+  m_ClampToMaxDistance: 0
+  m_MaxDistance: 0
 --- !u!1 &6932896341069310465
 GameObject:
   m_ObjectHideFlags: 0
