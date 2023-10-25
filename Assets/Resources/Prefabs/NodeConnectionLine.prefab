@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e304f776d35bbf8468ede8a1987c80dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  indexDistal: 0
 --- !u!120 &7887957314171634589
 LineRenderer:
   serializedVersion: 2
