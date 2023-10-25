@@ -9,6 +9,20 @@ public class UIManager : MonoBehaviour
     // Image url를 반영하는 Image UI 
     public Image downLoadImage;
 
+    // http://192.168.0.2:8000/get_data
+    public void OnClickBNSERVER()
+    {
+        HttpInfo info = new HttpInfo();
+        info.SetInfo(RequestType.GET, "/get_data", (DownloadHandler downLoadHandler) => {
+            print("/get_data : " + downLoadHandler.text);
+        });
+
+        HttpManager.Get().SendRequest(info);
+
+    }
+
+
+
     // Todos_List UI 버튼 클릭 리스너 -> RequestType.GET
     public void OnClickTodos()
     {
@@ -41,24 +55,48 @@ public class UIManager : MonoBehaviour
     }
 
     // 회원가입 SignUp UI 버튼 클릭 리스너 -> RequestType.POST
+    // http://192.168.0.2:8000/save_data/
     public void PostTest()
     {
         HttpInfo info = new HttpInfo();
-        info.SetInfo(RequestType.POST, "/create/signUp", (DownloadHandler downLoadHandler) =>
+        info.SetInfo(RequestType.POST, "/save_data/", (DownloadHandler downLoadHandler) =>
         {
             // Post 데이터 전송했을 때 서버로부터 응답.
         });
 
-        SignUpInfo signUpInfo = new SignUpInfo();
-        signUpInfo.userName = "test";
-        signUpInfo.birthday = "test";
-        signUpInfo.age = 22;
+        //SignUpInfo signUpInfo = new SignUpInfo();
+        //signUpInfo.userName = "test";
+        //signUpInfo.birthday = "test";
+        //signUpInfo.age = 22;
+
+        NodeData textNode = new NodeData();
+        textNode.id = 7;
+        textNode.Node_Text = "test";
+        textNode.Node_type = 2;
+        textNode.aiData = null; 
+        textNode.isSelected = true;
+        textNode.Children = null; 
 
 
-        info.body = JsonUtility.ToJson(signUpInfo);
+
+        info.body = JsonUtility.ToJson(textNode);
 
         HttpManager.Get().SendRequest(info);
     }
+
+    // http://192.168.0.2:8000/keyword-suggestions/
+    public void PostAiTest()
+    {
+        HttpInfo info = new HttpInfo();
+        info.SetInfo(RequestType.POST, "/keyword-suggestions/", (DownloadHandler downLoadHandler) =>
+        {
+            // Post 데이터 전송했을 때 서버로부터 응답.
+        });
+
+
+
+    }
+
 
     // ImageDownLoad UI 버튼 클릭 리스너 -> RequestType.GET
     public void OnClickDownLoadImage()

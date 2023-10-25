@@ -8,6 +8,9 @@ using UnityEngine.Networking;
 
 // https://jsonplaceholder.typicode.com
 
+// 봉남님 서버 . 
+// http://192.168.0.2:8000/get_data
+
 // JSONLIST KEY 형식. 
 [Serializable]
 public class JsonList<T>
@@ -32,6 +35,17 @@ public struct SignUpInfo
     public string userName;
     public string birthday;
     public int age; 
+}
+
+[Serializable]
+public class NodeData
+{
+    public int id;
+    public string Node_Text;
+    public int Node_type;
+    public List<string> aiData;
+    public bool isSelected;
+    public List<string> Children;
 }
 
 // Http RestAPI GET, POST, PUT, DELETE, TEXTURE 분기  
@@ -59,7 +73,8 @@ public class HttpInfo
         bool useDefaultUrl = true)
     {
         requestType = type;
-        if (useDefaultUrl) url = "https://jsonplaceholder.typicode.com";
+        //if (useDefaultUrl) url = "https://jsonplaceholder.typicode.com";
+        if (useDefaultUrl) url = "http://192.168.0.2:8000";
         url += u;
 
         onReceiveData = callback;   
@@ -139,11 +154,10 @@ public class HttpManager : MonoBehaviour
 
         // 서버에서 요청 성공,  
         if (req.result == UnityWebRequest.Result.Success)
-        {
-           
+        {        
             if(httpInfo.onReceiveData != null)
             {
-           
+                print(" 서버에서 요청 성공.! ");
                 httpInfo.onReceiveData(req.downloadHandler); 
             }
            
