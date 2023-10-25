@@ -20,7 +20,7 @@ public class NodeConnectLine : MonoBehaviour
 
     // 시작 위치는 항상 부모의 오브젝트의 Pos를 가져온다. 
     private Transform startPos; 
-    private Transform endPos;
+    private GameObject endObject;
 
     public bool INDEXDISTAL
     {
@@ -34,10 +34,10 @@ public class NodeConnectLine : MonoBehaviour
         set { startPos = value; }   
     }
 
-    public Transform ENDPOS
+    public GameObject ENDPOSOBEJCT
     {
-        get { return endPos; }
-        set { endPos = value; }
+        get { return endObject; }
+        set { endObject = value; }
     }
 
     // Start is called before the first frame update
@@ -57,7 +57,7 @@ public class NodeConnectLine : MonoBehaviour
     {
         // 라인을 지속적으로 연결 
         lr.SetPosition(0, startPos.position);
-        lr.SetPosition(1, endPos.position);
+        lr.SetPosition(1, endObject.transform.position);
 
 
     }

@@ -9,19 +9,22 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 public class MindMapController : MonoBehaviour
 {
     // 마인드맵 오른쪽 기능 컨트롤러
-    public Transform R_indexTip;
+    public GameObject R_indexTip;
 
     // 마인드맵 왼쪽 기능 컨트롤러
-    public Transform L_indexTip;
+    public GameObject L_indexTip;
 
     // 마인드맵 노드들을 부모로 관리하는 오브젝트
-    public GameObject NodeManager;
+    public GameObject nodeManager;
 
     // 사용자가 생성한 노드의 Info 정보 ( 생성될 때마다 갱신)  
     private MindMapNodeInfo nodeInfo;  
 
     // R_indexTip 사용 여부
-    private bool RightIndexTip = true;
+    private bool rightIndexTip = true;
+
+    // 노드의 데이터 정보 업데이트 
+    private bool upDateData; 
 
     // 노드의 연결한 위치를 임시로 저장 
     CreateNodeContoller ConnectionPointNode;
@@ -121,7 +124,7 @@ public class MindMapController : MonoBehaviour
 
         switch (state)
         {
-       
+
             case State.CREATE:
                 UpdateCreate();
                 break;
@@ -147,7 +150,7 @@ public class MindMapController : MonoBehaviour
                 break;
         }
 
-
+        
         // 1번 키를 누르면 플레이어가 노드를 생성할 수 있는 CREATE
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -160,7 +163,11 @@ public class MindMapController : MonoBehaviour
             state = State.CONNECTION;
         }
 
-
+        // 3번 키를 누르면 플레이어가 노드에 데이터를 삭제
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            state = State.DELETE;
+        }
     }
 
     // 마인드 노드를 링크하고, 트리를 연결하는 메소드 
@@ -168,7 +175,7 @@ public class MindMapController : MonoBehaviour
     // 루트 노드의 자식으로 지정. 
     // 로직 -> 자식은 부모보다 id 값이 클수가 없다(예외처리)
 
-  
+
 
     private void UpdateConnection()
     {
@@ -183,11 +190,11 @@ public class MindMapController : MonoBehaviour
             // X번 키를 누르면 활성화된 "링크"를 허공에 끌어 당기면 자동으로 R_indexTip의 위치에 라인렌더러가 생긴다. (QA 완료)
             if (Input.GetKeyDown(KeyCode.X))
             {
-                if (RightIndexTip)
+                if (rightIndexTip)
                 {
                     updateConnectionNode.ConnectionIndexNode(R_indexTip, true);
                     ConnectionPointNode = updateConnectionNode;
-                    RightIndexTip = false;
+                    rightIndexTip = false;
                 }
                
             }
@@ -197,7 +204,7 @@ public class MindMapController : MonoBehaviour
             // 2.  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                if (!RightIndexTip)
+                if (!rightIndexTip)
                 {
                     //// 사용자로 부터 입력받아 연결할 노드 정보
                     //MindMapNodeInfo selectedInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
@@ -224,12 +231,12 @@ public class MindMapController : MonoBehaviour
                     //}
 
                     // 마인드맵에 대한 링크를 연결. 
-                    ConnectionPointNode.ConnectionIndexNode(updateConnectionNode.transform, false);
+                    ConnectionPointNode.ConnectionIndexNode(updateConnectionNode.transform.gameObject, false);
 
                     //INDEXDISTAL과 연결된 라인렌더러 노드를 찾아서 삭제. (QA 완료)
                     ConnectionPointNode.OnDestroyindexObject();
 
-                    RightIndexTip = true;
+                    rightIndexTip = true;
                 }
 
             }
@@ -242,7 +249,13 @@ public class MindMapController : MonoBehaviour
     // 사용자가 마인드 노드에 텍스트를 입력하는 메소드
     private void UpdateInputText()
     {
-        print("텍스트 입력창 실행,");
+        print("텍스트 입력창 실행 : 노드 데이터 출력 : " + hover.GetComponentInChildren<MindMapNodeInfo>().DATA);
+
+        // 현재 입력하려는 노드 
+        MindMapNodeInfo nodeInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
+
+        
+       
     }
 
     // 서버로 부터 AIText 정보를 받아 처리하는 메소드 
@@ -260,12 +273,30 @@ public class MindMapController : MonoBehaviour
     // 마인드 노드를 삭제하는 메소드 
     private void UpdateDelete()
     {
-        // 마인드 삭제 
-        // "마인드 선택 상태에서 실행된 "마인드 UI "중 DELETE를 선택해 해당 마인드를 삭제
-        // 키보드 1번 키를 누르면 선택된 마인드 노드를 확인하고 삭제.
+     
+        // 키보드 V번 키를 누르면 선택된 마인드 노드를 확인하고 삭제.
         
-        // 1. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
-        // 2. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
+        if(Input.GetKeyDown(KeyCode.V)) {
+
+            MindMapNodeInfo deleteNode = hover.GetComponentInChildren<MindMapNodeInfo>();
+            CreateNodeContoller deleteNodeController = hover.GetComponentInChildren<CreateNodeContoller>();
+
+            // 1. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
+
+            // 2. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
+            if (deleteNode.Children.Count == 0)
+            {
+                print("노드 삭제");
+
+                // 1. 연결되어 있는 노드 렌더러들을 모두 삭제.
+               
+
+                // 2. 해당 삭제할 노드 삭제 
+                Destroy(deleteNode.transform.parent.gameObject);
+            }
+        }
+
+
 
 
     }
@@ -287,7 +318,7 @@ public class MindMapController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
-            GameObject CreateNode = Instantiate(obj, R_indexTip.position, Quaternion.identity);
+            GameObject CreateNode = Instantiate(obj, R_indexTip.transform.position, Quaternion.identity);
 
             // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             //CreateNode.transform.SetParent(NodeManager.transform);

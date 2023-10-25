@@ -9,14 +9,14 @@ public class CreateNodeContoller : MonoBehaviour
 {
 
     private GameObject obj;
-    public static Action<Transform, bool> connection;
+    public static Action<GameObject, bool> connection;
     public static Action destroyConnection; 
 
     void Start()
     {
-        connection = (pos, indexObject) =>
+        connection = (posObject, indexObject) =>
         {
-            ConnectionIndexNode(pos, indexObject);
+            ConnectionIndexNode(posObject, indexObject);
         };
 
         destroyConnection = () =>
@@ -26,7 +26,7 @@ public class CreateNodeContoller : MonoBehaviour
 
     }
 
-    public void ConnectionIndexNode(Transform endPos, bool indexObject)
+    public void ConnectionIndexNode(GameObject endPosObject, bool indexObject)
     {
         obj = Resources.Load<GameObject>("Prefabs/NodeConnectionLine");
         GameObject LIneObject = Instantiate(obj, Vector3.zero, Quaternion.identity);
@@ -35,7 +35,7 @@ public class CreateNodeContoller : MonoBehaviour
 
         // 연결할 노드의 연결 위치를 지정. 
         connectionLine.STARTPOS = this.transform;
-        connectionLine.ENDPOS = endPos;
+        connectionLine.ENDPOSOBEJCT = endPosObject;
 
         if (indexObject)
         {
@@ -43,6 +43,18 @@ public class CreateNodeContoller : MonoBehaviour
             connectionLine.INDEXDISTAL = true;
         }
        
+    }
+
+    // 해당 노드에 연결되어 있는 라인렌더러 노드를 찾아서 삭제 
+    public void OnDestroyNodeObject(GameObject deleteNode)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if(transform.GetChild(i).GetComponent<NodeConnectLine>().ENDPOSOBEJCT == deleteNode)
+            {
+                Destroy(transform.GetChild(i).GetComponent<NodeConnectLine>().gameObject);
+            }
+        }
     }
 
 

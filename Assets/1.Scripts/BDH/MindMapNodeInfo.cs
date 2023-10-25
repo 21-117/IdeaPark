@@ -7,7 +7,7 @@ public class MindMapNodeInfo : MonoBehaviour
 {
     private bool rootNode; 
     private int id = 0; // 노드의 ID 
-    private string data;  // 텍스트 정보. 
+    private string data = "";  // 텍스트 정보. 
     private int type; // 노드의 생성 종류 타입 [Cube, Sphere, Capsule, Cylinder] 
     private Transform tr; // 노드의 생성 위치 
     private Color color; // 색 정보.
