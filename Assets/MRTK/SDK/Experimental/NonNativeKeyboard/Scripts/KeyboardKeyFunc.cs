@@ -22,6 +22,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
             Enter,
             Tab,
             ABC,
+            Korean,
             Symbol,
             Previous,
             Next,
