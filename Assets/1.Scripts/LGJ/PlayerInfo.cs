@@ -9,13 +9,31 @@ public class PlayerInfo : MonoBehaviour
 
     // 현재 하이라이트 된 오브젝트
     public GameObject cursorObject;
-
+    public GameObject buttonMind;
     private void Awake()
     {
         if(instance != null) Destroy(instance);
         instance = this;
     }
 
+    // 구체 삭제
+    public void DeleteBubble()
+    {
+        if(cursorObject != null)
+        {
+            cursorObject.GetComponent<XR_Bubble>().buttonMind.SetActive(false);
+            cursorObject.SetActive(false);
+        }
+    }
+
+    // 구체 만들기
+    public void CreateBubble()
+    {
+        if(cursorObject != null)
+        {
+
+        }
+    }
 
 
 }
