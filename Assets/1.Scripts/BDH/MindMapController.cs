@@ -91,6 +91,11 @@ public class MindMapController : MonoBehaviour
 
     public static State state;
 
+    private void Awake()
+    {
+        
+    }
+
 
     void Start()
     {
