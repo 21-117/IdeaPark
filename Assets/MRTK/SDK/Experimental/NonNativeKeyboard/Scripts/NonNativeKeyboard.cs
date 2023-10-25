@@ -129,7 +129,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
         /// </summary>
         public Image AlphaMailKeys = null;
 
-        private LayoutType m_LastKeyboardLayout = LayoutType.Korean;
+        private LayoutType m_LastKeyboardLayout = LayoutType.Alpha;
 
         /// <summary>
         /// The scale the keyboard should be at its maximum distance.
@@ -336,7 +336,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
         /// </summary>
         protected void OnDisable()
         {
-            m_LastKeyboardLayout = LayoutType.Korean;
+            m_LastKeyboardLayout = LayoutType.Alpha;
             //Clear();
         }
 
@@ -543,10 +543,9 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
                         ShowSymbolKeyboard();
                         break;
                     }
-
-                case LayoutType.Korean:
+                default:
                     {
-                        ShowKoreanKeyboard();
+                        ShowAlphaKeyboard();
                         TryToShowAlphaSubkeys();
                         break;
                     }
@@ -658,13 +657,13 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
 
                 case KeyboardKeyFunc.Function.ABC:
                     {
-                        ActivateSpecificKeyboard(LayoutType.Alpha);
+                        ActivateSpecificKeyboard(m_LastKeyboardLayout);
                         break;
                     }
 
                 case KeyboardKeyFunc.Function.Korean:
                     {
-                        ActivateSpecificKeyboard(m_LastKeyboardLayout);
+                        ActivateSpecificKeyboard(LayoutType.Korean);
                         break;
                     }
 
@@ -972,7 +971,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
         /// <returns>Returns true if default subkeys were activated, false if alphanumeric keyboard isn't active</returns>
         private bool TryToShowAlphaSubkeys()
         {
-            if (KoreanKeyboard.IsActive())
+            if (AlphaKeyboard.IsActive())
             {
                 AlphaSubKeys.gameObject.SetActive(true);
                 return true;
@@ -989,7 +988,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
         /// <returns>Returns true if the email subkey was activated, false if alphanumeric keyboard is not active and key can't be activated</returns>
         private bool TryToShowEmailSubkeys()
         {
-            if (KoreanKeyboard.IsActive())
+            if (AlphaKeyboard.IsActive())
             {
                 AlphaMailKeys.gameObject.SetActive(true);
                 m_LastKeyboardLayout = LayoutType.Email;
@@ -1007,7 +1006,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
         /// <returns>Returns true if the URL subkey was activated, false if alphanumeric keyboard is not active and key can't be activated</returns>
         private bool TryToShowURLSubkeys()
         {
-            if (KoreanKeyboard.IsActive())
+            if (AlphaKeyboard.IsActive())
             {
                 AlphaWebKeys.gameObject.SetActive(true);
                 m_LastKeyboardLayout = LayoutType.URL;
