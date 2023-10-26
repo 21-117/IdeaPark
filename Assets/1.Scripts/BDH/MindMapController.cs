@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using TMPro;
 
 
 public class MindMapController : MonoBehaviour
 {
+    public static MindMapController instance;
+
     // 마인드맵 오른쪽 기능 컨트롤러
     public GameObject R_indexTip;
 
@@ -15,19 +17,25 @@ public class MindMapController : MonoBehaviour
     public GameObject L_indexTip;
 
     // 마인드맵 노드들을 부모로 관리하는 오브젝트
-    public GameObject nodeManager;
+    private GameObject mindNodeManager;
 
-    // 사용자가 생성한 노드의 Info 정보 ( 생성될 때마다 갱신)  
+    // Hover된 오브젝트 
+    private GameObject hover = null;
+
+    // 사용자가 생성한 노드의 Info 정보  
     private MindMapNodeInfo nodeInfo;
+
+    // 갱신된 현재 노드의 라인렌더러 controller 
+    public ConnectionNodeController currentConnectionNode = null;
+
+    // 이전 노드의 임시 라인렌더러 controller 
+    private ConnectionNodeController prevConnectionNode;
 
     // R_indexTip 사용 여부
     private bool rightIndexTip = true;
 
     // 노드의 데이터 정보 업데이트 
     private bool upDateData;
-
-    // 노드의 연결한 위치를 임시로 저장 
-    CreateNodeContoller ConnectionPointNode;
 
     // 핀치 여부 
     private bool isPinched;
@@ -37,9 +45,6 @@ public class MindMapController : MonoBehaviour
 
     // Hover 여부
     private bool isHovered;
-
-    // Hover된 오브젝트 
-    private GameObject hover = null;
 
     // Poke 여부
     private bool isPoked;
@@ -93,13 +98,22 @@ public class MindMapController : MonoBehaviour
 
     private void Awake()
     {
+        mindNodeManager = GameObject.Find("[ MindNodeManager ]");
 
+
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-
 
     void Start()
     {
-
 
         setHover = (x, hoverObject) =>
         {
@@ -184,62 +198,67 @@ public class MindMapController : MonoBehaviour
 
     private void UpdateConnection()
     {
-
         if (hover != null)
         {
-            print("현재 손가락에 닿은 오브젝트 : " + hover.GetComponentInChildren<MindMapNodeInfo>().ID);
 
-            CreateNodeContoller updateConnectionNode = hover.GetComponentInChildren<CreateNodeContoller>();
-
+            currentConnectionNode = hover.GetComponentInChildren<ConnectionNodeController>();
 
             // X번 키를 누르면 활성화된 "링크"를 허공에 끌어 당기면 자동으로 R_indexTip의 위치에 라인렌더러가 생긴다. (QA 완료)
             if (Input.GetKeyDown(KeyCode.X))
             {
                 if (rightIndexTip)
                 {
-                    updateConnectionNode.ConnectionIndexNode(R_indexTip, true);
-                    ConnectionPointNode = updateConnectionNode;
+                    currentConnectionNode.ConnectionNode(R_indexTip, true);
+                    prevConnectionNode = currentConnectionNode;
                     rightIndexTip = false;
                 }
 
             }
 
             // C번 키를 누르면 라인렌더러를 연결, 마인드맵의 부모 노드와 자식 노드를 연결. 
-            // 1. "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다.
-            // 2.  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
+
+
             if (Input.GetKeyDown(KeyCode.C))
             {
                 if (!rightIndexTip)
                 {
-                    //// 사용자로 부터 입력받아 연결할 노드 정보
-                    //MindMapNodeInfo selectedInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
+                    MindMapNodeInfo prevNodeInfo = prevConnectionNode.GetComponent<MindMapNodeInfo>();
+                    MindMapNodeInfo currentNodeInfo = currentConnectionNode.GetComponent<MindMapNodeInfo>();
 
-                    //// 생성한 노드 정보 : nodeInfo, 연결할 노드 정보 : hover.GetComponentInChildren<MindMapNodeInfo>() 를 ID 값을 비교한다. 
-                    //bool nodeCheck = (nodeInfo.ID > selectedInfo.ID) ? true : false;
-
-                    //print("ID 값 확인 : " + "NODEINFO.ID : " + nodeInfo.ID + "selectedInfo.ID : " + selectedInfo.ID);
+                    //// 이전에 임시 저장 노드 정보, 현재 연결할 노드 정보 : ID 값을 비교한다. 
+                    bool nodeIdCheck = (prevNodeInfo.ID < currentNodeInfo.ID) ? true : false;
 
 
-                    //// 생성한 노드 ID 가 높은 경우 -> CreateNode 생성한 노드(부모),  target를 연결할 노드(자식) 
-                    //if (nodeCheck)
-                    //{
 
-                    //    // CreateNode(부모) 자식 노드 리스트 Children에 target (자식)을 추가한다. 
-                    //    nodeInfo.Children.Add(selectedInfo);
+                    // 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
+                    // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
+                    // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
 
-                    //}
-                    //// 연결한 노드 ID가 높은 경우 -> 연결한 노드(부모) , 생성한 노드(자식)
-                    //else
-                    //{
-                    //    // target(부모) 자식 노드 리스트 Children에 CreateNode (자식)을 추가한다.  
-                    //    selectedInfo.Children.Add(nodeInfo);
-                    //}
 
-                    // 마인드맵에 대한 링크를 연결. 
-                    ConnectionPointNode.ConnectionIndexNode(updateConnectionNode.transform.gameObject, false);
+                    // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
+                    // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
+                    // 제한 사항 -> 자식에서 부모로 연결할 수 없다. (알파 -> 편의를 위해 자식에서도 부모 연결 가능하게 할 것인지.?)  
 
-                    //INDEXDISTAL과 연결된 라인렌더러 노드를 찾아서 삭제. (QA 완료)
-                    ConnectionPointNode.OnDestroyindexObject();
+                    if (nodeIdCheck)
+                    {
+                        print("ID 값 확인 : " + "이전에 생성한 노드 정보 : " + prevNodeInfo.ID + "  " + "현재 연결할 노드 정보 : " + currentNodeInfo.ID);
+
+                        // "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다. ( 부모 - 자식) 
+                        prevConnectionNode.ConnectionNode(currentConnectionNode.transform.gameObject, false);
+
+                        // prevConnectionNode(부모) 자식 노드 리스트 Children에 currentConnectionNode (자식) 노드를 추가한다. 
+                        prevNodeInfo.Children.Add(currentNodeInfo);
+
+                    }
+                    else
+                    {
+                        // 이전에 생성한 노드 ID 가 높은 경우 단순히 연결만 지원한다. (양 방향 링크 지원)
+                        currentConnectionNode.ConnectionNode(prevConnectionNode.transform.gameObject, false);
+
+                    }
+
+                    //  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
+                    prevConnectionNode.OnDestroyIndexTip(R_indexTip);
 
                     rightIndexTip = true;
                 }
@@ -248,16 +267,15 @@ public class MindMapController : MonoBehaviour
 
 
         }
-
     }
+
 
     // 사용자가 마인드 노드에 텍스트를 입력하는 메소드
     private void UpdateInputText()
     {
-        print("텍스트 입력창 실행 : 노드 데이터 출력 : " + hover.GetComponentInChildren<MindMapNodeInfo>().DATA);
 
-        // 현재 입력하려는 노드 
-        MindMapNodeInfo nodeInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
+
+
 
 
 
@@ -275,31 +293,38 @@ public class MindMapController : MonoBehaviour
         throw new NotImplementedException();
     }
 
+
     // 마인드 노드를 삭제하는 메소드 
     private void UpdateDelete()
     {
 
         // 키보드 V번 키를 누르면 선택된 마인드 노드를 확인하고 삭제.
-
         if (Input.GetKeyDown(KeyCode.V))
         {
+            GameObject deleteNode = hover;
+            MindMapNodeInfo deleteNodeInfo;
 
-            MindMapNodeInfo deleteNode = hover.GetComponentInChildren<MindMapNodeInfo>();
-            CreateNodeContoller deleteNodeController = hover.GetComponentInChildren<CreateNodeContoller>();
-
-            // 1. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
-
-            // 2. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
-            if (deleteNode.Children.Count == 0)
+            if (deleteNode != null)
             {
-                print("노드 삭제");
+                deleteNodeInfo = deleteNode.GetComponentInChildren<MindMapNodeInfo>();
 
-                // 1. 연결되어 있는 노드 렌더러들을 모두 삭제.
+                // 1. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
+                if (deleteNodeInfo.Children.Count == 0)
+                {
 
+                    // 1. 연결되어 있는 노드 렌더러들을 모두 삭제.                 
+                    ConnectionNodeController.destroyLineRenderer(deleteNode);
 
-                // 2. 해당 삭제할 노드 삭제 
-                Destroy(deleteNode.transform.parent.gameObject);
+                    // 2. 해당 삭제할 노드 삭제 
+                    Destroy(deleteNode);
+                }
+                else
+                {
+                    // 2. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
+                }
+
             }
+
         }
 
 
@@ -316,6 +341,7 @@ public class MindMapController : MonoBehaviour
         // 서브
     }
 
+
     // 마인드 노드를 생성하는 메소드 
     private void UpdateCreate()
     {
@@ -324,23 +350,39 @@ public class MindMapController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
+            // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             GameObject CreateNode = Instantiate(obj, R_indexTip.transform.position, Quaternion.identity);
 
-            // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
-            //CreateNode.transform.SetParent(NodeManager.transform);
+            TextMeshProUGUI nodeText = CreateNode.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+         
+
+            CreateNode.transform.SetParent(mindNodeManager.transform);
 
             nodeInfo = CreateNode.GetComponentInChildren<MindMapNodeInfo>();
 
-            // 노드의 ID 값을 증가. 
-            nodeInfo.UpdateNodeId();
-
             if (nodeInfo.ID == 0)
             {
+                // 오브젝트 이름을 루트 노드로 변경. 
+                CreateNode.name = "RootNode";
+
+                // 임시로 노드의 더미 데이터 삽입.
+                nodeInfo.DATA = "RootNode";
+                nodeText.text = "RootNode";
+
                 // 루트 노드(주제)로 지정한다. 
                 nodeInfo.ROOTNODE = true;
 
                 // MindeMapManager의 트리 루트로 설정.
                 MindMapManager.instance.ROOTNODE = nodeInfo;
+            }
+            else
+            {
+                // 오브젝트 이름을 자식 노드로 변경.
+                CreateNode.name = "ChildNode_" + nodeInfo.ID;
+
+                // 임시로 노드의 더미 데이터 삽입.
+                nodeInfo.DATA = "ChildNode_" + nodeInfo.ID;
+                nodeText.text = "ChildNode_" + nodeInfo.ID;
             }
 
         }

@@ -784,7 +784,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1039440952}
   m_Layer: 0
-  m_Name: '[ NodeManager ]'
+  m_Name: '[ MindNodeManager ]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -849,7 +849,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   R_indexTip: {fileID: 1039459359}
   L_indexTip: {fileID: 1297004054}
-  nodeManager: {fileID: 1039440951}
+  currentConnectionNode: {fileID: 0}
 --- !u!114 &1436945301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -974,6 +974,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_PhysicsTriggerInteraction: 1
+  fingerTip: {fileID: 0}
+  tumbTip: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  radius: 0.5
+  sampleBubble: {fileID: 0}
 --- !u!1 &1638166667
 GameObject:
   m_ObjectHideFlags: 0

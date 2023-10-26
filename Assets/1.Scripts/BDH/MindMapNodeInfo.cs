@@ -17,7 +17,7 @@ public class MindMapNodeInfo : MonoBehaviour
     // 자식 마인드맵 노드에 대한 정보를 리스트 형식 저장. 
     public List<MindMapNodeInfo> Children = new List<MindMapNodeInfo>();
 
-    public void UpdateNodeId()
+    private void Awake()
     {
         this.id = MindMapManager.instance.GetID;
         // 각 노드의 ID 값을 출력
