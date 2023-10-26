@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 6257364738520549887}
   - component: {fileID: 5583141129113074072}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Colors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1080,7 +1080,7 @@ PrefabInstance:
     - target: {fileID: 2573839477641309198, guid: 2eb03679cc43f494f9f40d5fef272e71,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2573839477641309198, guid: 2eb03679cc43f494f9f40d5fef272e71,
         type: 3}

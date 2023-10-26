@@ -10,6 +10,7 @@ public class PlayerInfo : MonoBehaviour
     // 현재 하이라이트 된 오브젝트
     public GameObject cursorObject;
     public GameObject buttonMind;
+    public FlexibleColorPicker fcp;
     private void Awake()
     {
         if(instance != null) Destroy(instance);

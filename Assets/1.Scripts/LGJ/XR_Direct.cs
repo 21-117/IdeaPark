@@ -12,7 +12,7 @@ public class XR_Direct : XRDirectInteractor
     public float radius = 0.5f;
     public GameObject sampleBubble;
     private Collider[] cols;
-    private float createTime = 2.0f, curTime = 0f, lerpValue;
+    private float createTime = 2.0f, curTime = 0f, lerpValue, touchTime, touchMaxTime;
 
     void Update()
     {
@@ -42,9 +42,10 @@ public class XR_Direct : XRDirectInteractor
     {
         base.OnHoverEntered(args);
         //MindMapController.setHover(true, args.interactableObject.transform.gameObject);
-        
+
         Debug.Log("hover entered");
     }
+
     protected override void OnHoverExited(HoverExitEventArgs args)
     {
         base.OnHoverExited(args);
@@ -62,8 +63,7 @@ public class XR_Direct : XRDirectInteractor
     [System.Obsolete]
     protected override void OnSelectEntering(SelectEnterEventArgs args)
     {
-        base.OnSelectEntering(args);
-        // 2초 이상을 유지하면 마인드 노드를 생성할 수 있다. 
+        base.OnSelectEntering(args);                                                                                                                
         Debug.Log("select entered");
     }
     protected override void OnSelectExiting(SelectExitEventArgs args)

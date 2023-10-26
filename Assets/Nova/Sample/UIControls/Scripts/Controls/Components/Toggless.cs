@@ -7,7 +7,7 @@ namespace NovaSamples.UIControls
     /// <summary>
     /// A UI control which reacts to user input and flips an underlying bool to track a <see cref="ToggledOn"/> state as it is clicked.
     /// </summary>
-    public class Toggle : UIControl<ToggleVisuals>
+    public class Toggless : UIControl<ToggleVisuals>
     {
         [Tooltip("Event invoked when the toggle state changes. Provides the ToggledOn state.")]
         public UnityEvent<bool> OnToggled = null;
