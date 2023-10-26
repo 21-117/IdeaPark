@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 // https://jsonplaceholder.typicode.com
 
 // 봉남님 서버 . 
-// http://192.168.0.2:8000/get_data
+// http://192.168.0.16:8000/keyword-suggestions/
 
 // JSONLIST KEY 형식. 
 [Serializable]
@@ -48,6 +48,14 @@ public class NodeData
     public List<string> Children;
 }
 
+[Serializable]
+public class AiData
+{
+    public int id;
+    public List<String> Node_text; 
+
+}
+
 // Http RestAPI GET, POST, PUT, DELETE, TEXTURE 분기  
 public enum RequestType
 {
@@ -74,7 +82,7 @@ public class HttpInfo
     {
         requestType = type;
         //if (useDefaultUrl) url = "https://jsonplaceholder.typicode.com";
-        if (useDefaultUrl) url = "http://192.168.0.2:8000";
+        if (useDefaultUrl) url = "http://192.168.0.16:8000";
         url += u;
 
         onReceiveData = callback;   
@@ -158,7 +166,9 @@ public class HttpManager : MonoBehaviour
             if(httpInfo.onReceiveData != null)
             {
                 print(" 서버에서 요청 성공.! ");
+                print("서버에서 온 AI 데이터 값 : " +req.downloadHandler.text);
                 httpInfo.onReceiveData(req.downloadHandler); 
+
             }
            
         }

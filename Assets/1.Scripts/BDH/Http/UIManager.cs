@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+
 
 public class UIManager : MonoBehaviour
 {
     // Image url를 반영하는 Image UI 
     public Image downLoadImage;
 
-    // http://192.168.0.2:8000/get_data
+    //http://192.168.0.16:8000/get_data
     public void OnClickBNSERVER()
     {
         HttpInfo info = new HttpInfo();
@@ -20,8 +22,6 @@ public class UIManager : MonoBehaviour
         HttpManager.Get().SendRequest(info);
 
     }
-
-
 
     // Todos_List UI 버튼 클릭 리스너 -> RequestType.GET
     public void OnClickTodos()
@@ -54,8 +54,8 @@ public class UIManager : MonoBehaviour
         HttpManager.Get().SendRequest(info);
     }
 
-    // 회원가입 SignUp UI 버튼 클릭 리스너 -> RequestType.POST
-    // http://192.168.0.2:8000/save_data/
+   
+    //http://192.168.0.16:8000/save_data/
     public void PostTest()
     {
         HttpInfo info = new HttpInfo();
@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
         //signUpInfo.age = 22;
 
         NodeData textNode = new NodeData();
-        textNode.id = 7;
+        textNode.id = 8;
         textNode.Node_Text = "test";
         textNode.Node_type = 2;
         textNode.aiData = null; 
@@ -84,7 +84,8 @@ public class UIManager : MonoBehaviour
         HttpManager.Get().SendRequest(info);
     }
 
-    // http://192.168.0.2:8000/keyword-suggestions/
+
+    // http://192.168.0.16:8000/keyword-suggestions/
     public void PostAiTest()
     {
         HttpInfo info = new HttpInfo();
@@ -93,8 +94,15 @@ public class UIManager : MonoBehaviour
             // Post 데이터 전송했을 때 서버로부터 응답.
         });
 
+        AiData data = new AiData();
+        data.id = 2;
+        List<string> ai = new List<string>() { "운동", "축구", "농구", "배드민턴" };
+        data.Node_text = ai; 
 
+        info.body = JsonUtility.ToJson(data);
 
+        print("내가 보낸 데이터값 : " +  info.body);
+        HttpManager.Get().SendRequest(info);
     }
 
 
