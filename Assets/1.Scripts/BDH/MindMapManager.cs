@@ -148,11 +148,26 @@ public class MindMapManager : MonoBehaviour
     }
 
     // 마인드 맵의 root의 자식 리스트를 출력 
-    public void RootPrintTree(MindMapNodeInfo root)
+    public void PrintChildTree(MindMapNodeInfo root)
     {
         foreach (var node in root.Children) {
             Debug.Log(node.DATA);
         }
+    }
+
+    // 마인드 맵의 root의 자식 리스트 1번 반환.
+    public MindMapNodeInfo returnRootNode(MindMapNodeInfo root, string name )
+    {
+        for(int i = 0; i < root.Children.Count; i ++)
+        {
+            if (root.Children[i].DATA == name)
+            {
+                print("찾은 데이터 노드 : " + root.Children[i].DATA);
+                return root.Children[i];
+            }
+        }
+
+        return null; 
     }
 
     // 마인드 맵의 노드 전체를 출력하는 메소드. -> (전체를 저장하는 메소드로 활용)
@@ -160,12 +175,12 @@ public class MindMapManager : MonoBehaviour
     public void PrintTree(MindMapNodeInfo root)
     {
 
-        // 노드의 GameObject를 만든다.
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //// 노드의 GameObject를 만든다.
+        //GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        // 노드들의 색상, 위치, 회전은 랜덤하게 설정.
-        go.transform.position = Random.onUnitSphere * Random.Range(3.0f, 5.0f);
-        go.transform.rotation = Random.rotation;
+        //// 노드들의 색상, 위치, 회전은 랜덤하게 설정.
+        //go.transform.position = Random.onUnitSphere * Random.Range(3.0f, 5.0f);
+        //go.transform.rotation = Random.rotation;
 
         // 현재 마인드맵 노드의 데이터 접근해서 출력 
         Debug.Log("현재 노드의 ID : " + root.ID + ",  현재 노드의 DATA : " + root.DATA);
@@ -194,15 +209,26 @@ public class MindMapManager : MonoBehaviour
     }
 
     // 현재 마인드 맵의 노드에서 모든 조상 노드를 찾아 반환하는 메소드.
-    public MindMapNodeInfo FindAncestor(MindMapNodeInfo node)
+    public MindMapNodeInfo FindAncestor(MindMapNodeInfo currentNode)
     {
+
         return null; 
     }
 
-    // 해당 노드의 마인드 맵 서브 트리를 찾아서 반환하는 메소드 .   
-    public List<MindMapNodeInfo> FindSubTree(MindMapNodeInfo node)
+    // 해당 노드의 마인드 맵 서브 트리를 찾아서 반환하는 메소드 . ( 반환타입 : List<MindMapNodeInfo>)  
+    public void FindSubTree(MindMapNodeInfo currentNode)
     {
-        return null;     
+
+        // 현재 마인드맵 노드의 데이터 접근해서 출력 
+        print("현재 노드의 ID : " + currentNode.ID + ",  현재 노드의 DATA : " + currentNode.DATA);
+
+        // 재귀적으로 자식의 서브트리 데이터 접근
+        foreach (MindMapNodeInfo child in currentNode.Children)
+        {
+            FindSubTree(child); 
+        }
+
+           
     }
 
     // 생성된 nodeList 정보들을 JSON 형태로 저장하는 메소드 
