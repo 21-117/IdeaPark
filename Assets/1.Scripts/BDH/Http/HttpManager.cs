@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 // https://jsonplaceholder.typicode.com
 
 // 봉남님 서버 . 
-// http://192.168.0.16:8000/keyword-suggestions/
+// http://192.168.0.16:8000/main/keyword-suggestions/
 
 // JSONLIST KEY 형식. 
 [Serializable]
@@ -93,6 +93,7 @@ public class HttpManager : MonoBehaviour
 {
     static HttpManager instance;
 
+  
     public static HttpManager Get()
     {
         if (instance == null)
@@ -167,6 +168,7 @@ public class HttpManager : MonoBehaviour
             {
                 print(" 서버에서 요청 성공.! ");
                 print("서버에서 온 AI 데이터 값 : " +req.downloadHandler.text);
+            
                 httpInfo.onReceiveData(req.downloadHandler); 
 
             }

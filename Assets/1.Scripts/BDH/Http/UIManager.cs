@@ -85,11 +85,11 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // http://192.168.0.16:8000/keyword-suggestions/
+    // http://192.168.0.16:8000/main/keyword-suggestions/
     public void PostAiTest()
     {
         HttpInfo info = new HttpInfo();
-        info.SetInfo(RequestType.POST, "/keyword-suggestions/", (DownloadHandler downLoadHandler) =>
+        info.SetInfo(RequestType.POST, "/main/keyword-suggestions/", (DownloadHandler downLoadHandler) =>
         {
             // Post 데이터 전송했을 때 서버로부터 응답.
         });
