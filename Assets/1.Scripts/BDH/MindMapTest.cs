@@ -37,16 +37,23 @@ public class MindMapTest : MonoBehaviour
         // 실전 테스트 해보자잇,,! 
         // ====================================================================
 
+        // 1. 마인드 맵의 주제인 루트 노드를 찾는다. 
         // 루트 노드 반환 메소드 - > 마인드 맵 [ MindNodeManager ]을 순회한 노드에서  rootNode 가 true인 노드를 반환.
         //MindMapNodeInfo root = MindMapManager.instance.RootFindTree();
         //print("현재 반환된 루트 노드 데이터 : " + root.DATA);
 
-        // 마인드 맵의 root의 자식 리스트를 출력 
+
+        // 2. 마인드 맵의 root의 자식 리스트를 출력 
         //MindMapManager.instance.PrintChildTree(root); 
 
-        // 마인드 맵 전체 출력하는 메소드 
+        // 3. 마인드 맵 전체 출력하는 메소드 
         //MindMapManager.instance.RootPrintTree(root); 
 
+
+        // 중간 노드를 삭제하는 기능 구현 
+        // 1. 현재 구성된 마인드 맵에서 선택된 노드 MindMapController UpdateSeleted() 메소드를 통해 노드의 정보를 가져온다.
+        // 2. MindMapController UpdateDelete()에서 분기를 통해 노드가 리프 노드인지, 중간 노드인지를 확인한다. 
+        // 3. 중간 노드인 경우, FindSubTree(tempNode); 모든 서브 트리를 순회하며 Destory를 한다. 
 
 
     }

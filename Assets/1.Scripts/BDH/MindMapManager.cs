@@ -148,7 +148,7 @@ public class MindMapManager : MonoBehaviour
     }
 
     // 마인드 맵의 root의 자식 리스트를 출력 
-    public void PrintChildTree(MindMapNodeInfo root)
+    public void PrintChildListNode(MindMapNodeInfo root)
     {
         foreach (var node in root.Children) {
             Debug.Log(node.DATA);
@@ -171,16 +171,8 @@ public class MindMapManager : MonoBehaviour
     }
 
     // 마인드 맵의 노드 전체를 출력하는 메소드. -> (전체를 저장하는 메소드로 활용)
-
     public void PrintTree(MindMapNodeInfo root)
     {
-
-        //// 노드의 GameObject를 만든다.
-        //GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-        //// 노드들의 색상, 위치, 회전은 랜덤하게 설정.
-        //go.transform.position = Random.onUnitSphere * Random.Range(3.0f, 5.0f);
-        //go.transform.rotation = Random.rotation;
 
         // 현재 마인드맵 노드의 데이터 접근해서 출력 
         Debug.Log("현재 노드의 ID : " + root.ID + ",  현재 노드의 DATA : " + root.DATA);
@@ -194,6 +186,7 @@ public class MindMapManager : MonoBehaviour
     } 
 
     // 마인드 맵의 분기에 대한 깊이를 반환하는 메소드. 
+    // 예외 처리 - > 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
     public  int FindGetHeight(MindMapNodeInfo root)
     {
         int height = 0;
