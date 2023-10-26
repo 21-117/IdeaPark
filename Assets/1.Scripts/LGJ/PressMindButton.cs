@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PressPalette : MonoBehaviour
+public class PressMindButton : MonoBehaviour
 {
     public GameObject palette;
+    public GameObject keyboard;
     public void OnOffPalette()
     {
         if (!palette.activeSelf)
@@ -14,6 +15,17 @@ public class PressPalette : MonoBehaviour
         else
         {
             palette.SetActive(false);
+        }
+    }
+    public void OnOffKeyboard()
+    {
+        if (!keyboard.activeSelf)
+        {
+            keyboard.SetActive(true);
+        }
+        else
+        {
+            keyboard.SetActive(false);
         }
     }
 }

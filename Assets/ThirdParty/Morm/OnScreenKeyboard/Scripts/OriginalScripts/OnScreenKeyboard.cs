@@ -47,7 +47,12 @@ public class OnScreenKeyboard : MonoBehaviour
         beforeLang = CurLang.KR;
         curCaps = Caps.Uncaps;
         ClearAllStrValue();
-        CloseKeyboard();
+        //CloseKeyboard();
+    }
+
+    public void SetShowTextField()
+    {
+        showTextField = PlayerInfo.instance.cursorObject.GetComponentInChildren<Text>();
     }
 
     private void Update()
@@ -76,7 +81,7 @@ public class OnScreenKeyboard : MonoBehaviour
     void AddListenerToButtons()
     {
         bgCloseBtn.onClick.AddListener(CloseKeyboard);
-        exitBtn.onClick.AddListener(CloseKeyboard);
+        //exitBtn.onClick.AddListener(CloseKeyboard);
         korBtn.onClick.AddListener(() => { curLang = CurLang.KR; });
         engBtn.onClick.AddListener(() => { curLang = CurLang.EN; });
         capsBtn.onClick.AddListener(() => {
@@ -156,7 +161,7 @@ public class OnScreenKeyboard : MonoBehaviour
     private void CloseKeyboard()
     {
         currentOskInputfield?.SaveInputedString(inputtedString);
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
     
     private void InputProcess(string value)
@@ -291,7 +296,7 @@ public class OnScreenKeyboard : MonoBehaviour
     {
         inputtedString = "";
         currentString = "";
-        showTextField.text = "";
+        //showTextField.text = "";
         
         if(targetInputField)
             targetInputField.text = "";

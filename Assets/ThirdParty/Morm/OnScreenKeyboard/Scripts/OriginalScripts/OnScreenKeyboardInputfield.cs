@@ -21,6 +21,7 @@ public class OnScreenKeyboardInputfield : MonoBehaviour, IPointerDownHandler
 
     public void SaveInputedString(string _inputStr)
     {
+        //inputtedString = _inputStr;
         inputtedString = _inputStr;
     }
 
@@ -28,7 +29,7 @@ public class OnScreenKeyboardInputfield : MonoBehaviour, IPointerDownHandler
     {
         if (targetOnScreenKeyboard)
         {
-            targetOnScreenKeyboard.gameObject.SetActive(true);
+            //targetOnScreenKeyboard.gameObject.SetActive(true);
             targetOnScreenKeyboard.ShowKeyboard(_inputField, this);
         }
     }

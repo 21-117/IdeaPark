@@ -181,7 +181,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAD6C\uCCB4"
+  m_Text: "\uB0B4\uC6A9"
 --- !u!114 &7170879285010526472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,6 +320,11 @@ PrefabInstance:
     - target: {fileID: 9171031756790316709, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9171031756790316709, guid: 3221e99dadad90d41ba75d5f71472114,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
