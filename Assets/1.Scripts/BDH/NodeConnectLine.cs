@@ -55,9 +55,13 @@ public class NodeConnectLine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 라인을 지속적으로 연결 
-        lr.SetPosition(0, startPos.position);
-        lr.SetPosition(1, endObject.transform.position);
+        if(this.gameObject != null && endObject != null)
+        {
+            // 라인을 지속적으로 연결 
+            lr.SetPosition(0, startPos.position);
+            lr.SetPosition(1, endObject.transform.position);
+        }
+      
 
 
     }

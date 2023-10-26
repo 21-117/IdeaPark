@@ -25,12 +25,12 @@ public class MindMapManager : MonoBehaviour
     // 마인드맵 싱글톤 패턴으로 적용.
     // static 변수를 통해 해당 인스턴스를 외부에서 접근 가능하게 함.
     public static MindMapManager instance;
-    
-    // 마인드 맵의 루트 노드 
-    private MindMapNodeInfo rootNode; 
 
-    // 생성된 마인드 맵의 노드들을 저장하는 리스트
-    public List<MindMapNodeInfo> nodeList;
+    // 마인드 맵의 루트 노드 
+    private MindMapNodeInfo rootNode;
+
+    // 생성된 마인드 맵의 노드들을 저장되어 있는 게임 오브젝트.
+    public GameObject nodeManager;
 
     // 루트 노드에 대한 프로퍼티 
     public MindMapNodeInfo ROOTNODE
@@ -50,7 +50,6 @@ public class MindMapManager : MonoBehaviour
 
     private void Awake()
     {
-        nodeList = new List<MindMapNodeInfo>(); 
 
         if (instance == null)
         {
@@ -97,47 +96,68 @@ public class MindMapManager : MonoBehaviour
         {
 
 
-
             {
+                //1. 자식 노드 생성 
                 MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "동아리 활동" };
+                //2. 부모, 자식 노드 판단 이후 연결 ( 자식 리스트에 추가 )  
+                root.Children.Add(node);
+
+                // 1, 2번 과정을 3번 반복한다. 
                 node.Children.Add(new MindMapNodeInfo() { DATA = "가입 이유" });
                 node.Children.Add(new MindMapNodeInfo() { DATA = "어떤 동아리 : 목적 -> 술" });
                 node.Children.Add(new MindMapNodeInfo() { DATA = "주요 활동" });
-                root.Children.Add(node);
+
             }
 
             {
                 MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "수업 시간" };
+                root.Children.Add(node);
                 node.Children.Add(new MindMapNodeInfo() { DATA = "관련 과목" });
                 node.Children.Add(new MindMapNodeInfo() { DATA = "과목 선택 이유" });
                 node.Children.Add(new MindMapNodeInfo() { DATA = "학습한 내용" });
-                root.Children.Add(node);
+
             }
 
             {
                 MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "독서 활동" };
+                root.Children.Add(node);
                 node.Children.Add(new MindMapNodeInfo() { DATA = "관련 독서" });
                 node.Children.Add(new MindMapNodeInfo() { DATA = "알게된 점" });
                 node.Children.Add(new MindMapNodeInfo() { DATA = "독서의 계기" });
-                root.Children.Add(node);
+
             }
         }
 
         return root;
     }
 
-  
+    // 마인드 맵의 ROOT 노드를 찾아서 반환하는 메소드 
+    public MindMapNodeInfo RootFindTree()
+    {
+        // MindNodeManager 오브젝트의 자식 노드들을 순회한다.
+        for(int i = 0; i < nodeManager.transform.childCount; i++)
+        {
+            if(nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>().ROOTNODE == true)
+            {
+                // 자식 노드의 Getcomponenent 스크립트인 MindMapNodeInfo에서 true인 노드를 찾아 반환한다. 
+                return nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>();
+            }
+        }
+
+        return null;
+    }
 
     // 마인드 맵의 root의 자식 리스트를 출력 
     public void RootPrintTree(MindMapNodeInfo root)
     {
-        foreach(var node in root.Children) {
-            Debug.Log(node.DATA); 
+        foreach (var node in root.Children) {
+            Debug.Log(node.DATA);
         }
     }
 
-    // 마인드 맵의 노드 전체를 출력하는 메소드. -> (전체를 저장하는 메소드로 활용) 
-    public  void PrintTree(MindMapNodeInfo root)
+    // 마인드 맵의 노드 전체를 출력하는 메소드. -> (전체를 저장하는 메소드로 활용)
+
+    public void PrintTree(MindMapNodeInfo root)
     {
 
         // 노드의 GameObject를 만든다.
@@ -156,7 +176,7 @@ public class MindMapManager : MonoBehaviour
             PrintTree(child);
         }
 
-    }
+    } 
 
     // 마인드 맵의 분기에 대한 깊이를 반환하는 메소드. 
     public  int FindGetHeight(MindMapNodeInfo root)
