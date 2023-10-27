@@ -190,12 +190,6 @@ public class MindMapController : MonoBehaviour
     }
 
     // 마인드 노드를 링크하고, 트리를 연결하는 메소드 
-    // 자식 노드로 설정시 유의.
-    // 루트 노드의 자식으로 지정. 
-    // 로직 -> 자식은 부모보다 id 값이 클수가 없다(예외처리)
-
-
-
     private void UpdateConnection()
     {
         if (hover != null)
@@ -230,17 +224,20 @@ public class MindMapController : MonoBehaviour
 
 
 
-                    // 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
+                    // 1.예외 처리 - > 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
                     // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
                     // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
 
+                    // 2. 예외 처리 - > FindGetHeight(MindMapNodeInfo root) 함수를 통해 마인드 맵의 깊이를 확인
+                    // 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
 
-                    // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
-                    // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
-                    // 제한 사항 -> 자식에서 부모로 연결할 수 없다. (알파 -> 편의를 위해 자식에서도 부모 연결 가능하게 할 것인지.?)  
+
 
                     if (nodeIdCheck)
                     {
+                        // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
+                        // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
+
                         print("ID 값 확인 : " + "이전에 생성한 노드 정보 : " + prevNodeInfo.ID + "  " + "현재 연결할 노드 정보 : " + currentNodeInfo.ID);
 
                         // "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다. ( 부모 - 자식) 
@@ -253,6 +250,7 @@ public class MindMapController : MonoBehaviour
                     else
                     {
                         // 이전에 생성한 노드 ID 가 높은 경우 단순히 연결만 지원한다. (양 방향 링크 지원)
+                        // 제한 사항 -> 자식에서 부모로 연결할 수 없다. 
                         currentConnectionNode.ConnectionNode(prevConnectionNode.transform.gameObject, false);
 
                     }
@@ -273,11 +271,6 @@ public class MindMapController : MonoBehaviour
     // 사용자가 마인드 노드에 텍스트를 입력하는 메소드
     private void UpdateInputText()
     {
-
-
-
-
-
 
     }
 
@@ -317,10 +310,17 @@ public class MindMapController : MonoBehaviour
 
                     // 2. 해당 삭제할 노드 삭제 
                     Destroy(deleteNode);
+
+                    // 3. 노드 삭제 SFX 사운드 실행 
+                    SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE); 
                 }
                 else
                 {
                     // 2. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
+
+
+                    // 3. 노드 삭제 SFX 사운드 실행 
+                    SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
                 }
 
             }
@@ -350,14 +350,20 @@ public class MindMapController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
-            // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
+
+        
             GameObject CreateNode = Instantiate(obj, R_indexTip.transform.position, Quaternion.identity);
+            print("새로운 노드를 생성함. "); 
+
+            // 노드 생성시 생성 SFX  사운드 실행 
+            SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
 
             TextMeshProUGUI nodeText = CreateNode.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-         
 
+            // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             CreateNode.transform.SetParent(mindNodeManager.transform);
 
+            // 생성된 노드의 정보에 접근한다. 
             nodeInfo = CreateNode.GetComponentInChildren<MindMapNodeInfo>();
 
             if (nodeInfo.ID == 0)
@@ -386,9 +392,6 @@ public class MindMapController : MonoBehaviour
             }
 
         }
-
-
-
 
     }
 }
