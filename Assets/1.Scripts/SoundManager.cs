@@ -14,21 +14,23 @@ public class SoundManager : MonoBehaviour
     }
 
     // SFX 종류
-    // 1. 프로젝트 시작 SFX 
+    // 1. 프로젝트 SFX 
     // 2. 마인드 맵 SFX [ 마인드 생성, 마인드 삭제, 마인드 클릭]
-    // 3. 마인드 UI SFX [ 마인드 UI 생성, 마인드 UI 클릭, UI메뉴 클릭, UI 확인, UI 취소 ]
+    // 3. 마인드 UI SFX [ 마인드 UI 메뉴 생성 , 마인드 UI 클릭 확인, UI메뉴 클릭, UI 확인, UI 취소 ]
     // 4. 키보드 SFX [ 키보드 타건음, 키보드 지우기 ] 
     public enum ESFX
     {
         SFX_OPENING,
         SFX_NODE_CREATE,
         SFX_NODE_DELETE,
-        SFX_NODE_SELECT,
+        SFX_NODE_ONCLICK,
         SFX_UI_CREATE,
-        SFX_UI_SELECT,
-        SFX_UIMENU_SELECT,
+        SFX_UI_ONCLICK,
+        SFX_UIMENU_ONCLICK,
         SFX_UI_COMPLETE,
-        SFX_UI_CANCEL
+        SFX_UI_CANCEL,
+        SFX_KEYBOARD_ONCLICK,
+        SFX_KEYBOARD_DELETE,
     }
 
     // Scene별 BGM Audio Clip을 담을 수 있는 배열
@@ -74,16 +76,11 @@ public class SoundManager : MonoBehaviour
         audioBGM.Stop(); 
     }
 
-    // SFX PLAY 
+    // 프로젝트 SFX PLAY 
     public void PlaySFX(ESFX sfxIdx)
     {
         // SFX 플레이 
         audioSFX.PlayOneShot(sfxs[(int) sfxIdx]);   
     }
-
-
-
-
-
 
 }

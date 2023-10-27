@@ -310,10 +310,17 @@ public class MindMapController : MonoBehaviour
 
                     // 2. 해당 삭제할 노드 삭제 
                     Destroy(deleteNode);
+
+                    // 3. 노드 삭제 SFX 사운드 실행 
+                    SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE); 
                 }
                 else
                 {
                     // 2. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
+
+
+                    // 3. 노드 삭제 SFX 사운드 실행 
+                    SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
                 }
 
             }
@@ -343,14 +350,20 @@ public class MindMapController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
-            // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
+
+        
             GameObject CreateNode = Instantiate(obj, R_indexTip.transform.position, Quaternion.identity);
+            print("새로운 노드를 생성함. "); 
+
+            // 노드 생성시 생성 SFX  사운드 실행 
+            SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
 
             TextMeshProUGUI nodeText = CreateNode.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-         
 
+            // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             CreateNode.transform.SetParent(mindNodeManager.transform);
 
+            // 생성된 노드의 정보에 접근한다. 
             nodeInfo = CreateNode.GetComponentInChildren<MindMapNodeInfo>();
 
             if (nodeInfo.ID == 0)
