@@ -98,7 +98,7 @@ public class MindMapController : MonoBehaviour
 
     private void Awake()
     {
-        mindNodeManager = GameObject.Find("[ MindNodeManager ]");
+        mindNodeManager = GameObject.Find("[ MINDNODE MANAGER ]");
 
 
         if (instance == null)
@@ -143,7 +143,7 @@ public class MindMapController : MonoBehaviour
 
         switch (state)
         {
-
+            
             case State.CREATE:
                 UpdateCreate();
                 break;
@@ -151,7 +151,7 @@ public class MindMapController : MonoBehaviour
                 UpdateSeleted();
                 break;
             case State.DELETE:
-                UpdateDelete();
+                //UpdateDelete();
                 break;
             case State.UPDATECOLOR:
                 UpdateColor();
@@ -288,12 +288,11 @@ public class MindMapController : MonoBehaviour
 
 
     // 마인드 노드를 삭제하는 메소드 
-    private void UpdateDelete()
+    public void UpdateDelete()
     {
-
         // 키보드 V번 키를 누르면 선택된 마인드 노드를 확인하고 삭제.
-        if (Input.GetKeyDown(KeyCode.V))
-        {
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
             GameObject deleteNode = hover;
             MindMapNodeInfo deleteNodeInfo;
 
@@ -322,14 +321,8 @@ public class MindMapController : MonoBehaviour
                     // 3. 노드 삭제 SFX 사운드 실행 
                     SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
                 }
-
             }
-
-        }
-
-
-
-
+        //}
     }
 
     // 마인드 노드 선택하는 메소드 
@@ -347,18 +340,17 @@ public class MindMapController : MonoBehaviour
     {
 
         // z번 키를 누르면 사용자 R_indexTip의 위치에서 노드가 생성된다. (QA 완료 )
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (PlayerInfo.instance.createBubble)
         {
-            GameObject obj = Resources.Load<GameObject>("Prefabs/Test_Node");
-
-        
+            PlayerInfo.instance.createBubble = false;
+            Debug.Log("Hello");
+            GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
             GameObject CreateNode = Instantiate(obj, R_indexTip.transform.position, Quaternion.identity);
-            print("새로운 노드를 생성함. "); 
 
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
 
-            TextMeshProUGUI nodeText = CreateNode.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+            //TextMeshProUGUI nodeText = CreateNode.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
 
             // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             CreateNode.transform.SetParent(mindNodeManager.transform);
@@ -373,7 +365,7 @@ public class MindMapController : MonoBehaviour
 
                 // 임시로 노드의 더미 데이터 삽입.
                 nodeInfo.DATA = "RootNode";
-                nodeText.text = "RootNode";
+                //nodeText.text = "RootNode";
 
                 // 루트 노드(주제)로 지정한다. 
                 nodeInfo.ROOTNODE = true;
@@ -388,8 +380,9 @@ public class MindMapController : MonoBehaviour
 
                 // 임시로 노드의 더미 데이터 삽입.
                 nodeInfo.DATA = "ChildNode_" + nodeInfo.ID;
-                nodeText.text = "ChildNode_" + nodeInfo.ID;
+                //nodeText.text = "ChildNode_" + nodeInfo.ID;
             }
+
 
         }
 

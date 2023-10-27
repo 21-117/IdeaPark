@@ -11,6 +11,9 @@ public class PlayerInfo : MonoBehaviour
     public GameObject cursorObject;
     public GameObject buttonMind;
     public FlexibleColorPicker fcp;
+    public bool createBubble = false;
+    // ¿Þ¼Õ, ¿À¸¥¼Õ
+    public GameObject LeftDirectHand, RightDirectHand;
     private void Awake()
     {
         if(instance != null) Destroy(instance);

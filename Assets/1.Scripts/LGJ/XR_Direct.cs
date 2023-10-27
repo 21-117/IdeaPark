@@ -4,13 +4,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
+using System; 
 
 public class XR_Direct : XRDirectInteractor
 {
     public Transform fingerTip, tumbTip;
     public LayerMask layerMask;
     public float radius = 0.5f;
-    public GameObject sampleBubble;
+    public GameObject sampleBubble, nodemanager;
     private Collider[] cols;
     private float createTime = 2.0f, curTime = 0f, lerpValue, touchTime, touchMaxTime;
 
@@ -23,10 +24,10 @@ public class XR_Direct : XRDirectInteractor
             lerpValue = Mathf.Clamp01(curTime / createTime);
             sampleBubble.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpValue);
             curTime += Time.deltaTime;
-            if (curTime > createTime)
+            if (curTime > createTime && !PlayerInfo.instance.createBubble)
             {
-                GameObject obj = Resources.Load<GameObject>("Bubble");
-                GameObject node = Instantiate(obj, fingerTip.position, Quaternion.identity);
+                // 노드를 만들어도 되는 허용치 부여
+                PlayerInfo.instance.createBubble = true;
                 curTime = 0f;
             }
         }
@@ -41,7 +42,7 @@ public class XR_Direct : XRDirectInteractor
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
         base.OnHoverEntered(args);
-        //MindMapController.setHover(true, args.interactableObject.transform.gameObject);
+        MindMapController.setHover(true, args.interactableObject.transform.gameObject);
 
         Debug.Log("hover entered");
     }
@@ -50,7 +51,6 @@ public class XR_Direct : XRDirectInteractor
     {
         base.OnHoverExited(args);
         //MindMapController.setHover(false, null);
-        
         if (args.interactableObject.transform.GetComponent<InstanceID>().curObjectType == ObjectType.Circle)
         {
             PlayerInfo.instance.cursorObject = args.interactableObject.transform.gameObject;
