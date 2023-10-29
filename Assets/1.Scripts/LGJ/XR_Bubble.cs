@@ -24,50 +24,55 @@ public class XR_Bubble : XRGrabInteractable
 
     }
 
-    private void OnTriggerExit(Collider other)
+    [System.Obsolete]
+    protected override void OnHoverExited(XRBaseInteractor interactor)
     {
-        if (other == CheckFingerTip.instance.fingerCol)
-        {
-            if (!buttonMind.activeSelf)
-            {
-                buttonMind.SetActive(true);
-                buttonMind.transform.position = this.transform.position;
-            }
-            else if (buttonMind.activeSelf)
-            {
-                buttonMind.SetActive(false);
+        base.OnHoverExited(interactor);
 
-                foreach (Toggle toggle in buttonToggles)
-                {
-                    toggle.isOn = false;
-                }
+        //Debug.Log(interactor.gameObject.name);
+
+        //if (!buttonMind.activeSelf && interactor.TryGetComponent(out CheckFingerTip checkFingerTip))
+        //{
+        //    buttonMind.SetActive(true);
+        //    buttonMind.transform.position = this.transform.position;
+        //}
+        //else if (buttonMind.activeSelf && interactor.TryGetComponent(out CheckFingerTip checkFingerTip2))
+        //{
+        //    buttonMind.SetActive(false);
+
+        //    foreach (Toggle toggle in buttonToggles)
+        //    {
+        //        toggle.isOn = false;
+        //    }
+        //}
+        
+        if(interactor.TryGetComponent(out XR_Direct dir))
+        {
+            MindMapController.state = MindMapController.State.CREATE;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+{
+    if (other == CheckFingerTip.instance.fingerCol)
+    {
+        if (!buttonMind.activeSelf)
+        {
+            buttonMind.SetActive(true);
+            buttonMind.transform.position = this.transform.position;
+        }
+        else if (buttonMind.activeSelf)
+        {
+            buttonMind.SetActive(false);
+
+            foreach (Toggle toggle in buttonToggles)
+            {
+                toggle.isOn = false;
             }
         }
     }
 }
+}
 
-    //[System.Obsolete]
-    //protected override void OnHoverExited(XRBaseInteractor interactor)
-    //{
-    //    base.OnHoverExited(interactor);
 
-    //    Debug.Log(interactor.gameObject.name);
-    //    if (!buttonMind.activeSelf && interactor.TryGetComponent(out CheckFingerTip checkFingerTip))
-    //    {
-    //        buttonMind.SetActive(true);
-    //        buttonMind.transform.position = this.transform.position;
-    //    }
-    //    else
-    //    {
-    //        if (buttonMind.activeSelf && interactor.TryGetComponent(out CheckFingerTip checkFingerTip2))
-    //        {
-    //            buttonMind.SetActive(false);
-
-    //            foreach (Toggle toggle in buttonToggles)
-    //            {
-    //                toggle.isOn = false;
-    //            }
-    //        }
-    //    }
-    //}
 

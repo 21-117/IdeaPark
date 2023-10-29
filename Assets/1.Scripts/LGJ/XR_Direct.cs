@@ -20,9 +20,12 @@ public class XR_Direct : XRDirectInteractor
         cols = Physics.OverlapSphere(this.transform.position, radius, layerMask);
         if(cols.Length == 0 && CheckFingerTip.instance.touchTip)
         {
-            sampleBubble.SetActive(true);
             lerpValue = Mathf.Clamp01(curTime / createTime);
-            sampleBubble.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpValue);
+            if (sampleBubble != null)
+            {
+                sampleBubble.SetActive(true);
+                sampleBubble.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpValue);
+            }
             curTime += Time.deltaTime;
             if (curTime > createTime && !PlayerInfo.instance.createBubble)
             {
@@ -33,7 +36,7 @@ public class XR_Direct : XRDirectInteractor
         }
         else
         {
-            sampleBubble.SetActive(false);
+            if(sampleBubble != null) sampleBubble.SetActive(false);
             curTime = 0f;
         }
     }
