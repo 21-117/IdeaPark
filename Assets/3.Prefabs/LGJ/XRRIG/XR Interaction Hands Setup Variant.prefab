@@ -726,6 +726,7 @@ MonoBehaviour:
     m_Bits: 1024
   radius: 0.15
   sampleBubble: {fileID: 7526447592355817780}
+  nodemanager: {fileID: 0}
 --- !u!1 &8175082862065269699 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2689664483491548960, guid: 5eccbf4be2c00e94689ee8062e4e7276,
@@ -765,6 +766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173a470557f5ca64abe30d1361350e3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fingerCol: {fileID: 0}
   touchTip: 0
 --- !u!54 &434782849949758236
 Rigidbody:

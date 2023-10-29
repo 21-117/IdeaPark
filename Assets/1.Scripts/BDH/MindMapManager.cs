@@ -135,9 +135,9 @@ public class MindMapManager : MonoBehaviour
     public MindMapNodeInfo RootFindTree()
     {
         // MindNodeManager 오브젝트의 자식 노드들을 순회한다.
-        for(int i = 0; i < nodeManager.transform.childCount; i++)
+        for (int i = 0; i < nodeManager.transform.childCount; i++)
         {
-            if(nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>().ROOTNODE == true)
+            if (nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>().ROOTNODE == true)
             {
                 // 자식 노드의 Getcomponenent 스크립트인 MindMapNodeInfo에서 true인 노드를 찾아 반환한다. 
                 return nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>();
@@ -150,15 +150,16 @@ public class MindMapManager : MonoBehaviour
     // 마인드 맵의 root의 자식 리스트를 출력 
     public void PrintChildListNode(MindMapNodeInfo root)
     {
-        foreach (var node in root.Children) {
+        foreach (var node in root.Children)
+        {
             Debug.Log(node.DATA);
         }
     }
 
     // 마인드 맵의 root의 자식 리스트 1번 반환.
-    public MindMapNodeInfo returnRootNode(MindMapNodeInfo root, string name )
+    public MindMapNodeInfo returnRootNode(MindMapNodeInfo root, string name)
     {
-        for(int i = 0; i < root.Children.Count; i ++)
+        for (int i = 0; i < root.Children.Count; i++)
         {
             if (root.Children[i].DATA == name)
             {
@@ -167,7 +168,7 @@ public class MindMapManager : MonoBehaviour
             }
         }
 
-        return null; 
+        return null;
     }
 
     // 마인드 맵의 노드 전체를 출력하는 메소드. -> (전체를 저장하는 메소드로 활용)
@@ -183,11 +184,11 @@ public class MindMapManager : MonoBehaviour
             PrintTree(child);
         }
 
-    } 
+    }
 
     // 마인드 맵의 분기에 대한 깊이를 반환하는 메소드. 
     // 예외 처리 - > 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
-    public  int FindGetHeight(MindMapNodeInfo root)
+    public int FindGetHeight(MindMapNodeInfo root)
     {
         int height = 0;
 
@@ -205,7 +206,7 @@ public class MindMapManager : MonoBehaviour
     public MindMapNodeInfo FindAncestor(MindMapNodeInfo currentNode)
     {
 
-        return null; 
+        return null;
     }
 
     // 해당 노드의 마인드 맵 서브 트리를 찾아서 반환하는 메소드 . ( 반환타입 : List<MindMapNodeInfo>)  
@@ -218,10 +219,23 @@ public class MindMapManager : MonoBehaviour
         // 재귀적으로 자식의 서브트리 데이터 접근
         foreach (MindMapNodeInfo child in currentNode.Children)
         {
-            FindSubTree(child); 
+            FindSubTree(child);
         }
 
-           
+
+    }
+
+    public void DeleteSubTree(MindMapNodeInfo root)
+    {
+
+        print("현재 삭제할 서브트리 노드 : " + root.transform.parent.gameObject);
+        Destroy(root.transform.parent.gameObject);
+        // 재귀적으로 자식들의 데이터 접근
+        foreach (MindMapNodeInfo child in root.Children)
+        {
+            DeleteSubTree(child);
+        }
+
     }
 
     // 생성된 nodeList 정보들을 JSON 형태로 저장하는 메소드 

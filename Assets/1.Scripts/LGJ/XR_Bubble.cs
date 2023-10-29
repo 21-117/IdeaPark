@@ -13,6 +13,13 @@ public class XR_Bubble : XRGrabInteractable
     public GameObject buttonMind;
     private int toggleCount;
     private Toggle[] buttonToggles;
+    public Text mindText;
+
+    private void Awake()
+    {
+        base.Awake();
+        mindText = this.transform.GetComponentInChildren<Text>();
+    }
 
     private void Start()
     {
@@ -21,7 +28,6 @@ public class XR_Bubble : XRGrabInteractable
         buttonToggles = new Toggle[toggleCount];
         // 이 스크립트를 가진 게임 오브젝트의 자식들 중 Toggle 컴포넌트를 가진 오브젝트들을 찾기
         buttonToggles = buttonMind.GetComponentsInChildren<Toggle>();
-
     }
 
     [System.Obsolete]
@@ -54,7 +60,7 @@ public class XR_Bubble : XRGrabInteractable
 
     private void OnTriggerExit(Collider other)
     {
-        if (other == CheckFingerTip.instance.fingerCol)
+        if (other == CheckFingerTip.instance.fingerCol && !CheckFingerTip.instance.touchTip)
         {
             if (!buttonMind.activeSelf)
             {

@@ -16,11 +16,17 @@ public class CheckFingerTip : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        touchTip = true;
+        if (other.gameObject.layer == 6)
+        {
+            touchTip = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        touchTip = false;
+        if (other.gameObject.layer == 6)
+        {
+            touchTip = false;
+        }
     }
 }

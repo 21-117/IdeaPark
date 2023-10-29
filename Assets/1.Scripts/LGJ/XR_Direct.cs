@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
-using System; 
+using System;
 
 public class XR_Direct : XRDirectInteractor
 {
@@ -13,12 +13,18 @@ public class XR_Direct : XRDirectInteractor
     public float radius = 0.5f;
     public GameObject sampleBubble, nodemanager;
     private Collider[] cols;
-    private float createTime = 2.0f, curTime = 0f, lerpValue, touchTime, touchMaxTime;
+    private float createTime = 2.0f, curTime = 0f, lerpValue, touchTime = 0f, touchMaxTime = 2.0f;
 
     void Update()
     {
+        touchTime += Time.deltaTime;
+        if (touchMaxTime > touchTime)
+        {
+            PlayerInfo.instance.buttonMind.SetActive(false);
+        }
+
         cols = Physics.OverlapSphere(this.transform.position, radius, layerMask);
-        if(cols.Length == 0 && CheckFingerTip.instance.touchTip)
+        if (cols.Length == 0 && CheckFingerTip.instance.touchTip)
         {
             lerpValue = Mathf.Clamp01(curTime / createTime);
             if (sampleBubble != null)
@@ -32,11 +38,12 @@ public class XR_Direct : XRDirectInteractor
                 // 노드를 만들어도 되는 허용치 부여
                 PlayerInfo.instance.createBubble = true;
                 curTime = 0f;
+                touchTime = 0f;
             }
         }
         else
         {
-            if(sampleBubble != null) sampleBubble.SetActive(false);
+            if (sampleBubble != null) sampleBubble.SetActive(false);
             curTime = 0f;
         }
     }
@@ -64,16 +71,18 @@ public class XR_Direct : XRDirectInteractor
 
 
     [System.Obsolete]
-    protected override void OnSelectEntering(SelectEnterEventArgs args)
+    protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        base.OnSelectEntering(args);                                                                                                                
+        base.OnSelectEntered(args);
         Debug.Log("select entered");
     }
-    protected override void OnSelectExiting(SelectExitEventArgs args)
+    protected override void OnSelectExited(SelectExitEventArgs args)
     {
-        base.OnSelectExiting(args);
+        base.OnSelectExited(args);
+        touchTime = 0f;
         //MindMapController.setPinch(true, args.interactableObject.transform.gameObject);
         //MindMapController.state = MindMapController.State.CONNECTION;
         Debug.Log("select exited");
     }
+
 }
