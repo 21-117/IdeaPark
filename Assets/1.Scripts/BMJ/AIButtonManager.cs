@@ -24,11 +24,11 @@ public class AIButtonManager : MonoBehaviour
     //5글자 이상인 음식과 관련된 예제 리스트 5개를 만들어보겠다.
     private List<string> data = new List<string>()
     {
-        "피자 냠냠",
-        "치킨 먹자",
-        "족발 세트",
-        "햄버거 맛있다",
-        "원할머니 보쌈"
+        "VR,AR 경험",
+        "소셜 네트워킹",
+        "경제 시스템",
+        "XR 콘텐츠 공유",
+        "가상 교육"
     };
 
     private void Start()
