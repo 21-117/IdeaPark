@@ -11,7 +11,7 @@ public class XR_Ray : XRRayInteractor
     protected override void OnSelectEntering(SelectEnterEventArgs args)
     {
         base.OnSelectEntering(args);
-        MindMapController.state = MindMapController.State.CONNECTION;
+        //indMapController.state = MindMapController.State.CONNECTION;
         Debug.Log("select entered");
     }
     protected override void OnSelectExiting(SelectExitEventArgs args)
@@ -19,7 +19,7 @@ public class XR_Ray : XRRayInteractor
         base.OnSelectExiting(args);
         //MindMapController.setPinch(true, args.interactableObject.transform.gameObject);
         //MindMapController.state = MindMapController.State.CONNECTION;
-        MindMapController.instance.UpdateConnection();
+        //MindMapController.instance.UpdateConnection();
         Debug.Log("select exited");
     }
 }

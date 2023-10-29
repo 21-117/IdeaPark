@@ -6,26 +6,16 @@ public class PressMindButton : MonoBehaviour
 {
     public GameObject palette;
     public GameObject keyboard;
-    public void OnOffPalette()
+    public GameObject trash;
+    public void OnOffButton(GameObject ui)
     {
-        if (!palette.activeSelf)
+        if (!ui.activeSelf)
         {
-            palette.SetActive(true);
+            ui.SetActive(true);
         }
         else
         {
-            palette.SetActive(false);
-        }
-    }
-    public void OnOffKeyboard()
-    {
-        if (!keyboard.activeSelf)
-        {
-            keyboard.SetActive(true);
-        }
-        else
-        {
-            keyboard.SetActive(false);
+            ui.SetActive(false);
         }
     }
 }

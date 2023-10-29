@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00080954505, g: 0.004162026, b: 0.020064274, a: 1}
+  m_IndirectSpecularColor: {r: 0.0007876151, g: 0.004127566, b: 0.0200601, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -857,7 +857,7 @@ PrefabInstance:
     - target: {fileID: 2489505614045925860, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2489505614045925860, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
@@ -920,6 +920,31 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3850129488563999255, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850129488563999255, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnOffButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850129488563999255, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PressMindButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850129488563999255, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 879818956}
+    - target: {fileID: 3850129488563999255, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4829600783555674320, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
       propertyPath: m_Name
@@ -943,7 +968,7 @@ PrefabInstance:
     - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
@@ -973,7 +998,7 @@ PrefabInstance:
     - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnOffKeyboard
+      value: OnOffButton
       objectReference: {fileID: 0}
     - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
@@ -992,8 +1017,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1841104723}
+    - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+        type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5093955435125889203, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
         type: 3}
@@ -1122,6 +1152,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1143153400}
   m_SourcePrefab: {fileID: 100100000, guid: fb87b6fbdd0fa3d41af1e87f3aee705d, type: 3}
+--- !u!1 &879818956 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3065361273774572706, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
+    type: 3}
+  m_PrefabInstance: {fileID: 879818953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &942481552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1285,6 +1321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   palette: {fileID: 0}
   keyboard: {fileID: 1841104723}
+  trash: {fileID: 0}
 --- !u!114 &1200177844 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8070140069175283179, guid: fb87b6fbdd0fa3d41af1e87f3aee705d,
