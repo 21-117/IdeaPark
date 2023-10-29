@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
 
-
 public class MindMapController : MonoBehaviour
 {
     public static MindMapController instance;
@@ -143,7 +142,7 @@ public class MindMapController : MonoBehaviour
 
         switch (state)
         {
-            
+
             case State.CREATE:
                 UpdateCreate();
                 break;
@@ -194,65 +193,70 @@ public class MindMapController : MonoBehaviour
     {
         if (hover != null)
         {
-            currentConnectionNode = hover.GetComponentInChildren<ConnectionNodeController>();
+            currentConnectionNode = PlayerInfo.instance.rayObject.GetComponentInChildren<ConnectionNodeController>();
 
             // X번 키를 누르면 활성화된 "링크"를 허공에 끌어 당기면 자동으로 R_indexTip의 위치에 라인렌더러가 생긴다. (QA 완료)
-
-            if (rightIndexTip)
+            if (Input.GetKeyDown(KeyCode.X))
             {
-                currentConnectionNode.ConnectionNode(R_indexTip, true);
-                prevConnectionNode = currentConnectionNode;
-                rightIndexTip = false;
+                if (rightIndexTip)
+                {
+                    currentConnectionNode.ConnectionNode(R_indexTip, true);
+                    prevConnectionNode = currentConnectionNode;
+                    rightIndexTip = false;
+                }
             }
-            //라인렌더러를 연결, 마인드맵의 부모 노드와 자식 노드를 연결. 
-            else if (!rightIndexTip)
+            if (Input.GetKeyDown(KeyCode.C))
             {
-                MindMapNodeInfo prevNodeInfo = prevConnectionNode.GetComponent<MindMapNodeInfo>();
-                MindMapNodeInfo currentNodeInfo = currentConnectionNode.GetComponent<MindMapNodeInfo>();
-
-                //// 이전에 임시 저장 노드 정보, 현재 연결할 노드 정보 : ID 값을 비교한다. 
-                bool nodeIdCheck = (prevNodeInfo.ID < currentNodeInfo.ID) ? true : false;
-
-
-
-                // 1.예외 처리 - > 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
-                // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
-                // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
-
-                // 2. 예외 처리 - > FindGetHeight(MindMapNodeInfo root) 함수를 통해 마인드 맵의 깊이를 확인
-                // 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
-
-
-
-                if (nodeIdCheck)
+                //라인렌더러를 연결, 마인드맵의 부모 노드와 자식 노드를 연결. 
+                if (!rightIndexTip)
                 {
-                    // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
-                    // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
+                    MindMapNodeInfo prevNodeInfo = prevConnectionNode.GetComponent<MindMapNodeInfo>();
+                    MindMapNodeInfo currentNodeInfo = currentConnectionNode.GetComponent<MindMapNodeInfo>();
 
-                    print("ID 값 확인 : " + "이전에 생성한 노드 정보 : " + prevNodeInfo.ID + "  " + "현재 연결할 노드 정보 : " + currentNodeInfo.ID);
+                    //// 이전에 임시 저장 노드 정보, 현재 연결할 노드 정보 : ID 값을 비교한다. 
+                    bool nodeIdCheck = (prevNodeInfo.ID < currentNodeInfo.ID) ? true : false;
 
-                    // "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다. ( 부모 - 자식) 
-                    prevConnectionNode.ConnectionNode(currentConnectionNode.transform.gameObject, false);
 
-                    // prevConnectionNode(부모) 자식 노드 리스트 Children에 currentConnectionNode (자식) 노드를 추가한다. 
-                    prevNodeInfo.Children.Add(currentNodeInfo);
 
+                    // 1.예외 처리 - > 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
+                    // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
+                    // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
+
+                    // 2. 예외 처리 - > FindGetHeight(MindMapNodeInfo root) 함수를 통해 마인드 맵의 깊이를 확인
+                    // 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
+
+
+
+                    if (nodeIdCheck)
+                    {
+                        // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
+                        // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
+
+                        print("ID 값 확인 : " + "이전에 생성한 노드 정보 : " + prevNodeInfo.ID + "  " + "현재 연결할 노드 정보 : " + currentNodeInfo.ID);
+
+                        // "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다. ( 부모 - 자식) 
+                        prevConnectionNode.ConnectionNode(currentConnectionNode.transform.gameObject, false);
+
+                        // prevConnectionNode(부모) 자식 노드 리스트 Children에 currentConnectionNode (자식) 노드를 추가한다. 
+                        prevNodeInfo.Children.Add(currentNodeInfo);
+
+                    }
+                    else
+                    {
+                        // 이전에 생성한 노드 ID 가 높은 경우 단순히 연결만 지원한다. (양 방향 링크 지원)
+                        // 제한 사항 -> 자식에서 부모로 연결할 수 없다. 
+                        currentConnectionNode.ConnectionNode(prevConnectionNode.transform.gameObject, false);
+
+                    }
+
+                    //  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
+                    prevConnectionNode.OnDestroyIndexTip(R_indexTip);
+
+                    rightIndexTip = true;
                 }
-                else
-                {
-                    // 이전에 생성한 노드 ID 가 높은 경우 단순히 연결만 지원한다. (양 방향 링크 지원)
-                    // 제한 사항 -> 자식에서 부모로 연결할 수 없다. 
-                    currentConnectionNode.ConnectionNode(prevConnectionNode.transform.gameObject, false);
-
-                }
-
-                //  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
-                prevConnectionNode.OnDestroyIndexTip(R_indexTip);
-
-                rightIndexTip = true;
             }
 
-            
+
 
             //currentConnectionNode = hover.GetComponentInChildren<ConnectionNodeController>();
 
@@ -352,35 +356,33 @@ public class MindMapController : MonoBehaviour
         // 키보드 V번 키를 누르면 선택된 마인드 노드를 확인하고 삭제.
         //if (Input.GetKeyDown(KeyCode.V))
         //{
-            GameObject deleteNode = hover;
-            MindMapNodeInfo deleteNodeInfo;
+        GameObject deleteNode = hover;
+        MindMapNodeInfo deleteNodeInfo;
 
-            if (deleteNode != null)
+        if (deleteNode != null)
+        {
+            deleteNodeInfo = deleteNode.GetComponentInChildren<MindMapNodeInfo>();
+            PlayerInfo.instance.cursorObject.GetComponent<XR_Bubble>().OffButtonMind();
+            // 1. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
+            if (deleteNodeInfo.Children.Count == 0)
             {
-                deleteNodeInfo = deleteNode.GetComponentInChildren<MindMapNodeInfo>();
+                // 1. 연결되어 있는 노드 렌더러들을 모두 삭제.                 
+                ConnectionNodeController.destroyLineRenderer(deleteNode);
 
-                // 1. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
-                if (deleteNodeInfo.Children.Count == 0)
-                {
+                // 2. 해당 삭제할 노드 삭제 
+                Destroy(deleteNode);
 
-                    // 1. 연결되어 있는 노드 렌더러들을 모두 삭제.                 
-                    ConnectionNodeController.destroyLineRenderer(deleteNode);
-
-                    // 2. 해당 삭제할 노드 삭제 
-                    Destroy(deleteNode);
-
-                    // 3. 노드 삭제 SFX 사운드 실행 
-                    SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE); 
-                }
-                else
-                {
-                    // 2. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
-
-
-                    // 3. 노드 삭제 SFX 사운드 실행 
-                    SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
-                }
+                // 3. 노드 삭제 SFX 사운드 실행 
+                SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
             }
+            else
+            {
+                // 2. 중간 노드를 삭제하는 경우는 서브트리 전체를 삭제 한다.
+
+                // 3. 노드 삭제 SFX 사운드 실행 
+                SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
+            }
+        }
         //}
     }
 

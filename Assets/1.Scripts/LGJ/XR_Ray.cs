@@ -11,12 +11,23 @@ public class XR_Ray : XRRayInteractor
     protected override void OnSelectEntering(SelectEnterEventArgs args)
     {
         base.OnSelectEntering(args);
-        //indMapController.state = MindMapController.State.CONNECTION;
+        MindMapController.state = MindMapController.State.CONNECTION;
         Debug.Log("select entered");
+        if (args.interactableObject.transform.TryGetComponent(out XR_Bubble bubble))
+        {
+            PlayerInfo.instance.rayObject = bubble.gameObject;
+            bubble.trackPosition = false;
+        }
     }
     protected override void OnSelectExiting(SelectExitEventArgs args)
     {
         base.OnSelectExiting(args);
+        MindMapController.state = MindMapController.State.CREATE;
+        if (args.interactableObject.transform.TryGetComponent(out XR_Bubble bubble))
+        {
+            PlayerInfo.instance.rayObject = null;
+            bubble.trackPosition = true;
+        }
         //MindMapController.setPinch(true, args.interactableObject.transform.gameObject);
         //MindMapController.state = MindMapController.State.CONNECTION;
         //MindMapController.instance.UpdateConnection();

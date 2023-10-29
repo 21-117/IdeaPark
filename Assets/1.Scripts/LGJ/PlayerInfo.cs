@@ -9,6 +9,7 @@ public class PlayerInfo : MonoBehaviour
 
     // 현재 하이라이트 된 오브젝트
     public GameObject cursorObject;
+    public GameObject rayObject;
     public GameObject buttonMind;
     public FlexibleColorPicker fcp;
     public bool createBubble = false;

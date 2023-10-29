@@ -45,23 +45,37 @@ public class XR_Bubble : XRGrabInteractable
         //        toggle.isOn = false;
         //    }
         //}
-        
-        if(interactor.TryGetComponent(out XR_Direct dir))
+
+        if (interactor.TryGetComponent(out XR_Direct dir))
         {
             MindMapController.state = MindMapController.State.CREATE;
         }
     }
 
     private void OnTriggerExit(Collider other)
-{
-    if (other == CheckFingerTip.instance.fingerCol)
     {
-        if (!buttonMind.activeSelf)
+        if (other == CheckFingerTip.instance.fingerCol)
         {
-            buttonMind.SetActive(true);
-            buttonMind.transform.position = this.transform.position;
+            if (!buttonMind.activeSelf)
+            {
+                buttonMind.SetActive(true);
+                buttonMind.transform.position = this.transform.position;
+            }
+            else if (buttonMind.activeSelf)
+            {
+                buttonMind.SetActive(false);
+
+                foreach (Toggle toggle in buttonToggles)
+                {
+                    toggle.isOn = false;
+                }
+            }
         }
-        else if (buttonMind.activeSelf)
+    }
+
+    public void OffButtonMind()
+    {
+        if (buttonMind.activeSelf)
         {
             buttonMind.SetActive(false);
 
@@ -71,7 +85,6 @@ public class XR_Bubble : XRGrabInteractable
             }
         }
     }
-}
 }
 
 
