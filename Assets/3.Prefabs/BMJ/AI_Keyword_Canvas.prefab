@@ -503,6 +503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AIButton: {fileID: 3681707324875355568, guid: bcf3e125d5ccbb14fbadc040bec3d6fb,
     type: 3}
+  attachTransform: {fileID: 0}
   parent: {fileID: 3480580635309444957}
 --- !u!1 &5349820092755119703
 GameObject:
