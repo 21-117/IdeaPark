@@ -91,15 +91,22 @@ public class HttpInfo
 
 public class HttpManager : MonoBehaviour
 {
-    static HttpManager instance;
+    public static HttpManager instance;
+    private List<string> getAiData; 
 
+    // AIList 프로퍼티 
+    public List<string> GETAIDATA
+    {
+        get { return getAiData; }
+        set { getAiData = value; }
+    }
   
     public static HttpManager Get()
     {
         if (instance == null)
         {
             
-            GameObject go = new GameObject("HttpStudy");
+            GameObject go = new GameObject("httpManager");
           
             go.AddComponent<HttpManager>();
         }
@@ -168,7 +175,9 @@ public class HttpManager : MonoBehaviour
             {
                 print(" 서버에서 요청 성공.! ");
                 print("서버에서 온 AI 데이터 값 : " +req.downloadHandler.text);
-            
+
+                // AIList에 http 통신 데이터를 추가.  
+                getAiData.Add(req.downloadHandler.text); 
                 httpInfo.onReceiveData(req.downloadHandler); 
 
             }

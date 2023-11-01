@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static System.Net.WebRequestMethods;
 
 public class AIButtonManager : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class AIButtonManager : MonoBehaviour
     // 해당 이벤트 오브젝트 데이터
     private string EventButtonData;
 
+    // httpManager 싱글톤 인스턴스 
+    HttpManager http;
+
     //5글자 이상인 음식과 관련된 예제 리스트 5개를 만들어보겠다.
     private List<string> data = new List<string>()
     {
@@ -31,6 +35,10 @@ public class AIButtonManager : MonoBehaviour
         "XR 콘텐츠 공유",
         "가상 교육"
     };
+    private void Awake()
+    {
+        http = HttpManager.instance;
+    }
 
     private void Start()
     {
@@ -40,7 +48,20 @@ public class AIButtonManager : MonoBehaviour
 
     private void CreateAIKeyword()
     {
-        //부모를 지정해서 Prefab을 생성한다.
+        //// http 통신으로 받은 AI 추천 키워드를 반영한다. 
+        //for (int i = 0; i < http.GETAIDATA.Count; i++)
+        //{
+        //    // AI 키워드 버튼을 생성. 
+        //    GameObject button_i = Instantiate(AIButton, parent);
+
+        //    // AI 키워드 버튼의 Text 부분에 데이터를 하나씩 넣는다.
+        //    button_i.GetComponentInChildren<TextMeshProUGUI>().text = http.GETAIDATA[i];
+
+        //    //버튼마다 클릭 이벤트를 설정.
+        //    Button btn = button_i.GetComponent<Button>();
+        //    btn.onClick.AddListener(OnClickButtonEvent);
+        //}
+
         for (int i = 0; i < data.Count; i++)
         {
             GameObject button_i = Instantiate(AIButton, parent);
@@ -48,7 +69,7 @@ public class AIButtonManager : MonoBehaviour
             //button 프리팹에 있는 버튼의 Text 부분에 데이터를 하나씩 넣는다.
             button_i.GetComponentInChildren<TextMeshProUGUI>().text = data[i];
 
-            // 버튼마다 클릭 이벤트를 설정.
+            //버튼마다 클릭 이벤트를 설정.
             Button btn = button_i.GetComponent<Button>();
             btn.onClick.AddListener(OnClickButtonEvent);
         }

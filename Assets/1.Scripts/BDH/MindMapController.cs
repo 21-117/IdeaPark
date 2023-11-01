@@ -149,7 +149,7 @@ public class MindMapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+       
         switch (state)
         {
 
@@ -286,8 +286,6 @@ public class MindMapController : MonoBehaviour
                     //// 이전에 임시 저장 노드 정보, 현재 연결할 노드 정보 : ID 값을 비교한다. 
                     bool nodeIdCheck = (prevNodeInfo.ID < currentNodeInfo.ID) ? true : false;
 
-
-
                     // 1.예외 처리 - > 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
                     // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
                     // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
@@ -353,16 +351,20 @@ public class MindMapController : MonoBehaviour
     // 마인드 노드를 삭제하는 메소드 
     public void UpdateDelete()
     {
-        // 키보드 V번 키를 누르면 선택된 마인드 노드를 확인하고 삭제.
-        //if (Input.GetKeyDown(KeyCode.V))
-        //{
+      
         GameObject deleteNode = hover;
         MindMapNodeInfo deleteNodeInfo;
 
         if (deleteNode != null)
         {
+          
             deleteNodeInfo = deleteNode.GetComponentInChildren<MindMapNodeInfo>();
+
+            // 삭제할 노드의 삭제할 1번, 2번으로 해결할 수 있나,,,? 
+            print("현재 삭제할려는 노드의 리스트의 갯수 확인. : " + deleteNodeInfo.Children.Count);
+             
             PlayerInfo.instance.cursorObject.GetComponent<XR_Bubble>().OffButtonMind();
+
             // 1. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
             if (deleteNodeInfo.Children.Count == 0)
             {
@@ -382,14 +384,14 @@ public class MindMapController : MonoBehaviour
                 MindMapNodeInfo nodeInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
                 if (nodeInfo != null)
                 {
-
+                    // 3. 해당 노드의 서브트리를 모두 찾아서 삭제. 
                     MindMapManager.instance.DeleteSubTree(nodeInfo);
                 }
-                // 3. 노드 삭제 SFX 사운드 실행 
+                // 4. 노드 삭제 SFX 사운드 실행 
                 SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
             }
         }
-        //}
+      
     }
 
     // 마인드 노드 선택하는 메소드 
@@ -410,14 +412,11 @@ public class MindMapController : MonoBehaviour
         if (PlayerInfo.instance.createBubble)
         {
             PlayerInfo.instance.createBubble = false;
-            Debug.Log("Hello");
             GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
             GameObject CreateNode = Instantiate(obj, attchTransform.position, Quaternion.identity);
 
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
-
-            //TextMeshProUGUI nodeText = CreateNode.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
 
             // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             CreateNode.transform.SetParent(mindNodeManager.transform);
@@ -433,7 +432,6 @@ public class MindMapController : MonoBehaviour
                 // 임시로 노드의 더미 데이터 삽입.
                 nodeInfo.DATA = value;
                 CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
-                //nodeText.text = "RootNode";
 
                 // 루트 노드(주제)로 지정한다. 
                 nodeInfo.ROOTNODE = true;
@@ -446,12 +444,13 @@ public class MindMapController : MonoBehaviour
                 // 오브젝트 이름을 자식 노드로 변경.
                 CreateNode.name = "ChildNode_" + nodeInfo.ID;
 
-                // 임시로 노드의 더미 데이터 삽입.
-                //nodeInfo.DATA = "ChildNode_" + nodeInfo.ID;
+                // 자식 노드의 데이터 삽입.
                 nodeInfo.DATA = value;
+
+                // 자식 노드의 Text. 
                 CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
 
-                //nodeText.text = "ChildNode_" + nodeInfo.ID;
+
             }
 
 
