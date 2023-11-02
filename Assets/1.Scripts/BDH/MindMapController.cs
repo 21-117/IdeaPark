@@ -26,7 +26,7 @@ public class MindMapController : MonoBehaviour
     private MindMapNodeInfo nodeInfo;
 
     // 갱신된 현재 노드의 라인렌더러 controller 
-    public ConnectionNodeController currentConnectionNode = null;
+    private ConnectionNodeController currentConnectionNode = null;
 
     // 이전 노드의 임시 라인렌더러 controller 
     private ConnectionNodeController prevConnectionNode;
@@ -196,8 +196,29 @@ public class MindMapController : MonoBehaviour
         {
             state = State.DELETE;
         }
+
+        // 4번 키를 누르면 현재 생성된 모든 노드의 데이터를 출력.
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            // 루트 노드를 찾아서 반환 
+            MindMapNodeInfo root = MindMapManager.instance.RootFindTree();
+            MindMapManager.instance.PrintTree(root);
+        }
+
+        // 5번 키를 누르면 현재 Hover된 노드의 자식 리스트 데이터를 출력
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            MindMapNodeInfo currentNodeInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
+            
+            if (currentNodeInfo != null)
+            {
+
+
+            }
+        }
     }
 
+ 
     public void firstNode()
     {
         if (rightIndexTip)
@@ -430,7 +451,8 @@ public class MindMapController : MonoBehaviour
                 CreateNode.name = "RootNode";
 
                 // 임시로 노드의 더미 데이터 삽입.
-                nodeInfo.DATA = value;
+                //nodeInfo.DATA = value;
+                nodeInfo.DATA = "RootNode" + nodeInfo.ID.ToString(); 
                 CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
 
                 // 루트 노드(주제)로 지정한다. 
@@ -445,7 +467,8 @@ public class MindMapController : MonoBehaviour
                 CreateNode.name = "ChildNode_" + nodeInfo.ID;
 
                 // 자식 노드의 데이터 삽입.
-                nodeInfo.DATA = value;
+                //nodeInfo.DATA = value;
+                nodeInfo.DATA = "Child" + nodeInfo.ID.ToString(); 
 
                 // 자식 노드의 Text. 
                 CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;

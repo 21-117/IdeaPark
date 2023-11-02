@@ -8,13 +8,13 @@ public class MindMapTest : MonoBehaviour
     void Start()
     {
         // MindMap 클래스의 MakeMindMapTree 메서드를 호출하여 마인드 맵을 만듭니다.
-        MindMapNodeInfo root = MindMapManager.instance.MakeMindMapTree();
+        //MindMapNodeInfo root = MindMapManager.instance.MakeMindMapTree();
 
         // 마인드 맵 "수업 시간" 노드를 찾는다. 
-        MindMapNodeInfo tempNode = MindMapManager.instance.returnRootNode(root, "수업 시간");
+        //MindMapNodeInfo tempNode = MindMapManager.instance.returnRootNode(root, "수업 시간");
 
         // 마인드 맵 "수업 시간" 모든 서브트리를 출력
-        MindMapManager.instance.FindSubTree(tempNode);
+        // MindMapManager.instance.FindSubTree(tempNode);
 
         // 마인드 맵의 root의 자식 리스트를 DATA 출력 
         //MindMapManager.instance.PrintChildTree(root);

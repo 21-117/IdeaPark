@@ -63,73 +63,73 @@ public class MindMapManager : MonoBehaviour
     }
 
 
-    // 마인드 맵을 생성하여 반환하는 메소드. 
-    public MindMapNodeInfo MakeMindMapTree()
-    {
-        // 예시 마인드맵 구조.
-        // 중심 주제 노드 : 과학 실험
-        // 주요 분기 노드 : 동아리 활동, 수업 시간, 독서 활동
-        // 하위 분기 노드
-        // 1. 동아리 활동 -> { 가입 이유, 어떤 동아리, 주요 활동}
-        // 2. 수업 시간 -> { 관련 과목, 과목 선택 이유, 학습한 내용}
-        // 3. 독서 활동 -> { 관련 독서, 알게된 점, 독서의 계기}
+    //마인드 맵을 생성하여 반환하는 메소드.
+    //public MindMapNodeInfo MakeMindMapTree()
+    //{
+    //    예시 마인드맵 구조.
+    //     중심 주제 노드: 과학 실험
+    //     주요 분기 노드: 동아리 활동, 수업 시간, 독서 활동
+    //     하위 분기 노드
+    //     1.동아리 활동-> { 가입 이유, 어떤 동아리, 주요 활동}
+    //    2.수업 시간-> { 관련 과목, 과목 선택 이유, 학습한 내용}
+    //    3.독서 활동-> { 관련 독서, 알게된 점, 독서의 계기}
 
-        // 구현 로직
-        // 부모 - 자식 
-        // -> id를 부여해야해서 count 값을 올린다.
-        // 1. -> 첫 번쨰로 생성된 부모 노드는 id = 0이다. 
-        // 로직: id == 0 -> 중심 주제 노드로 설정.
-        // id != 0 ->  나머지 노드에서 상관 관계를 찾아 연결. 
-
-
-        // 삽입하고 마인드 노드를 생성하는 메소드 구현 
-        // 자식은 부모보다 id 값이 클수가 없다(예외처리)
-        // 1. 사용자가 노드를 생성한다. 
-        // 2. 연결선을 연결할 노드(부모 노드)에 연결
-        // 2-1. 라인을 생성하는 스크립트를 생성할 오브젝트에 추가.        
-        // 2-2. 연결 시 id 값을 비교하여 id 값이 큰 노드가 부모 - 
-        // 3. 연결 시 연결할 노드(부모 노드)의 정보를 가져온다, 
-        // 4. 가져온 노드의 정보의 자식 리스트에 생성된 삽입한다. 
+    //    구현 로직
+    //     부모 - 자식
+    //     ->id를 부여해야해서 count 값을 올린다.
+    //     1. ->첫 번쨰로 생성된 부모 노드는 id = 0이다.
+    //     로직: id == 0->중심 주제 노드로 설정.
+    //     id != 0->나머지 노드에서 상관 관계를 찾아 연결.
 
 
-        MindMapNodeInfo root = new MindMapNodeInfo() { DATA = "과학 실험" };
-        {
+    //     삽입하고 마인드 노드를 생성하는 메소드 구현
+    //     자식은 부모보다 id 값이 클수가 없다(예외처리)
+    //     1.사용자가 노드를 생성한다. 
+    //     2.연결선을 연결할 노드(부모 노드)에 연결
+    //     2 - 1.라인을 생성하는 스크립트를 생성할 오브젝트에 추가.
+    //     2 - 2.연결 시 id 값을 비교하여 id 값이 큰 노드가 부모 -
+    //     3.연결 시 연결할 노드(부모 노드)의 정보를 가져온다, 
+    //     4.가져온 노드의 정보의 자식 리스트에 생성된 삽입한다. 
 
 
-            {
-                //1. 자식 노드 생성 
-                MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "동아리 활동" };
-                //2. 부모, 자식 노드 판단 이후 연결 ( 자식 리스트에 추가 )  
-                root.Children.Add(node);
+    //    MindMapNodeInfo root = new MindMapNodeInfo() { DATA = "과학 실험" };
+    //    {
 
-                // 1, 2번 과정을 3번 반복한다. 
-                node.Children.Add(new MindMapNodeInfo() { DATA = "가입 이유" });
-                node.Children.Add(new MindMapNodeInfo() { DATA = "어떤 동아리 : 목적 -> 술" });
-                node.Children.Add(new MindMapNodeInfo() { DATA = "주요 활동" });
 
-            }
+    //        {
+    //            1.자식 노드 생성
+    //            MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "동아리 활동" };
+    //            2.부모, 자식 노드 판단 이후 연결(자식 리스트에 추가)
+    //            root.Children.Add(node);
 
-            {
-                MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "수업 시간" };
-                root.Children.Add(node);
-                node.Children.Add(new MindMapNodeInfo() { DATA = "관련 과목" });
-                node.Children.Add(new MindMapNodeInfo() { DATA = "과목 선택 이유" });
-                node.Children.Add(new MindMapNodeInfo() { DATA = "학습한 내용" });
+    //            1, 2번 과정을 3번 반복한다. 
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "가입 이유" });
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "어떤 동아리 : 목적 -> 술" });
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "주요 활동" });
 
-            }
+    //        }
 
-            {
-                MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "독서 활동" };
-                root.Children.Add(node);
-                node.Children.Add(new MindMapNodeInfo() { DATA = "관련 독서" });
-                node.Children.Add(new MindMapNodeInfo() { DATA = "알게된 점" });
-                node.Children.Add(new MindMapNodeInfo() { DATA = "독서의 계기" });
+    //        {
+    //            MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "수업 시간" };
+    //            root.Children.Add(node);
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "관련 과목" });
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "과목 선택 이유" });
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "학습한 내용" });
 
-            }
-        }
+    //        }
 
-        return root;
-    }
+    //        {
+    //            MindMapNodeInfo node = new MindMapNodeInfo() { DATA = "독서 활동" };
+    //            root.Children.Add(node);
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "관련 독서" });
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "알게된 점" });
+    //            node.Children.Add(new MindMapNodeInfo() { DATA = "독서의 계기" });
+
+    //        }
+    //    }
+
+    //    return root;
+    //}
 
     // 마인드 맵의 ROOT 노드를 찾아서 반환하는 메소드 
     public MindMapNodeInfo RootFindTree()
@@ -137,10 +137,10 @@ public class MindMapManager : MonoBehaviour
         // MindNodeManager 오브젝트의 자식 노드들을 순회한다.
         for (int i = 0; i < nodeManager.transform.childCount; i++)
         {
-            if (nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>().ROOTNODE == true)
+            if (nodeManager.transform.GetChild(i).GetComponentInChildren<MindMapNodeInfo>().ROOTNODE == true)
             {
                 // 자식 노드의 Getcomponenent 스크립트인 MindMapNodeInfo에서 true인 노드를 찾아 반환한다. 
-                return nodeManager.transform.GetChild(i).GetComponent<MindMapNodeInfo>();
+                return nodeManager.transform.GetChild(i).GetComponentInChildren<MindMapNodeInfo>();
             }
         }
 
@@ -176,7 +176,16 @@ public class MindMapManager : MonoBehaviour
     {
 
         // 현재 마인드맵 노드의 데이터 접근해서 출력 
-        Debug.Log("현재 노드의 ID : " + root.ID + ",  현재 노드의 DATA : " + root.DATA);
+        if (root.ROOTNODE)
+        {
+            // 루트 노드 출력
+            print("루트 노드의 ID : " + root.ID + ",  현재 노드의 DATA : " + root.DATA);
+        }
+        else
+        {
+            // 자식 노드 출력 
+            print("자식 노드의 ID : " + root.ID + ",  현재 노드의 DATA : " + root.DATA);
+        }
 
         // 재귀적으로 자식들의 데이터 접근
         foreach (MindMapNodeInfo child in root.Children)
