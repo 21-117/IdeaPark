@@ -37,6 +37,10 @@ public class MindMapController : MonoBehaviour
     // 노드의 데이터 정보 업데이트 
     private bool upDateData;
 
+    // XR_Ray 에 쓸 어태치 디테치 스위치 변수
+    public bool _nodeAttach = false;
+    public bool _nodeDetach = false;
+
     // 핀치 여부 
     private bool isPinched;
 
