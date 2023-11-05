@@ -250,7 +250,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.x
-    path: Button_Keyboard
+    path: Button_Font
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -280,7 +280,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Button_Keyboard
+    path: Button_Font
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -329,7 +329,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 950689162
+      path: 3560382561
       attribute: 1460864421
       script: {fileID: 0}
       typeID: 224
@@ -338,7 +338,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 950689162
+      path: 3560382561
       attribute: 538195251
       script: {fileID: 0}
       typeID: 224
@@ -619,7 +619,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.x
-    path: Button_Keyboard
+    path: Button_Font
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -649,7 +649,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Button_Keyboard
+    path: Button_Font
     classID: 224
     script: {fileID: 0}
     flags: 0

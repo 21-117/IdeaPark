@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PressMindButton : MonoBehaviour
 {
+    public GameObject ai;
     public GameObject palette;
     public GameObject keyboard;
     public GameObject trash;

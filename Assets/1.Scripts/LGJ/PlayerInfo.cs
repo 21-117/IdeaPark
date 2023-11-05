@@ -14,7 +14,7 @@ public class PlayerInfo : MonoBehaviour
     public FlexibleColorPicker fcp;
     public bool createBubble = false;
     // ¿Þ¼Õ, ¿À¸¥¼Õ
-    public GameObject LeftDirectHand, RightDirectHand;
+    public GameObject left_Hand_Obj, right_Hand_Obj;
     private void Awake()
     {
         if(instance != null) Destroy(instance);

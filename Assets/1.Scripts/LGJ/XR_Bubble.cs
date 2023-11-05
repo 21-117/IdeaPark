@@ -58,26 +58,26 @@ public class XR_Bubble : XRGrabInteractable
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other == CheckFingerTip.instance.fingerCol && !CheckFingerTip.instance.touchTip)
-        {
-            if (!buttonMind.activeSelf)
-            {
-                buttonMind.SetActive(true);
-                buttonMind.transform.position = this.transform.position;
-            }
-            else if (buttonMind.activeSelf)
-            {
-                buttonMind.SetActive(false);
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other == CheckFingerTip.instance.fingerCol && !CheckFingerTip.instance.touchTip)
+    //    {
+    //        if (!buttonMind.activeSelf)
+    //        {
+    //            buttonMind.SetActive(true);
+    //            buttonMind.transform.position = this.transform.position;
+    //        }
+    //        else if (buttonMind.activeSelf)
+    //        {
+    //            buttonMind.SetActive(false);
 
-                foreach (Toggle toggle in buttonToggles)
-                {
-                    toggle.isOn = false;
-                }
-            }
-        }
-    }
+    //            foreach (Toggle toggle in buttonToggles)
+    //            {
+    //                toggle.isOn = false;
+    //            }
+    //        }
+    //    }
+    //}
 
     public void OffButtonMind()
     {
