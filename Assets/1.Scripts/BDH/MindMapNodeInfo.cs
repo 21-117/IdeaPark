@@ -5,7 +5,8 @@ using UnityEngine;
 // 노드 오브젝트의 전체적인 정보를 가지고 있는 클래스 
 public class MindMapNodeInfo : MonoBehaviour 
 {
-    private bool rootNode; 
+    private bool rootNode;
+    private MindMapNodeInfo parentNode; // 부모 노드 
     private int id = 0; // 노드의 ID 
     private string data = "";  // 텍스트 정보. 
     private int type; // 노드의 생성 종류 타입 [Cube, Sphere, Capsule, Cylinder] 
@@ -67,6 +68,11 @@ public class MindMapNodeInfo : MonoBehaviour
         set { rootNode = value; }
     }
 
-
+    // 해당 노드의 부모 노드에 대한 접근 프로퍼티
+    public MindMapNodeInfo PARENTNODE
+    {
+        get { return parentNode; }  
+        set { parentNode = value; } 
+    }
 
 }
