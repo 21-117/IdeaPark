@@ -216,9 +216,18 @@ public class MindMapController : MonoBehaviour
             
             if (currentNodeInfo != null)
             {
-
-
+                MindMapManager.instance.FindSubTree(currentNodeInfo);
             }
+        }
+
+        // 6번 키를 누르면 현재 Hover된 노드의 모든 조상 노드를 찾아서 데이터를 출력.
+        // UpdateAiText에 활용. 
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+          
+            // List<string> ancestorNodeList = new List<string>();
+
+
         }
     }
 
@@ -333,6 +342,9 @@ public class MindMapController : MonoBehaviour
                         // prevConnectionNode(부모) 자식 노드 리스트 Children에 currentConnectionNode (자식) 노드를 추가한다. 
                         prevNodeInfo.Children.Add(currentNodeInfo);
 
+                        // 부모 노드 정보 저장
+                        currentNodeInfo.PARENTNODE = prevNodeInfo; 
+
                     }
                     else
                     {
@@ -433,7 +445,6 @@ public class MindMapController : MonoBehaviour
     public void UpdateCreate(Transform attchTransform, string value)
     {
 
-        // z번 키를 누르면 사용자 R_indexTip의 위치에서 노드가 생성된다. (QA 완료 )
         if (PlayerInfo.instance.createBubble)
         {
             PlayerInfo.instance.createBubble = false;
@@ -462,7 +473,7 @@ public class MindMapController : MonoBehaviour
                 // 루트 노드(주제)로 지정한다. 
                 nodeInfo.ROOTNODE = true;
 
-                // MindeMapManager의 트리 루트로 설정.
+                // MindMapManager의 트리 루트로 설정. -> MindMapManager를 통해서 루트 노드를 관리. 
                 MindMapManager.instance.ROOTNODE = nodeInfo;
             }
             else
