@@ -23,7 +23,6 @@ public class SaveMinMapNode
 public class MindMapManager : MonoBehaviour
 {
     // 마인드맵 싱글톤 패턴으로 적용.
-    // static 변수를 통해 해당 인스턴스를 외부에서 접근 가능하게 함.
     public static MindMapManager instance;
 
     // 마인드 맵의 루트 노드 
@@ -214,6 +213,8 @@ public class MindMapManager : MonoBehaviour
     // 현재 마인드 맵의 노드에서 모든 조상 노드를 찾아 반환하는 메소드.
     public MindMapNodeInfo FindAncestor(MindMapNodeInfo currentNode)
     {
+        // 부모 노드가 없는 경우까지 탐색을 한다. ( 주제 : ROOT 노드는 부모 노드가 없다)
+        
 
         return null;
     }
@@ -236,9 +237,12 @@ public class MindMapManager : MonoBehaviour
 
     public void DeleteSubTree(MindMapNodeInfo root)
     {
-
-        print("현재 삭제할 서브트리 노드 : " + root.transform.parent.gameObject);
-        Destroy(root.transform.parent.gameObject);
+        if(root != null)
+        {
+            print("현재 삭제할 서브트리 노드 : " + root.transform.parent.gameObject);
+            Destroy(root.transform.parent.gameObject);
+        }
+       
         // 재귀적으로 자식들의 데이터 접근
         foreach (MindMapNodeInfo child in root.Children)
         {
