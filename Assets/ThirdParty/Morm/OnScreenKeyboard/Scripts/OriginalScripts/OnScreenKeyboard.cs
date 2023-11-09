@@ -52,7 +52,7 @@ public class OnScreenKeyboard : MonoBehaviour
 
     public void SetShowTextField()
     {
-        showTextField = PlayerInfo.instance.cursorObject.GetComponentInChildren<Text>();
+        showTextField = PlayerInfo.localPlayer.GrabObject.GetComponentInChildren<Text>();
     }
 
     private void Update()

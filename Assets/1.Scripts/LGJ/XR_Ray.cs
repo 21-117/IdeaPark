@@ -8,7 +8,7 @@ public class XR_Ray : XRRayInteractor
     public LayerMask layerMask;
     void Update()
     {
-        MindMapController.instance.UpdateConnection();
+        //MindMapController.instance.UpdateConnection();
     }
 
     [System.Obsolete]
@@ -19,7 +19,7 @@ public class XR_Ray : XRRayInteractor
         Debug.Log("select entered");
         if (args.interactableObject.transform.TryGetComponent(out XR_Bubble bubble))
         {
-            PlayerInfo.instance.rayObject = bubble.gameObject;
+            PlayerInfo.localPlayer.RayObject = bubble.gameObject;
             bubble.trackPosition = false;
         }
     }
@@ -28,25 +28,25 @@ public class XR_Ray : XRRayInteractor
         base.OnSelectExiting(args);
         //MindMapController.state = MindMapController.State.CREATE;
 
-        if (MindMapController.instance._nodeAttach == false && MindMapController.instance._nodeDetach == false)
-        {
-            MindMapController.instance._nodeAttach = true;
-        }
-        else if (MindMapController.instance._nodeAttach == true && MindMapController.instance._nodeDetach == false)
-        {
-            MindMapController.instance._nodeAttach = false;
-            MindMapController.instance._nodeDetach = true;
-        }
-        else if (MindMapController.instance._nodeAttach == false && MindMapController.instance._nodeDetach == true)
-        {
-            MindMapController.instance._nodeAttach = true;
-            MindMapController.instance._nodeDetach = false;
-        }
+        //if (MindMapController.instance._nodeAttach == false && MindMapController.instance._nodeDetach == false)
+        //{
+        //    MindMapController.instance._nodeAttach = true;
+        //}
+        //else if (MindMapController.instance._nodeAttach == true && MindMapController.instance._nodeDetach == false)
+        //{
+        //    MindMapController.instance._nodeAttach = false;
+        //    MindMapController.instance._nodeDetach = true;
+        //}
+        //else if (MindMapController.instance._nodeAttach == false && MindMapController.instance._nodeDetach == true)
+        //{
+        //    MindMapController.instance._nodeAttach = true;
+        //    MindMapController.instance._nodeDetach = false;
+        //}
 
 
         if (args.interactableObject.transform.TryGetComponent(out XR_Bubble bubble))
         {
-            PlayerInfo.instance.rayObject = null;
+            PlayerInfo.localPlayer.RayObject = null;
             bubble.trackPosition = true;
         }
         //MindMapController.setPinch(true, args.interactableObject.transform.gameObject);

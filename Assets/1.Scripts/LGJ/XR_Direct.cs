@@ -31,7 +31,7 @@ public class XR_Direct : XRDirectInteractor
         //}
 
         cols = Physics.OverlapSphere(this.transform.position, radius, layerMask);
-        if (cols.Length == 0 && CheckFingerTip.instance.touchTip && PlayerInfo.instance.left_Hand_Obj == null && PlayerInfo.instance.right_Hand_Obj == null)
+        if (cols.Length == 0 && CheckFingerTip.instance.touchTip && PlayerInfo.localPlayer.left_Hand_Obj == null && PlayerInfo.localPlayer.right_Hand_Obj == null)
         {
             lerpValue = Mathf.Clamp01(curTime / createTime);
             if (sampleBubble != null)
@@ -40,10 +40,10 @@ public class XR_Direct : XRDirectInteractor
                 sampleBubble.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpValue);
             }
             curTime += Time.deltaTime;
-            if (curTime > createTime && !PlayerInfo.instance.createBubble)
+            if (curTime > createTime && !PlayerInfo.localPlayer.createBubble)
             {
                 // 노드를 만들어도 되는 허용치 부여
-                PlayerInfo.instance.createBubble = true;
+                PlayerInfo.localPlayer.createBubble = true;
                 curTime = 0f;
                 //touchTime = 0f;
             }
@@ -59,7 +59,7 @@ public class XR_Direct : XRDirectInteractor
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
         base.OnHoverEntered(args);
-        MindMapController.setHover(true, args.interactableObject.transform.gameObject);
+        //MindMapController.setHover(true, args.interactableObject.transform.gameObject);
 
         Debug.Log("hover entered");
     }
@@ -70,7 +70,7 @@ public class XR_Direct : XRDirectInteractor
         //MindMapController.setHover(false, null);
         if (args.interactableObject.transform.GetComponent<InstanceID>() != null && args.interactableObject.transform.GetComponent<InstanceID>().curObjectType == ObjectType.Circle)
         {
-            PlayerInfo.instance.cursorObject = args.interactableObject.transform.gameObject;
+            PlayerInfo.localPlayer.GrabObject = args.interactableObject.transform.gameObject;
         }
 
         Debug.Log("hover exited");
@@ -87,11 +87,11 @@ public class XR_Direct : XRDirectInteractor
         {
             if(handpos == HandPos.Left)
             {
-                PlayerInfo.instance.left_Hand_Obj = args.interactableObject.transform.gameObject; 
+                PlayerInfo.localPlayer.left_Hand_Obj = args.interactableObject.transform.gameObject; 
             }
             else if(handpos == HandPos.Right)
             {
-                PlayerInfo.instance.right_Hand_Obj = args.interactableObject.transform.gameObject;
+                PlayerInfo.localPlayer.right_Hand_Obj = args.interactableObject.transform.gameObject;
             }
         }
     }
@@ -103,11 +103,11 @@ public class XR_Direct : XRDirectInteractor
         {
             if (handpos == HandPos.Left)
             {
-                PlayerInfo.instance.left_Hand_Obj = null;
+                PlayerInfo.localPlayer.left_Hand_Obj = null;
             }
             else if (handpos == HandPos.Right)
             {
-                PlayerInfo.instance.right_Hand_Obj = null;
+                PlayerInfo.localPlayer.right_Hand_Obj = null;
             }
         }
         //MindMapController.setPinch(true, args.interactableObject.transform.gameObject);

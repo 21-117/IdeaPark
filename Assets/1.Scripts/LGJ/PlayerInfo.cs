@@ -1,14 +1,15 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerInfo : MonoBehaviour
+public class PlayerInfo : MonoBehaviourPunCallbacks
 {
-    public static PlayerInfo instance;
+    public static PlayerInfo localPlayer;
 
     // 현재 하이라이트 된 오브젝트
-    public GameObject cursorObject;
+    public GameObject grabObject;
     public GameObject rayObject;
     public GameObject buttonMind;
     public FlexibleColorPicker fcp;
@@ -17,24 +18,50 @@ public class PlayerInfo : MonoBehaviour
     public GameObject left_Hand_Obj, right_Hand_Obj;
     private void Awake()
     {
-        if(instance != null) Destroy(instance);
-        instance = this;
+        if (photonView.IsMine)
+        {
+            localPlayer = this;
+        }
+        else if (photonView.IsMine == false)
+        {
+            //PlayerInfo 컴포넌트를 비활성화
+            this.enabled = false;
+        }
+    }
+
+    private void Start()
+    {
+        GrabObject = null;
+        RayObject = null;
+
+    }
+
+    public GameObject GrabObject
+    {
+        get { return grabObject; }
+        set { grabObject = value; }
+    }
+
+    public GameObject RayObject
+    {
+        get { return rayObject; }
+        set { rayObject = value; }
     }
 
     // 구체 삭제
     public void DeleteBubble()
     {
-        if(cursorObject != null)
+        if (GrabObject != null)
         {
-            cursorObject.GetComponent<XR_Bubble>().buttonMind.SetActive(false);
-            cursorObject.SetActive(false);
+            GrabObject.GetComponent<XR_Bubble>().buttonMind.SetActive(false);
+            GrabObject.SetActive(false);
         }
     }
 
     // 구체 만들기
     public void CreateBubble()
     {
-        if(cursorObject != null)
+        if (GrabObject != null)
         {
 
         }

@@ -8,11 +8,23 @@ public class FCP_ExampleScript : MonoBehaviour {
 
     private void Start() {
 
-        fcp = PlayerInfo.instance.fcp;
-        if (getStartingColorFromMaterial)
-            fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
+        //fcp = PlayerInfo.localPlayer.fcp;
+        //if (getStartingColorFromMaterial)
+        //    fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
 
-        fcp.onColorChange.AddListener(OnChangeColor);
+        //fcp.onColorChange.AddListener(OnChangeColor);
+    }
+
+    private void Update()
+    {
+        if(PlayerInfo.localPlayer != null)
+        {
+            fcp = PlayerInfo.localPlayer.fcp;
+            if (getStartingColorFromMaterial)
+                fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
+
+            fcp.onColorChange.AddListener(OnChangeColor);
+        }
     }
 
     private void OnChangeColor(Color co) {

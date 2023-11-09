@@ -287,9 +287,9 @@ public class MindMapController : MonoBehaviour
     // 마인드 노드를 링크하고, 트리를 연결하는 메소드 
     public void UpdateConnection()
     {
-        if (PlayerInfo.instance.rayObject != null)
+        if (PlayerInfo.localPlayer.rayObject != null)
         {
-            currentConnectionNode = PlayerInfo.instance.rayObject.GetComponentInChildren<ConnectionNodeController>();
+            currentConnectionNode = PlayerInfo.localPlayer.rayObject.GetComponentInChildren<ConnectionNodeController>();
 
 
             if (rightIndexTip)
@@ -386,7 +386,7 @@ public class MindMapController : MonoBehaviour
             // 삭제할 노드의 삭제할 1번, 2번으로 해결할 수 있나,,,? 
             print("현재 삭제할려는 노드의 리스트의 갯수 확인. : " + deleteNodeInfo.Children.Count);
 
-            PlayerInfo.instance.cursorObject.GetComponent<XR_Bubble>().OffButtonMind();
+            PlayerInfo.localPlayer.GrabObject.GetComponent<XR_Bubble>().OffButtonMind();
 
             // 1. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
             if (deleteNodeInfo.Children.Count == 0)
@@ -432,9 +432,9 @@ public class MindMapController : MonoBehaviour
     {
 
         // z번 키를 누르면 사용자 R_indexTip의 위치에서 노드가 생성된다. (QA 완료 )
-        if (PlayerInfo.instance.createBubble)
+        if (PlayerInfo.localPlayer.createBubble)
         {
-            PlayerInfo.instance.createBubble = false;
+            PlayerInfo.localPlayer.createBubble = false;
             GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
             GameObject CreateNode = Instantiate(obj, attchTransform.position, Quaternion.identity);
 
