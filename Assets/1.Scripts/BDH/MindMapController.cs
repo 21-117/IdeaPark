@@ -162,7 +162,7 @@ public class MindMapController : MonoBehaviour
                 UpdateCreate(R_indexTip.transform, "");
                 break;
             case State.SELETED:
-                UpdateSeleted();
+                //UpdateSeleted();
                 break;
             case State.DELETE:
                 //UpdateDelete();
