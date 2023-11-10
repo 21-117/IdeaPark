@@ -20,10 +20,10 @@ public class SaveMinMapNode
     public List<MindMapNodeInfo> Children; // 자식 노드 리스트 
 }
 
-public class MindMapManager : MonoBehaviour
+public class MindMapTreeManager : MonoBehaviour
 {
     // 마인드맵 싱글톤 패턴으로 적용.
-    public static MindMapManager instance;
+    public static MindMapTreeManager instance;
 
     // 마인드 맵의 루트 노드 
     private MindMapNodeInfo rootNode;

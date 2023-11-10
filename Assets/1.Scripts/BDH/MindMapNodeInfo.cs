@@ -20,11 +20,11 @@ public class MindMapNodeInfo : MonoBehaviour
 
     private void Awake()
     {
-        this.id = MindMapManager.instance.GetID;
-        // 각 노드의 ID 값을 출력
+        //this.id = MindMapTreeManager.instance.GetID;
+        //// 각 노드의 ID 값을 출력
 
-        // 노드가 생성될 때 마다 ID 값이 1씩 증가한다.
-        MindMapManager.instance.GetID += 1;
+        //// 노드가 생성될 때 마다 ID 값이 1씩 증가한다.
+        //MindMapTreeManager.instance.GetID += 1;
     }
 
     // ID 정보에 대한 접근 프로퍼티

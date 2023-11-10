@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Photon.Pun; 
 using TMPro;
 using JetBrains.Annotations;
 
-public class MindMapController : MonoBehaviour
+public class MindMapController : MonoBehaviourPun
 {
-    public static MindMapController instance;
 
     // 마인드맵 오른쪽 기능 컨트롤러
     public GameObject R_indexTip;
@@ -86,47 +86,17 @@ public class MindMapController : MonoBehaviour
         set { isHovered = value; }
     }
 
-    public enum State
-    {
-
-        CREATE,
-        SELETED,
-        DELETE,
-        UPDATECOLOR,
-        AITEXT,
-        INPUTTEXT,
-        CONNECTION,
-    }
-
-    public enum Bubble
-    {
-        first,
-        second,
-        third
-    }
-
-    public static State state;
-    public static Bubble bubble;
-
-    private void Awake()
-    {
-        // 다같이 쓰니까 
-        mindNodeManager = GameObject.Find("[ MINDNODE MANAGER ]");
-
-
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     void Start()
     {
+        // 내가 만든 Player가 아닐때
+        if(photonView.IsMine == false)
+        {
+            // MindMapController 컴포넌트를 비활성화
+            this.enabled = false;   
+        }
+
+        mindNodeManager = GameObject.Find("[ MINDNODE MANAGER ]");
 
         setHover = (x, hoverObject) =>
         {
@@ -146,68 +116,39 @@ public class MindMapController : MonoBehaviour
             this.poke = pokeObject;
         };
 
-
-        state = State.CREATE;
-        bubble = Bubble.first;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        switch (state)
-        {
-
-            case State.CREATE:
-                UpdateCreate(R_indexTip.transform, "");
-                break;
-            case State.SELETED:
-                //UpdateSeleted();
-                break;
-            case State.DELETE:
-                //UpdateDelete();
-                break;
-            case State.UPDATECOLOR:
-                UpdateColor();
-                break;
-            case State.AITEXT:
-                UpdateAiText();
-                break;
-            case State.INPUTTEXT:
-                UpdateInputText();
-                break;
-            case State.CONNECTION:
-                UpdateConnection();
-                break;
-            default:
-                break;
-        }
-
-
         // 1번 키를 누르면 플레이어가 노드를 생성할 수 있는 CREATE
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            state = State.CREATE;
+            print("플레이어가 노드를 생성함."); 
+            string textValue = "";
+            photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip, textValue);
+            //UpdateCreate(R_indexTip.transform, "");
         }
 
         // 2번 키를 누르면 플레이어가 노드를 연결할 수 있는 CONNECTION
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            state = State.CONNECTION;
+            photonView.RPC(nameof(UpdateConnection), RpcTarget.All); 
         }
 
         // 3번 키를 누르면 플레이어가 노드에 데이터를 삭제
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            state = State.DELETE;
+         
         }
 
         // 4번 키를 누르면 현재 생성된 모든 노드의 데이터를 출력.
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             // 루트 노드를 찾아서 반환 
-            MindMapNodeInfo root = MindMapManager.instance.RootFindTree();
-            MindMapManager.instance.PrintTree(root);
+            MindMapNodeInfo root = MindMapTreeManager.instance.RootFindTree();
+            MindMapTreeManager.instance.PrintTree(root);
         }
 
         // 5번 키를 누르면 현재 Hover된 노드의 자식 리스트 데이터를 출력
@@ -286,6 +227,7 @@ public class MindMapController : MonoBehaviour
     }
 
     // 마인드 노드를 링크하고, 트리를 연결하는 메소드 
+    [PunRPC]
     public void UpdateConnection()
     {
         if (PlayerInfo.localPlayer.rayObject != null)
@@ -373,6 +315,7 @@ public class MindMapController : MonoBehaviour
 
 
     // 마인드 노드를 삭제하는 메소드 
+    [PunRPC]
     public void UpdateDelete()
     {
 
@@ -409,7 +352,7 @@ public class MindMapController : MonoBehaviour
                 if (nodeInfo != null)
                 {
                     // 3. 해당 노드의 서브트리를 모두 찾아서 삭제. 
-                    MindMapManager.instance.DeleteSubTree(nodeInfo);
+                    MindMapTreeManager.instance.DeleteSubTree(nodeInfo);
                 }
                 // 4. 노드 삭제 SFX 사운드 실행 
                 SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
@@ -419,19 +362,17 @@ public class MindMapController : MonoBehaviour
     }
 
 
-
-
     // 마인드 노드를 생성하는 메소드 
+    [PunRPC]
     public void UpdateCreate(Transform attchTransform, string value)
     {
 
-        // z번 키를 누르면 사용자 R_indexTip의 위치에서 노드가 생성된다. (QA 완료 )
         if (PlayerInfo.localPlayer.createBubble)
         {
             PlayerInfo.localPlayer.createBubble = false;
             GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
             GameObject CreateNode = Instantiate(obj, attchTransform.position, Quaternion.identity);
-
+            print("노드 생성함."); 
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
 
@@ -441,36 +382,36 @@ public class MindMapController : MonoBehaviour
             // 생성된 노드의 정보에 접근한다. 
             nodeInfo = CreateNode.GetComponentInChildren<MindMapNodeInfo>();
 
-            if (nodeInfo.ID == 0)
-            {
-                // 오브젝트 이름을 루트 노드로 변경. 
-                CreateNode.name = "RootNode";
+            //if (nodeInfo.ID == 0)
+            //{
+            //    // 오브젝트 이름을 루트 노드로 변경. 
+            //    CreateNode.name = "RootNode";
 
-                // 임시로 노드의 더미 데이터 삽입.
-                //nodeInfo.DATA = value;
-                nodeInfo.DATA = "RootNode" + nodeInfo.ID.ToString();
-                CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
+            //    // 임시로 노드의 더미 데이터 삽입.
+            //    //nodeInfo.DATA = value;
+            //    nodeInfo.DATA = "RootNode" + nodeInfo.ID.ToString();
+            //    CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
 
-                // 루트 노드(주제)로 지정한다. 
-                nodeInfo.ROOTNODE = true;
+            //    // 루트 노드(주제)로 지정한다. 
+            //    nodeInfo.ROOTNODE = true;
 
-                // MindeMapManager의 트리 루트로 설정.
-                MindMapManager.instance.ROOTNODE = nodeInfo;
-            }
-            else
-            {
-                // 오브젝트 이름을 자식 노드로 변경.
-                CreateNode.name = "ChildNode_" + nodeInfo.ID;
+            //    // MindeMapManager의 트리 루트로 설정.
+            //    MindMapTreeManager.instance.ROOTNODE = nodeInfo;
+            //}
+            //else
+            //{
+            //    // 오브젝트 이름을 자식 노드로 변경.
+            //    CreateNode.name = "ChildNode_" + nodeInfo.ID;
 
-                // 자식 노드의 데이터 삽입.
-                //nodeInfo.DATA = value;
-                nodeInfo.DATA = "Child" + nodeInfo.ID.ToString();
+            //    // 자식 노드의 데이터 삽입.
+            //    //nodeInfo.DATA = value;
+            //    nodeInfo.DATA = "Child" + nodeInfo.ID.ToString();
 
-                // 자식 노드의 Text. 
-                CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
+            //    // 자식 노드의 Text. 
+            //    CreateNode.GetComponent<XR_Bubble>().mindText.text = nodeInfo.DATA;
 
 
-            }
+            //}
 
 
         }
