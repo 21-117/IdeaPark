@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -20,10 +21,10 @@ public class NewtworkPlayer : MonoBehaviour
     void Start()
     {
         photonView = GetComponent<PhotonView>();
-        XRRig rig = FindObjectOfType<XRRig>();
+        XROrigin rig = FindObjectOfType<XROrigin>();
         headRig = rig.transform.Find("Camera Offset/Main Camera");
-        leftHandRig = rig.transform.Find("Camera Offset/LeftHand");
-        rightHandRig = rig.transform.Find("Camera Offset/RightHand");
+        leftHandRig = rig.transform.Find("Camera Offset/Left Hand");
+        rightHandRig = rig.transform.Find("Camera Offset/Right Hand");
     }
 
     // Update is called once per frame
@@ -31,9 +32,9 @@ public class NewtworkPlayer : MonoBehaviour
     {
         if (photonView.IsMine)
         {
-            head.gameObject.SetActive(false);
-            leftHand.gameObject.SetActive(false);
-            rightHand.gameObject.SetActive(false);
+            //head.gameObject.SetActive(false);
+            //leftHand.gameObject.SetActive(false);
+            //rightHand.gameObject.SetActive(false);
             MapPosition(head, headRig);
             MapPosition(leftHand, leftHandRig);
             MapPosition(rightHand, rightHandRig);
