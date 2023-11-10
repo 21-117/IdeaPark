@@ -14,6 +14,11 @@ public class VoiceRecognize
 
 public class ClovaMicrophone : MonoBehaviour
 {
+    // STT 기능 활성화 
+    public static Action onStartSTT;
+    // STT 기능 비활성화
+    public static Action onStopSTT;
+
     public Vector3 minScale; 
     public Vector3 maxScale;
 
@@ -44,6 +49,12 @@ public class ClovaMicrophone : MonoBehaviour
         micList = Microphone.devices;
     }
 
+    private void Start()
+    {
+        onStartSTT = () => { onRecoderMicrophone(); };
+        onStopSTT = () => { onCallNaverAPI(); };
+    }
+
     private void Update()
     {
         float loudness = GetLoudnessFromMicrophone() * loudnessSensibility;
@@ -55,25 +66,35 @@ public class ClovaMicrophone : MonoBehaviour
         // 5번 키를 누르면 마이크 녹음 시작
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            print("네이버 API 호출을 위한 녹음을 시작합니다. 현재 마이크 환경 : " + micList[MicDevices]); 
-            clip = Microphone.Start(micList[MicDevices], true, 10, 44100);
+            onRecoderMicrophone(); 
         }
 
         // 6번 키를 누르면 마이크 녹음 종료 후 API 호출. 
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            print("네이버 API 호출을 위한 녹음을 종료합니다. ");
-            Microphone.End(micList[MicDevices]);
-
-            // 경로에 오디오 파일 WAV 저장. 
-            SaveAudioClipToWAV(Application.dataPath + "/test.wav");
-
-            // 오디오 경로 파일을 바이트 배열 파일로 변환. 
-            byte[] byteData = File.ReadAllBytes(Application.dataPath + "/test.wav");
-
-            // 네이버 STT API 코루틴 호출. 
-            StartCoroutine(PostVoice(apiUrl, byteData));
+            onCallNaverAPI();
         }
+    }
+
+    private void onRecoderMicrophone()
+    {
+        print("네이버 API 호출을 위한 녹음을 시작합니다. 현재 마이크 환경 : " + micList[MicDevices]);
+        clip = Microphone.Start(micList[MicDevices], true, 10, 44100);
+    }
+
+    private void onCallNaverAPI()
+    {
+        print("네이버 API 호출을 위한 녹음을 종료합니다. ");
+        Microphone.End(micList[MicDevices]);
+
+        // 경로에 오디오 파일 WAV 저장. 
+        SaveAudioClipToWAV(Application.dataPath + "/test.wav");
+
+        // 오디오 경로 파일을 바이트 배열 파일로 변환. 
+        byte[] byteData = File.ReadAllBytes(Application.dataPath + "/test.wav");
+
+        // 네이버 STT API 코루틴 호출. 
+        StartCoroutine(PostVoice(apiUrl, byteData));
     }
 
     // Naver API로 오디오 데이터 전송. 
