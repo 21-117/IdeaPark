@@ -127,7 +127,7 @@ public class MindMapController : MonoBehaviourPun
         {
             print("플레이어가 노드를 생성함."); 
             string textValue = "";
-            photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip, textValue);
+            photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip.transform, textValue);
             //UpdateCreate(R_indexTip.transform, "");
         }
 
