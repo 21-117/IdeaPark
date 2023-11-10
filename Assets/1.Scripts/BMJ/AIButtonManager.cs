@@ -91,15 +91,15 @@ public class AIButtonManager : MonoBehaviour
         // 생성하고 싶은 키워드를 선택하고 마인드 추가
         if (EventButtonObj != null)
         {
-            // 마인드 해당 오브젝트 생성.
-            print("마인드 노드 생성 : " + EventButtonObj.name);
-            // 마인드 노드에 데이터 삽입.
-            print("마인드 노드 데이터 삽입 : " + EventButtonData);
+            // 마인드 노드 생성 허용
             PlayerInfo.localPlayer.createBubble = true;
 
-            // MindMapController.instance.UpdateCreate(attachTransform, EventButtonData);
+            // AI 키워드 마인드 노드 생성. 
+            MindMapController.CreateMindNode(attachTransform.position, EventButtonData);
 
+            // 마인드 노드 생성 불가 
             PlayerInfo.localPlayer.createBubble = false;
+
             // 링크도 연결.
 
             // AI 키워드 추천 UI창이 사라지고 노드 바로 생성

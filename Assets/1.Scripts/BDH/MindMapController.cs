@@ -65,6 +65,10 @@ public class MindMapController : MonoBehaviourPun
     // POKE된 셋팅 정보
     public static Action<bool, GameObject> setPoke;
 
+    // 마인드 노드 생성 메소드 호출
+    public static Action<Vector3, string> CreateMindNode;
+    
+
     // Poke에 대한 프로퍼티
     public bool ISPOKED
     {
@@ -116,6 +120,10 @@ public class MindMapController : MonoBehaviourPun
             this.poke = pokeObject;
         };
 
+        CreateMindNode = (pos, node) =>
+        {
+            UpdateCreate(pos, node);    
+        };
     }
 
     // Update is called once per frame
@@ -128,7 +136,7 @@ public class MindMapController : MonoBehaviourPun
             print("플레이어가 노드를 생성함."); 
             string textValue = "";
             photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip.transform.position, textValue);
-            //UpdateCreate(R_indexTip.transform, "");
+            
         }
 
         // 2번 키를 누르면 플레이어가 노드를 연결할 수 있는 CONNECTION
@@ -140,7 +148,7 @@ public class MindMapController : MonoBehaviourPun
         // 3번 키를 누르면 플레이어가 노드에 데이터를 삭제
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-         
+            photonView.RPC(nameof(UpdateDelete), RpcTarget.All); 
         }
 
         // 4번 키를 누르면 현재 생성된 모든 노드의 데이터를 출력.
