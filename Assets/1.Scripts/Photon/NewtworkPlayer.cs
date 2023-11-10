@@ -25,19 +25,25 @@ public class NewtworkPlayer : MonoBehaviour
         headRig = rig.transform.Find("Camera Offset/Main Camera");
         leftHandRig = rig.transform.Find("Camera Offset/Left Hand");
         rightHandRig = rig.transform.Find("Camera Offset/Right Hand");
+
     }
+
 
     // Update is called once per frame
     void Update()
     {
         if (photonView.IsMine)
         {
-            //head.gameObject.SetActive(false);
+            head.gameObject.SetActive(true);
             //leftHand.gameObject.SetActive(false);
             //rightHand.gameObject.SetActive(false);
             MapPosition(head, headRig);
             MapPosition(leftHand, leftHandRig);
             MapPosition(rightHand, rightHandRig);
+        }
+        else
+        {
+            head.gameObject.SetActive(false);
         }
     }
 
