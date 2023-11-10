@@ -63,10 +63,7 @@ public class XR_Bubble : XRGrabInteractable
         //    }
         //}
 
-        if (interactor.TryGetComponent(out XR_Direct dir))
-        {
-            MindMapController.state = MindMapController.State.CREATE;
-        }
+        
     }
 
     //private void OnTriggerExit(Collider other)

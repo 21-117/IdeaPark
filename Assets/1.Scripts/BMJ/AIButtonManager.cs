@@ -96,7 +96,9 @@ public class AIButtonManager : MonoBehaviour
             // 마인드 노드에 데이터 삽입.
             print("마인드 노드 데이터 삽입 : " + EventButtonData);
             PlayerInfo.localPlayer.createBubble = true;
-            MindMapController.instance.UpdateCreate(attachTransform, EventButtonData);
+
+            // MindMapController.instance.UpdateCreate(attachTransform, EventButtonData);
+
             PlayerInfo.localPlayer.createBubble = false;
             // 링크도 연결.
 

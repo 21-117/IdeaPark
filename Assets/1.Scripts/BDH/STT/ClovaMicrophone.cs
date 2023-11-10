@@ -26,10 +26,13 @@ public class ClovaMicrophone : MonoBehaviour
     private int _recordingLengthSec = 15;
     private int _recordingHZ = 22050;
 
-
+    // 오디오 클립 저장. 
     private AudioClip clip;
 
+    // 오디오 디바이스 배열
+    // 
     string[] micList;
+
     void Awake()
     {
         micList = Microphone.devices;
@@ -73,26 +76,6 @@ public class ClovaMicrophone : MonoBehaviour
         return;
     }
 
-    //public byte[] Convert(AudioClip clip)
-    //{
-    //    var samples = new float[clip.samples];
-    //    clip.GetData(samples, 0);
-
-    //    MemoryStream stream = new MemoryStream();
-    //    BinaryWriter writer = new BinaryWriter(stream);
-
-    //    int length = samples.Length;
-    //    writer.Write(length);
-
-    //    foreach (var sample in samples)
-    //    {
-    //        writer.Write(sample);
-    //    }
-
-    //    return stream.ToArray();
-    //}
-
-
     // Naver API로 오디오 데이터 전송. 
     private IEnumerator PostVoice(string url, byte[] data)
     {
@@ -129,9 +112,6 @@ public class ClovaMicrophone : MonoBehaviour
             // Voice Server responded: 인식결과
         }
     }
-
-
-   
 
     private void Update()
     {

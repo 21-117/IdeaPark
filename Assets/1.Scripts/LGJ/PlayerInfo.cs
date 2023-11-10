@@ -14,6 +14,7 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
     public GameObject buttonMind;
     public FlexibleColorPicker fcp;
     public bool createBubble = false;
+
     // ¿Þ¼Õ, ¿À¸¥¼Õ
     public GameObject left_Hand_Obj, right_Hand_Obj;
     private void Awake()
