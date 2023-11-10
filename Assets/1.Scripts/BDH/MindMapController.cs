@@ -110,6 +110,7 @@ public class MindMapController : MonoBehaviour
 
     private void Awake()
     {
+        // 다같이 쓰니까 
         mindNodeManager = GameObject.Find("[ MINDNODE MANAGER ]");
 
 
@@ -417,14 +418,7 @@ public class MindMapController : MonoBehaviour
 
     }
 
-    // 마인드 노드 선택하는 메소드 
-    private void UpdateSeleted()
-    {
-        // 마인드 선택 
-        // 검지의 TIP을 구체 POKE를 하면 마인드 선택 상태가 되면 마인드 UI가 실행된다.
 
-        // 서브
-    }
 
 
     // 마인드 노드를 생성하는 메소드 
