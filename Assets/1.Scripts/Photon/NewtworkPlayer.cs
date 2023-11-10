@@ -20,9 +20,15 @@ public class NewtworkPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MapPosition(head, XRNode.Head);
-        MapPosition(leftHand, XRNode.LeftHand);
-        MapPosition(rightHand, XRNode.RightHand);
+        if (photonView.IsMine)
+        {
+            head.gameObject.SetActive(false);
+            leftHand.gameObject.SetActive(false);
+            rightHand.gameObject.SetActive(false);
+            MapPosition(head, XRNode.Head);
+            MapPosition(leftHand, XRNode.LeftHand);
+            MapPosition(rightHand, XRNode.RightHand);
+        }
     }
 
     void MapPosition(Transform target, XRNode node)
