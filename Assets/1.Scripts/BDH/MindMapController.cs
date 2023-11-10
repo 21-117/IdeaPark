@@ -127,7 +127,7 @@ public class MindMapController : MonoBehaviourPun
         {
             print("플레이어가 노드를 생성함."); 
             string textValue = "";
-            photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip.transform, textValue);
+            photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip.transform.position, textValue);
             //UpdateCreate(R_indexTip.transform, "");
         }
 
@@ -364,21 +364,21 @@ public class MindMapController : MonoBehaviourPun
 
     // 마인드 노드를 생성하는 메소드 
     [PunRPC]
-    public void UpdateCreate(Transform attchTransform, string value)
+    public void UpdateCreate(Vector3 attachPos, string value)
     {
 
         if (PlayerInfo.localPlayer.createBubble)
         {
             PlayerInfo.localPlayer.createBubble = false;
             GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
-            GameObject CreateNode = Instantiate(obj, attchTransform.position, Quaternion.identity);
+            GameObject CreateNode = Instantiate(obj, attachPos, Quaternion.identity);
             print("노드 생성함."); 
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
 
             // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             CreateNode.transform.SetParent(mindNodeManager.transform);
-
+            
             // 생성된 노드의 정보에 접근한다. 
             nodeInfo = CreateNode.GetComponentInChildren<MindMapNodeInfo>();
 
