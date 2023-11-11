@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class PlayerInfo : MonoBehaviourPunCallbacks
@@ -34,7 +35,8 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
     {
         GrabObject = null;
         RayObject = null;
-
+        XROrigin rig = FindObjectOfType<XROrigin>();
+        buttonMind = rig.transform.Find("Camera Offset/Left Hand/UIs/Button_Mind").gameObject;
     }
 
     public GameObject GrabObject

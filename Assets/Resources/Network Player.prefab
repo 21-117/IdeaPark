@@ -23309,12 +23309,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4523793127494434599}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c385b5745cc93344b0bd222b256e0f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  R_indexTip: {fileID: 0}
+  R_indexTip: {fileID: 3278121512379243043}
   L_indexTip: {fileID: 0}
   _nodeAttach: 0
   _nodeDetach: 0
@@ -23330,7 +23330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 3
+  logLevel: 1
   ignoreGlobalLogLevel: 0
   recorderInUse: {fileID: 0}
   speakerInUse: {fileID: 3968030221597501372}
@@ -23344,7 +23344,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4523793127494434599}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a4778d1538e6304e91f5b5596006712, type: 3}
   m_Name: 

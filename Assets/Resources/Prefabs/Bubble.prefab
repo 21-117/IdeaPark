@@ -344,6 +344,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7878538764640487836}
+    - targetCorrespondingSourceObject: {fileID: 5268460675038366902, guid: 3221e99dadad90d41ba75d5f71472114,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1254616772095924208}
+    - targetCorrespondingSourceObject: {fileID: 5268460675038366902, guid: 3221e99dadad90d41ba75d5f71472114,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6775190602523957821}
     - targetCorrespondingSourceObject: {fileID: 2468804214868727367, guid: 3221e99dadad90d41ba75d5f71472114,
         type: 3}
       insertIndex: -1
@@ -522,6 +530,7 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   buttonMind: {fileID: 0}
+  mindText: {fileID: 0}
 --- !u!114 &7878538764640487836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,6 +544,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curObjectType: 0
+--- !u!114 &1254616772095924208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3413064093916311941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 1
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: -6775190602523957821}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-6775190602523957821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3413064093916311941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
+  m_TeleportIfDistanceGreaterThan: 3
 --- !u!1 &4900482633378540404 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2468804214868727367, guid: 3221e99dadad90d41ba75d5f71472114,
