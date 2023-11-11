@@ -27,7 +27,7 @@ public class NewtworkPlayer : MonoBehaviour
         leftHandRig = rig.transform.Find("Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist");
         rightHandRig = rig.transform.Find("Camera Offset/Right Hand/Right Hand Interaction Visual/R_Wrist");
 
-        audioListener = headRig.GetComponent<AudioListener>();
+        audioListener = head.GetComponent<AudioListener>();
 
         if (photonView.IsMine)
         {
