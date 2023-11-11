@@ -8,14 +8,17 @@ public class XR_Ray : XRRayInteractor
     public LayerMask layerMask;
     void Update()
     {
-        //MindMapController.instance.UpdateConnection();
+        if (PlayerInfo.localPlayer != null)
+        {
+            MindMapController.mindMapController.UpdateConnection();
+        }
     }
 
     [System.Obsolete]
     protected override void OnSelectEntering(SelectEnterEventArgs args)
     {
         base.OnSelectEntering(args);
-        //MindMapController.state = MindMapController.State.CONNECTION;
+
         Debug.Log("select entered");
         if (args.interactableObject.transform.TryGetComponent(out XR_Bubble bubble))
         {

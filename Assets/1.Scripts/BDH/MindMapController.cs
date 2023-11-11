@@ -94,11 +94,14 @@ public class MindMapController : MonoBehaviourPun
 
     void Start()
     {
-        // 내가 만든 Player가 아닐때
-        if(photonView.IsMine == false)
+        if (photonView.IsMine)
         {
-            // MindMapController 컴포넌트를 비활성화
-            this.enabled = false;   
+            mindMapController = this;
+        }
+        else if (photonView.IsMine == false)
+        {
+            //PlayerInfo 컴포넌트를 비활성화
+            this.enabled = false;
         }
 
         mindNodeManager = GameObject.Find("[ MINDNODE MANAGER ]");
