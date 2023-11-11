@@ -5,7 +5,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-
 // Clova STT로 부터 받은 데이터 값. 
 [Serializable]
 public class VoiceRecognize
@@ -13,67 +12,146 @@ public class VoiceRecognize
     public string text;
 }
 
-
 public class ClovaMicrophone : MonoBehaviour
 {
-    // Clova API 정보 셋팅 
-    private string apiUrl = "https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor";
-    private string clientID = "zz92lidnq2";
-    private string clientSecret = "yVjtEJb8vYSGk8koNTN3YP7MSSdiRFSNe45uGAu7";
+    // STT 기능 활성화 
+    public static Action onStartSTT;
+    // STT 기능 비활성화
+    public static Action onStopSTT;
 
-    private string _microphoneID = null;
-    private AudioClip _recording = null;
-    private int _recordingLengthSec = 15;
-    private int _recordingHZ = 22050;
+    public Vector3 minScale; 
+    public Vector3 maxScale;
+
+    private float loudnessSensibility = 100f;
+    private float threshold = 0.1f;
+    private float loudness; 
+    private float recordingTimeOut = 10f;
+    private bool isRecording = false; 
+   
+    // 오디오 Source 
+    private AudioSource audioSource;
 
     // 오디오 클립 저장. 
     private AudioClip clip;
 
     // 오디오 디바이스 배열
-    // 
     string[] micList;
+
+    // 오디오 디바이스 정수 
+    private const int MicDevices = 0;// PC 오디오 스피커 3번, 오큘러스 헤드셋 0번, 
+
+    // Clova API 정보 셋팅 
+    private string apiUrl = "https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Kor";
+    private string clientID = "zz92lidnq2";
+    private string clientSecret = "yVjtEJb8vYSGk8koNTN3YP7MSSdiRFSNe45uGAu7";
+    private int sampleWindow = 64;
 
     void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         micList = Microphone.devices;
     }
 
     private void Start()
     {
-        // pc 오디오 스피커 3번,
-        // 오큘러스 헤드셋 0번, 
-        _microphoneID = Microphone.devices[3];
+        onStartSTT = () => { onRecoderMicrophone(); };
+        onStopSTT = () => { onCallNaverAPI(); };
     }
 
-    // STT 호출 시작. -> 녹음 시작 
-    public void startRecording()
+    private void Update()
     {
-        Debug.Log("start recording");
-        _recording = Microphone.Start(_microphoneID, false, _recordingLengthSec, _recordingHZ);
-        //_recording = Microphone.Start(_microphoneID, true, 20, AudioSettings.outputSampleRate);
+        loudness = GetLoudnessFromMicrophone() * loudnessSensibility;
 
-    }
+        if (loudness < threshold) loudness = 0; 
 
-    // STT 호출 종료 -> 녹음 종료 
-    public void stopRecording()
-    {
-        if (Microphone.IsRecording(_microphoneID))
+        this.transform.localScale = Vector3.Lerp(minScale, maxScale, loudness);
+
+        // 5번 키를 누르면 마이크 녹음 시작
+        if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            Microphone.End(_microphoneID);
+            StartCoroutine(StartRecording()); 
+        }
 
-            Debug.Log("stop recording");
-            if (_recording == null)
+        // 6번 키를 누르면 마이크 녹음 종료 후 API 호출. 
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            onCallNaverAPI();
+        }
+    }
+
+    private void onRecoderMicrophone()
+    {
+        // 1. Photon voice Recorder Transmit Enabled를 비활성화 .
+        VoiceRecorderController.onStopTransmit();
+
+        print("네이버 API 호출을 위한 녹음을 시작합니다. 현재 마이크 환경 : " + micList[MicDevices]);
+
+        // 3. 네이버 API 호출을 위한 녹음
+        clip = Microphone.Start(micList[MicDevices], true, 10, 44100);
+    }
+
+    private void onStopRecoderMicrophone()
+    {
+        print("네이버 API 호출을 위한 녹음을 종료합니다. ");
+        isRecording = false;
+
+        // 네이버 API 호출을 위한 녹음을 종료
+        Microphone.End(micList[MicDevices]);
+    }
+
+    private void onCallNaverAPI()
+    {
+        // 네이버 API 호출을 위한 녹음을 종료
+        onStopRecoderMicrophone();
+
+        // Photon voice Recorder Transmit Enabled를 활성화 .
+        VoiceRecorderController.onStartTransmit();
+
+        // 경로에 오디오 파일 WAV 저장. 
+        SaveAudioClipToWAV(Application.dataPath + "/test.wav");
+
+        // 오디오 경로 파일을 바이트 배열 파일로 변환. 
+        byte[] byteData = File.ReadAllBytes(Application.dataPath + "/test.wav");
+
+        // 네이버 STT API 코루틴 호출. 
+        StartCoroutine(PostVoice(apiUrl, byteData));
+    }
+
+    // 마이크로폰 녹음 시작 코루틴. 
+    // 예외처리 : 10초 이상 Microphone의 입력이 없는 경우 종료
+    IEnumerator StartRecording()
+    {
+        float timer = 0f; 
+
+        isRecording = true;
+
+        // 0.2 초 잠시 대기한 후 
+        yield return new WaitForSeconds(0.2f);
+
+        // 녹음 시작 메소드 호출 
+        onRecoderMicrophone();
+
+        while (isRecording)
+        {
+            // 매 프레임마다 체크 
+            yield return null;
+
+            timer += Time.deltaTime;
+
+            // 입력이 감지되면 타이머 초기화
+            if (Microphone.IsRecording(micList[MicDevices]) && loudness > threshold)
+            {          
+                timer = 0f;
+            }
+           
+            // 입력이 10초 이상 없으면 녹음 종료. 
+            if (timer > recordingTimeOut)
             {
-                Debug.LogError("nothing recorded");
-                return;
+                // 녹음 종료 메소드 호출. 
+                onStopRecoderMicrophone(); 
             }
 
-           // byte[] byteData = Convert(_recording);
-
-            // 녹음된 audioclip api 서버로 보냄
-           // StartCoroutine(PostVoice(apiUrl, byteData));
         }
-        return;
     }
 
     // Naver API로 오디오 데이터 전송. 
@@ -113,25 +191,6 @@ public class ClovaMicrophone : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            clip = Microphone.Start(micList[3], true, 10, 44100);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Microphone.End(micList[3]);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            SaveAudioClipToWAV(Application.dataPath + "/test.wav");
-
-            byte[] byteData = File.ReadAllBytes(Application.dataPath + "/test.wav");
-            StartCoroutine(PostVoice(apiUrl, byteData));
-        }
-    }
-
     public void SaveAudioClipToWAV(string filePath)
     {
         if (clip == null)
@@ -152,8 +211,6 @@ public class ClovaMicrophone : MonoBehaviour
         }
 
         Debug.Log("AudioClip saved as WAV: " + filePath);
-
-
     }
 
     // WAV 파일 헤더 작성
@@ -182,14 +239,45 @@ public class ClovaMicrophone : MonoBehaviour
     {
         Int16[] intData = new Int16[samples.Length];
         // float -> Int16 변환
+
         for (int i = 0; i < samples.Length; i++)
         {
             intData[i] = (short)(samples[i] * 32767);
         }
+
         // Int16 데이터 작성
         Byte[] bytesData = new Byte[intData.Length * 2];
         Buffer.BlockCopy(intData, 0, bytesData, 0, bytesData.Length);
         fileStream.Write(bytesData, 0, bytesData.Length);
+    }
+
+    // 마이크 장치 실행 시 Loudness 측정 
+    public float GetLoudnessFromMicrophone()
+    {
+        return GetLoudnessFromAudioClip(Microphone.GetPosition(micList[MicDevices]), clip);
+    }
+
+    // 오디오 클립 실행 시 Loudness 측정 
+    public float GetLoudnessFromAudioClip(int clipPosition, AudioClip clip)
+    {
+        int startPosition = clipPosition - sampleWindow;
+
+        if (startPosition < 0)
+        {
+            return 0;
+        }
+
+        float[] waveData = new float[sampleWindow];
+        clip.GetData(waveData, startPosition);
+
+        float totalLoudness = 0f;
+
+        for (int i = 0; i < sampleWindow; i++)
+        {
+            totalLoudness += Mathf.Abs(waveData[i]);
+        }
+
+        return totalLoudness / sampleWindow;
     }
 
 

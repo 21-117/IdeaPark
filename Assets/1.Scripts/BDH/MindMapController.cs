@@ -159,17 +159,17 @@ public class MindMapController : MonoBehaviourPun
             MindMapTreeManager.instance.PrintTree(root);
         }
 
-        // 5번 키를 누르면 현재 Hover된 노드의 자식 리스트 데이터를 출력
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            MindMapNodeInfo currentNodeInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
+        //// 5번 키를 누르면 현재 Hover된 노드의 자식 리스트 데이터를 출력
+        //if (Input.GetKeyDown(KeyCode.Alpha5))
+        //{
+        //    MindMapNodeInfo currentNodeInfo = hover.GetComponentInChildren<MindMapNodeInfo>();
 
-            if (currentNodeInfo != null)
-            {
+        //    if (currentNodeInfo != null)
+        //    {
 
 
-            }
-        }
+        //    }
+        //}
     }
 
 
