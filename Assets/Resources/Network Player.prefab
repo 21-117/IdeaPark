@@ -642,6 +642,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3640720567416817428}
   - component: {fileID: 6137989446084956235}
+  - component: {fileID: 5041118741045170835}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -680,6 +681,14 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!81 &5041118741045170835
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2241708528105022276}
+  m_Enabled: 1
 --- !u!1 &2510048787076490956
 GameObject:
   m_ObjectHideFlags: 0

@@ -32071,7 +32071,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4229082527412176130}
   - component: {fileID: 1088002202624206876}
-  - component: {fileID: 2129311996909718940}
   - component: {fileID: 213175428352086886}
   - component: {fileID: 5340340763521704851}
   - component: {fileID: 6193813417971400752}
@@ -32133,21 +32132,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2129311996909718940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4452864799736859585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9355604633bcb7c4ea9c87e7fee5aea4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  head: {fileID: 619730497710663903}
-  leftHand: {fileID: 7013620244144107209}
-  rightHand: {fileID: 7803066002171701963}
 --- !u!114 &213175428352086886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43616,7 +43600,6 @@ GameObject:
   - component: {fileID: 5655432499178330196}
   - component: {fileID: 2966035079558557466}
   - component: {fileID: 266566089300675496}
-  - component: {fileID: 1036725426012951152}
   - component: {fileID: 5146654348241811092}
   m_Layer: 0
   m_Name: Main Camera
@@ -43840,14 +43823,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!81 &1036725426012951152
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5847475155707385704}
-  m_Enabled: 1
 --- !u!114 &5146654348241811092
 MonoBehaviour:
   m_ObjectHideFlags: 0
