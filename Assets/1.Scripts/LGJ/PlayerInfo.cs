@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class PlayerInfo : MonoBehaviourPunCallbacks
 {
@@ -15,6 +16,8 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
     public GameObject buttonMind;
     public FlexibleColorPicker fcp;
     public bool createBubble = false;
+
+    public GameObject palette, keyboard, ai;
 
     // ¿Þ¼Õ, ¿À¸¥¼Õ
     public GameObject left_Hand_Obj, right_Hand_Obj;
@@ -37,6 +40,8 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
         RayObject = null;
         XROrigin rig = FindObjectOfType<XROrigin>();
         buttonMind = rig.transform.Find("Camera Offset/Left Hand/UIs/Button_Mind").gameObject;
+
+        fcp.transform.parent.GetComponent<Canvas>().worldCamera = Camera.main;
     }
 
     public GameObject GrabObject

@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 
 public class MindMapController : MonoBehaviourPun
 {
+    public static MindMapController mindMapController;
 
     // 마인드맵 오른쪽 기능 컨트롤러
     public GameObject R_indexTip;

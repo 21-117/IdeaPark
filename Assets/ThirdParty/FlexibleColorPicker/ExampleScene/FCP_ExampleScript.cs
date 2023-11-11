@@ -8,7 +8,8 @@ public class FCP_ExampleScript : MonoBehaviour {
 
     private void Start() {
 
-        //fcp = PlayerInfo.localPlayer.fcp;
+        //fcp = FindObjectOfType<FlexibleColorPicker>();
+        ////fcp = PlayerInfo.localPlayer.fcp;
         //if (getStartingColorFromMaterial)
         //    fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
 
@@ -17,7 +18,7 @@ public class FCP_ExampleScript : MonoBehaviour {
 
     private void Update()
     {
-        if(PlayerInfo.localPlayer != null)
+        if (PlayerInfo.localPlayer != null)
         {
             fcp = PlayerInfo.localPlayer.fcp;
             if (getStartingColorFromMaterial)

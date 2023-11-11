@@ -26,22 +26,21 @@ public class XR_Ray : XRRayInteractor
     protected override void OnSelectExiting(SelectExitEventArgs args)
     {
         base.OnSelectExiting(args);
-        //MindMapController.state = MindMapController.State.CREATE;
 
-        //if (MindMapController.instance._nodeAttach == false && MindMapController.instance._nodeDetach == false)
-        //{
-        //    MindMapController.instance._nodeAttach = true;
-        //}
-        //else if (MindMapController.instance._nodeAttach == true && MindMapController.instance._nodeDetach == false)
-        //{
-        //    MindMapController.instance._nodeAttach = false;
-        //    MindMapController.instance._nodeDetach = true;
-        //}
-        //else if (MindMapController.instance._nodeAttach == false && MindMapController.instance._nodeDetach == true)
-        //{
-        //    MindMapController.instance._nodeAttach = true;
-        //    MindMapController.instance._nodeDetach = false;
-        //}
+        if (MindMapController.mindMapController._nodeAttach == false && MindMapController.mindMapController._nodeDetach == false)
+        {
+            MindMapController.mindMapController._nodeAttach = true;
+        }
+        else if (MindMapController.mindMapController._nodeAttach == true && MindMapController.mindMapController._nodeDetach == false)
+        {
+            MindMapController.mindMapController._nodeAttach = false;
+            MindMapController.mindMapController._nodeDetach = true;
+        }
+        else if (MindMapController.mindMapController._nodeAttach == false && MindMapController.mindMapController._nodeDetach == true)
+        {
+            MindMapController.mindMapController._nodeAttach = true;
+            MindMapController.mindMapController._nodeDetach = false;
+        }
 
 
         if (args.interactableObject.transform.TryGetComponent(out XR_Bubble bubble))
