@@ -23,7 +23,10 @@ public class ClovaMicrophone : MonoBehaviour
     public Vector3 maxScale;
 
     private float loudnessSensibility = 100f;
-    private float threshold = 0.1f; 
+    private float threshold = 0.1f;
+    private float loudness; 
+    private float recordingTimeOut = 10f;
+    private bool isRecording = false; 
    
     // 오디오 Source 
     private AudioSource audioSource;
@@ -57,7 +60,7 @@ public class ClovaMicrophone : MonoBehaviour
 
     private void Update()
     {
-        float loudness = GetLoudnessFromMicrophone() * loudnessSensibility;
+        loudness = GetLoudnessFromMicrophone() * loudnessSensibility;
 
         if (loudness < threshold) loudness = 0; 
 
@@ -66,7 +69,7 @@ public class ClovaMicrophone : MonoBehaviour
         // 5번 키를 누르면 마이크 녹음 시작
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            onRecoderMicrophone(); 
+            StartCoroutine(StartRecording()); 
         }
 
         // 6번 키를 누르면 마이크 녹음 종료 후 API 호출. 
@@ -78,14 +81,31 @@ public class ClovaMicrophone : MonoBehaviour
 
     private void onRecoderMicrophone()
     {
+        // 1. Photon voice Recorder Transmit Enabled를 비활성화 .
+        VoiceRecorderController.onStopTransmit();
+
         print("네이버 API 호출을 위한 녹음을 시작합니다. 현재 마이크 환경 : " + micList[MicDevices]);
+
+        // 3. 네이버 API 호출을 위한 녹음
         clip = Microphone.Start(micList[MicDevices], true, 10, 44100);
+    }
+
+    private void onStopRecoderMicrophone()
+    {
+        print("네이버 API 호출을 위한 녹음을 종료합니다. ");
+        isRecording = false;
+
+        // 네이버 API 호출을 위한 녹음을 종료
+        Microphone.End(micList[MicDevices]);
     }
 
     private void onCallNaverAPI()
     {
-        print("네이버 API 호출을 위한 녹음을 종료합니다. ");
-        Microphone.End(micList[MicDevices]);
+        // 네이버 API 호출을 위한 녹음을 종료
+        onStopRecoderMicrophone();
+
+        // Photon voice Recorder Transmit Enabled를 활성화 .
+        VoiceRecorderController.onStartTransmit();
 
         // 경로에 오디오 파일 WAV 저장. 
         SaveAudioClipToWAV(Application.dataPath + "/test.wav");
@@ -95,6 +115,43 @@ public class ClovaMicrophone : MonoBehaviour
 
         // 네이버 STT API 코루틴 호출. 
         StartCoroutine(PostVoice(apiUrl, byteData));
+    }
+
+    // 마이크로폰 녹음 시작 코루틴. 
+    // 예외처리 : 10초 이상 Microphone의 입력이 없는 경우 종료
+    IEnumerator StartRecording()
+    {
+        float timer = 0f; 
+
+        isRecording = true;
+
+        // 0.2 초 잠시 대기한 후 
+        yield return new WaitForSeconds(0.2f);
+
+        // 녹음 시작 메소드 호출 
+        onRecoderMicrophone();
+
+        while (isRecording)
+        {
+            // 매 프레임마다 체크 
+            yield return null;
+
+            timer += Time.deltaTime;
+
+            // 입력이 감지되면 타이머 초기화
+            if (Microphone.IsRecording(micList[MicDevices]) && loudness > threshold)
+            {          
+                timer = 0f;
+            }
+           
+            // 입력이 10초 이상 없으면 녹음 종료. 
+            if (timer > recordingTimeOut)
+            {
+                // 녹음 종료 메소드 호출. 
+                onStopRecoderMicrophone(); 
+            }
+
+        }
     }
 
     // Naver API로 오디오 데이터 전송. 
@@ -182,10 +239,12 @@ public class ClovaMicrophone : MonoBehaviour
     {
         Int16[] intData = new Int16[samples.Length];
         // float -> Int16 변환
+
         for (int i = 0; i < samples.Length; i++)
         {
             intData[i] = (short)(samples[i] * 32767);
         }
+
         // Int16 데이터 작성
         Byte[] bytesData = new Byte[intData.Length * 2];
         Buffer.BlockCopy(intData, 0, bytesData, 0, bytesData.Length);
