@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
 public class ConnectionNodeController : MonoBehaviour
 {
@@ -36,8 +37,8 @@ public class ConnectionNodeController : MonoBehaviour
     public void ConnectionNode(GameObject endPosObject, bool indexObject)
     {
        
-        ConnectionLine = Resources.Load<GameObject>("Prefabs/NodeConnectionLine");
-        GameObject LIneObject = Instantiate(ConnectionLine, Vector3.zero, Quaternion.identity);
+        //ConnectionLine = Resources.Load<GameObject>("Prefabs/NodeConnectionLine");
+        GameObject LIneObject = PhotonNetwork.Instantiate("Prefabs/NodeConnectionLine", Vector3.zero, Quaternion.identity);
 
         // endPosObject의 오브젝트에 자식으로 라인 오브젝트가 저장된다.  
         LIneObject.transform.SetParent(endPosObject.transform);

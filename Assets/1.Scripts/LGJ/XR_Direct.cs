@@ -81,7 +81,7 @@ public class XR_Direct : XRDirectInteractor
     {
         base.OnSelectEntered(args);
         Debug.Log("select entered");
-        MindMapController.setHover(true, args.interactableObject.transform.gameObject);
+        //MindMapController.setHover(true, args.interactableObject.transform.gameObject);
 
         if (args.interactableObject != null)
         {
@@ -99,7 +99,7 @@ public class XR_Direct : XRDirectInteractor
     {
         base.OnSelectExited(args);
         touchTime = 0f;
-        if (args.interactableObject == null)
+        if (args.interactableObject != null)
         {
             if (handpos == HandPos.Left)
             {

@@ -41,7 +41,6 @@ public class MindMapController : MonoBehaviourPun
     // XR_Ray 에 쓸 어태치 디테치 스위치 변수
     public bool _nodeAttach = false;
     public bool _nodeDetach = false;
-
     // 핀치 여부 
     private bool isPinched;
 
@@ -133,21 +132,11 @@ public class MindMapController : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-
         // 1번 키를 누르면 플레이어가 노드를 생성할 수 있는 CREATE
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            print("플레이어가 노드를 생성함."); 
-            string textValue = "";
-            photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip.transform.position, textValue);
-            
-        }
+        photonView.RPC(nameof(UpdateCreate), RpcTarget.All, R_indexTip.transform.position, "");
 
         // 2번 키를 누르면 플레이어가 노드를 연결할 수 있는 CONNECTION
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            photonView.RPC(nameof(UpdateConnection), RpcTarget.All); 
-        }
+        photonView.RPC(nameof(UpdateConnection), RpcTarget.All);
 
         // 3번 키를 누르면 플레이어가 노드에 데이터를 삭제
         if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -246,59 +235,62 @@ public class MindMapController : MonoBehaviourPun
         {
             currentConnectionNode = PlayerInfo.localPlayer.rayObject.GetComponentInChildren<ConnectionNodeController>();
 
+            if (_nodeAttach) {
 
-            if (rightIndexTip)
-            {
-                currentConnectionNode.ConnectionNode(R_indexTip, true);
-                prevConnectionNode = currentConnectionNode;
-                rightIndexTip = false;
+                if (rightIndexTip)
+                {
+                    currentConnectionNode.ConnectionNode(R_indexTip, true);
+                    prevConnectionNode = currentConnectionNode;
+                    rightIndexTip = false;
+                }
             }
 
+            if (_nodeDetach) {
 
-
-            if (!rightIndexTip)
-            {
-                MindMapNodeInfo prevNodeInfo = prevConnectionNode.GetComponent<MindMapNodeInfo>();
-                MindMapNodeInfo currentNodeInfo = currentConnectionNode.GetComponent<MindMapNodeInfo>();
-
-                //// 이전에 임시 저장 노드 정보, 현재 연결할 노드 정보 : ID 값을 비교한다. 
-                bool nodeIdCheck = (prevNodeInfo.ID < currentNodeInfo.ID) ? true : false;
-
-                // 1.예외 처리 - > 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
-                // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
-                // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
-
-                // 2. 예외 처리 - > FindGetHeight(MindMapNodeInfo root) 함수를 통해 마인드 맵의 깊이를 확인
-                // 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
-
-
-
-                if (nodeIdCheck)
+                if (!rightIndexTip)
                 {
-                    // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
-                    // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
+                    MindMapNodeInfo prevNodeInfo = prevConnectionNode.GetComponent<MindMapNodeInfo>();
+                    MindMapNodeInfo currentNodeInfo = currentConnectionNode.GetComponent<MindMapNodeInfo>();
 
-                    print("ID 값 확인 : " + "이전에 생성한 노드 정보 : " + prevNodeInfo.ID + "  " + "현재 연결할 노드 정보 : " + currentNodeInfo.ID);
+                    //// 이전에 임시 저장 노드 정보, 현재 연결할 노드 정보 : ID 값을 비교한다. 
+                    bool nodeIdCheck = (prevNodeInfo.ID < currentNodeInfo.ID) ? true : false;
 
-                    // "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다. ( 부모 - 자식) 
-                    prevConnectionNode.ConnectionNode(currentConnectionNode.transform.gameObject, false);
+                    // 1.예외 처리 - > 만약에 현재 연결할 노드 (자식)가 다른 부모를 가진 경우( 리프 노드가 아닌 경우 ) -> 연결을 허용해야 하는가..? 
+                    // 허용한 다면 체크하는 방법은 -> 연결할 노드 (자식)의 라인렌더러 오브젝트를 가지고 있는 지 확인하면 된다. 
+                    // 연결할 노드 (자식)의 라인렌더러 오브젝트가 존재한다면 -> 리프 노드가 아님. 
 
-                    // prevConnectionNode(부모) 자식 노드 리스트 Children에 currentConnectionNode (자식) 노드를 추가한다. 
-                    prevNodeInfo.Children.Add(currentNodeInfo);
+                    // 2. 예외 처리 - > FindGetHeight(MindMapNodeInfo root) 함수를 통해 마인드 맵의 깊이를 확인
+                    // 깊이가 같은 노드들끼리는 연결할 수 없도록 설정. 
 
+
+
+                    if (nodeIdCheck)
+                    {
+                        // 이전에 생성한 노드 ID 가 낮은 경우 -> 이전에 생성한 노드(부모),  현재 연결할 노드 노드(자식) 
+                        // 이 경우에만 부모 - 자식 관계가 형성될 수 있다.
+
+                        print("ID 값 확인 : " + "이전에 생성한 노드 정보 : " + prevNodeInfo.ID + "  " + "현재 연결할 노드 정보 : " + currentNodeInfo.ID);
+
+                        // "링크"를 허공에 끌어 당기고, 연결할 노드를 찾으면 노드가 연결된다. ( 부모 - 자식) 
+                        prevConnectionNode.ConnectionNode(currentConnectionNode.transform.gameObject, false);
+
+                        // prevConnectionNode(부모) 자식 노드 리스트 Children에 currentConnectionNode (자식) 노드를 추가한다. 
+                        prevNodeInfo.Children.Add(currentNodeInfo);
+
+                    }
+                    else
+                    {
+                        // 이전에 생성한 노드 ID 가 높은 경우 단순히 연결만 지원한다. (양 방향 링크 지원)
+                        // 제한 사항 -> 자식에서 부모로 연결할 수 없다. 
+                        currentConnectionNode.ConnectionNode(prevConnectionNode.transform.gameObject, false);
+
+                    }
+
+                    //  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
+                    prevConnectionNode.OnDestroyIndexTip(R_indexTip);
+
+                    rightIndexTip = true;
                 }
-                else
-                {
-                    // 이전에 생성한 노드 ID 가 높은 경우 단순히 연결만 지원한다. (양 방향 링크 지원)
-                    // 제한 사항 -> 자식에서 부모로 연결할 수 없다. 
-                    currentConnectionNode.ConnectionNode(prevConnectionNode.transform.gameObject, false);
-
-                }
-
-                //  "링크"를 허공에 끌어 당기고, 연결할 노드를 찾지 못하면 "링크" 가 사라진다. 
-                prevConnectionNode.OnDestroyIndexTip(R_indexTip);
-
-                rightIndexTip = true;
             }
 
 
@@ -350,7 +342,7 @@ public class MindMapController : MonoBehaviourPun
                 ConnectionNodeController.destroyLineRenderer(deleteNode);
 
                 // 2. 해당 삭제할 노드 삭제 
-                PhotonNetwork.Destroy(deleteNode);
+                Destroy(deleteNode);
 
                 // 3. 노드 삭제 SFX 사운드 실행 
                 SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
@@ -383,7 +375,7 @@ public class MindMapController : MonoBehaviourPun
             PlayerInfo.localPlayer.createBubble = false;
             //GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
             GameObject CreateNode = PhotonNetwork.Instantiate("Prefabs/Bubble", attachPos, Quaternion.identity);
-            print("노드 생성함."); 
+
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
 
