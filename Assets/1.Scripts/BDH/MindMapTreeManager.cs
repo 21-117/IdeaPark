@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.OpenXR.Input;
-
+using Photon.Pun;
 
 
 // 마인드맵을 구성하는 노드를 저장하는 형태. 
@@ -240,7 +240,7 @@ public class MindMapTreeManager : MonoBehaviour
         if(root != null)
         {
             print("현재 삭제할 서브트리 노드 : " + root.transform.parent.gameObject);
-            Destroy(root.transform.parent.gameObject);
+            PhotonNetwork.Destroy(root.transform.parent.gameObject);
         }
        
         // 재귀적으로 자식들의 데이터 접근

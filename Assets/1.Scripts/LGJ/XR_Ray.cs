@@ -10,7 +10,7 @@ public class XR_Ray : XRRayInteractor
     {
         if (PlayerInfo.localPlayer != null)
         {
-            MindMapController.mindMapController.UpdateConnection();
+            //MindMapController.mindMapController.UpdateConnection();
         }
     }
 

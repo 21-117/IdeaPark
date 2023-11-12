@@ -342,7 +342,6 @@ public class MindMapController : MonoBehaviourPun
             // 삭제할 노드의 삭제할 1번, 2번으로 해결할 수 있나,,,? 
             print("현재 삭제할려는 노드의 리스트의 갯수 확인. : " + deleteNodeInfo.Children.Count);
 
-            PlayerInfo.localPlayer.GrabObject.GetComponent<XR_Bubble>().OffButtonMind();
 
             // 1. 리프 노드를 삭제하는 경우는 해당 리프 노드를 찾아서 삭제한다. 
             if (deleteNodeInfo.Children.Count == 0)
@@ -351,7 +350,7 @@ public class MindMapController : MonoBehaviourPun
                 ConnectionNodeController.destroyLineRenderer(deleteNode);
 
                 // 2. 해당 삭제할 노드 삭제 
-                Destroy(deleteNode);
+                PhotonNetwork.Destroy(deleteNode);
 
                 // 3. 노드 삭제 SFX 사운드 실행 
                 SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_DELETE);
@@ -382,8 +381,8 @@ public class MindMapController : MonoBehaviourPun
         if (PlayerInfo.localPlayer.createBubble)
         {
             PlayerInfo.localPlayer.createBubble = false;
-            GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
-            GameObject CreateNode = Instantiate(obj, attachPos, Quaternion.identity);
+            //GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
+            GameObject CreateNode = PhotonNetwork.Instantiate("Prefabs/Bubble", attachPos, Quaternion.identity);
             print("노드 생성함."); 
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);

@@ -59,7 +59,6 @@ public class XR_Direct : XRDirectInteractor
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
         base.OnHoverEntered(args);
-        //MindMapController.setHover(true, args.interactableObject.transform.gameObject);
 
         Debug.Log("hover entered");
     }
@@ -82,6 +81,7 @@ public class XR_Direct : XRDirectInteractor
     {
         base.OnSelectEntered(args);
         Debug.Log("select entered");
+        MindMapController.setHover(true, args.interactableObject.transform.gameObject);
 
         if (args.interactableObject != null)
         {
