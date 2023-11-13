@@ -1808,7 +1808,7 @@ GameObject:
   - component: {fileID: 2981336697803334079}
   - component: {fileID: 8763373167774114026}
   m_Layer: 5
-  m_Name: Button_Font
+  m_Name: Button_Keyboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1950,7 +1950,6 @@ MonoBehaviour:
   ai: {fileID: 0}
   palette: {fileID: 0}
   keyboard: {fileID: 0}
-  trash: {fileID: 0}
 --- !u!1 &748823069779721905
 GameObject:
   m_ObjectHideFlags: 0
@@ -4805,7 +4804,6 @@ MonoBehaviour:
   ai: {fileID: 0}
   palette: {fileID: 0}
   keyboard: {fileID: 0}
-  trash: {fileID: 0}
 --- !u!1 &1619013718475014787
 GameObject:
   m_ObjectHideFlags: 0
@@ -5881,7 +5879,6 @@ MonoBehaviour:
   ai: {fileID: 0}
   palette: {fileID: 0}
   keyboard: {fileID: 0}
-  trash: {fileID: 0}
 --- !u!1 &3386881585954834849
 GameObject:
   m_ObjectHideFlags: 0
@@ -5937,6 +5934,7 @@ GameObject:
   - component: {fileID: 5755464701164143113}
   - component: {fileID: 4535709787437958456}
   - component: {fileID: 1137665484075693888}
+  - component: {fileID: 3377605350272176089}
   m_Layer: 5
   m_Name: Button_Mind
   m_TagString: BubbleUI
@@ -6072,6 +6070,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &3377605350272176089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433541936955263987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98a95293fb94a1746aa77ddc4e7ae368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3501054493118122026
 GameObject:
   m_ObjectHideFlags: 0
@@ -7313,8 +7323,9 @@ GameObject:
   - component: {fileID: 8743815586883524039}
   - component: {fileID: 3489141408451042711}
   - component: {fileID: 6203754683265078378}
+  - component: {fileID: 6442751128418190074}
   m_Layer: 5
-  m_Name: Button_Trash
+  m_Name: Button_Delete
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7427,9 +7438,9 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerInfo, Assembly-CSharp
-        m_MethodName: DeleteBubble
+      - m_Target: {fileID: 6442751128418190074}
+        m_TargetAssemblyTypeName: PressMindButton, Assembly-CSharp
+        m_MethodName: OnOffButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7440,6 +7451,22 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 0
+--- !u!114 &6442751128418190074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4283280996283417731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7053640eb40291740a18679eec76e006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 4
+  ai: {fileID: 0}
+  palette: {fileID: 0}
+  keyboard: {fileID: 0}
 --- !u!1 &4318801746058982772
 GameObject:
   m_ObjectHideFlags: 0
@@ -8904,6 +8931,7 @@ GameObject:
   - component: {fileID: 4702121888750050683}
   - component: {fileID: 5595166102953569747}
   - component: {fileID: 5910828119107356453}
+  - component: {fileID: 8268743125796795350}
   m_Layer: 5
   m_Name: Button_Voice
   m_TagString: Untagged
@@ -9018,9 +9046,9 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerInfo, Assembly-CSharp
-        m_MethodName: DeleteBubble
+      - m_Target: {fileID: 8268743125796795350}
+        m_TargetAssemblyTypeName: PressMindButton, Assembly-CSharp
+        m_MethodName: OnOffButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9031,6 +9059,22 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 0
+--- !u!114 &8268743125796795350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5485306794088901377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7053640eb40291740a18679eec76e006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 5
+  ai: {fileID: 0}
+  palette: {fileID: 0}
+  keyboard: {fileID: 0}
 --- !u!1 &5575320993657115173
 GameObject:
   m_ObjectHideFlags: 0
@@ -17642,6 +17686,7 @@ GameObject:
   - component: {fileID: 7925398486843865452}
   - component: {fileID: 5105272132516882210}
   - component: {fileID: 3239719380835103543}
+  - component: {fileID: 2587384714325881061}
   m_Layer: 5
   m_Name: Button_STT
   m_TagString: Untagged
@@ -17756,9 +17801,9 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerInfo, Assembly-CSharp
-        m_MethodName: DeleteBubble
+      - m_Target: {fileID: 2587384714325881061}
+        m_TargetAssemblyTypeName: PressMindButton, Assembly-CSharp
+        m_MethodName: OnOffButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17769,6 +17814,22 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 0
+--- !u!114 &2587384714325881061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8778967441322417915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7053640eb40291740a18679eec76e006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 6
+  ai: {fileID: 0}
+  palette: {fileID: 0}
+  keyboard: {fileID: 0}
 --- !u!1 &8780256669707566562
 GameObject:
   m_ObjectHideFlags: 0
