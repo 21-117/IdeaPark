@@ -19,17 +19,11 @@ public class ClovaMicrophone : MonoBehaviour
     // STT 기능 비활성화
     public static Action onStopSTT;
 
-    public Vector3 minScale; 
-    public Vector3 maxScale;
-
     private float loudnessSensibility = 100f;
     private float threshold = 0.1f;
     private float loudness; 
     private float recordingTimeOut = 10f;
     private bool isRecording = false; 
-   
-    // 오디오 Source 
-    private AudioSource audioSource;
 
     // 오디오 클립 저장. 
     private AudioClip clip;
@@ -48,35 +42,24 @@ public class ClovaMicrophone : MonoBehaviour
 
     void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        
         micList = Microphone.devices;
     }
 
     private void Start()
     {
-        onStartSTT = () => { onRecoderMicrophone(); };
+        onStartSTT = () => { StartCoroutine(StartRecording()); };
         onStopSTT = () => { onCallNaverAPI(); };
     }
 
     private void Update()
     {
-        loudness = GetLoudnessFromMicrophone() * loudnessSensibility;
+        float loudness = GetLoudnessFromMicrophone() * loudnessSensibility;
 
-        if (loudness < threshold) loudness = 0; 
+        if (loudness < threshold)
+            loudness = 0;
 
-        this.transform.localScale = Vector3.Lerp(minScale, maxScale, loudness);
 
-        // 5번 키를 누르면 마이크 녹음 시작
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            StartCoroutine(StartRecording()); 
-        }
-
-        // 6번 키를 누르면 마이크 녹음 종료 후 API 호출. 
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            onCallNaverAPI();
-        }
     }
 
     private void onRecoderMicrophone()

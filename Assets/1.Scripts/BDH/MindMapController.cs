@@ -67,7 +67,8 @@ public class MindMapController : MonoBehaviourPun
 
     // 마인드 노드 생성 메소드 호출
     public static Action<Vector3, string> CreateMindNode;
-    
+
+    private int count = 0; 
 
     // Poke에 대한 프로퍼티
     public bool ISPOKED
@@ -373,8 +374,8 @@ public class MindMapController : MonoBehaviourPun
         if (PlayerInfo.localPlayer.createBubble)
         {
             PlayerInfo.localPlayer.createBubble = false;
-            //GameObject obj = Resources.Load<GameObject>("Prefabs/Bubble");
             GameObject CreateNode = PhotonNetwork.Instantiate("Prefabs/Bubble", attachPos, Quaternion.identity);
+            CreateNode.name = "Bubble_" + count.ToString(); 
 
             // 노드 생성시 생성 SFX  사운드 실행 
             SoundManager.instance.PlaySFX(SoundManager.ESFX.SFX_NODE_CREATE);
@@ -416,7 +417,7 @@ public class MindMapController : MonoBehaviourPun
 
             //}
 
-
+            count++; 
         }
 
     }

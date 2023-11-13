@@ -16,18 +16,17 @@ public class AudioLoudnessDetection : MonoBehaviour
     public void MicrophoneToAudioClip()
     {
         // 마이크를 원하는 것으로 설정 가능하다. 
-        //string microphoneName = Microphone.devices[0]; // 0번 오큘러스 해드셋 
-        string microphoneName = Microphone.devices[3];
+        string microphoneName = Microphone.devices[0]; // 0번 오큘러스 해드셋 
+
         print(microphoneName);
         microphoneClip = Microphone.Start(microphoneName, true, 20, AudioSettings.outputSampleRate);
 
-        //microphoneClip = Microphone.Start(microphoneName, false, 60, 16000);
     }
 
     // 마이크 장치 실행 시 Loudness 측정 
     public float GetLoudnessFromMicrophone()
     {
-        return GetLoudnessFromAudioClip(Microphone.GetPosition(Microphone.devices[3]), microphoneClip);
+        return GetLoudnessFromAudioClip(Microphone.GetPosition(Microphone.devices[0]), microphoneClip);
     }
 
 
