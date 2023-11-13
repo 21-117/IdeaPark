@@ -24,7 +24,7 @@ public class VoiceRecorderController : MonoBehaviour
     void Start()
     {
         // 초기값으로는 비활성화로 설정. 
-        //recorder.TransmitEnabled = false; 
+        recorder.TransmitEnabled = false; 
 
         onStartTransmit = () =>
         {

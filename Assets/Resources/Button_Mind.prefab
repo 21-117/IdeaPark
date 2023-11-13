@@ -1139,7 +1139,7 @@ PrefabInstance:
     - target: {fileID: 6496723694224172713, guid: 2eb03679cc43f494f9f40d5fef272e71,
         type: 3}
       propertyPath: m_PresetInfoIsWorld
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6981933185168835668, guid: 2eb03679cc43f494f9f40d5fef272e71,
         type: 3}
@@ -1422,9 +1422,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7053640eb40291740a18679eec76e006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
+  ai: {fileID: 0}
   palette: {fileID: 0}
   keyboard: {fileID: 0}
-  trash: {fileID: 0}
 --- !u!114 &1998320563565393704 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8864589273149168630, guid: 2eb03679cc43f494f9f40d5fef272e71,

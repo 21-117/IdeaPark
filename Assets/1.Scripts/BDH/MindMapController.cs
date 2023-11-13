@@ -68,7 +68,9 @@ public class MindMapController : MonoBehaviourPun
     // 마인드 노드 생성 메소드 호출
     public static Action<Vector3, string> CreateMindNode;
 
-    private int count = 0; 
+    // 임시로 만듬. 
+    private int count = 0;
+    
 
     // Poke에 대한 프로퍼티
     public bool ISPOKED
@@ -383,9 +385,11 @@ public class MindMapController : MonoBehaviourPun
             // 생성된 노드들은 [ MindMapManager ]의 하위에 저장된다,
             CreateNode.transform.SetParent(mindNodeManager.transform);
             
-            // 생성된 노드의 정보에 접근한다. 
+            // 생성된 노드의 정보에 접한다. 
             nodeInfo = CreateNode.GetComponentInChildren<MindMapNodeInfo>();
 
+           
+            CreateNode.GetComponent<XR_Bubble>().mindText.text = value;
             //if (nodeInfo.ID == 0)
             //{
             //    // 오브젝트 이름을 루트 노드로 변경. 

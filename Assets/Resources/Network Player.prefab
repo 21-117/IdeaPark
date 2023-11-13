@@ -9174,8 +9174,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AIButton: {fileID: 3681707324875355568, guid: bcf3e125d5ccbb14fbadc040bec3d6fb,
     type: 3}
-  attachTransform: {fileID: 0}
+  attachTransform: {fileID: 1389851684536544962}
   parent: {fileID: 7677556113880575421}
+  addMindNodeBtn: {fileID: 6243439239738781817}
+  updateMindNodeBtn: {fileID: 9126805960783647607}
 --- !u!1 &6207939184496438059
 GameObject:
   m_ObjectHideFlags: 0

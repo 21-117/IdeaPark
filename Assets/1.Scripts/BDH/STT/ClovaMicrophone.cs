@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 // Clova STT로 부터 받은 데이터 값. 
@@ -171,6 +172,9 @@ public class ClovaMicrophone : MonoBehaviour
 
             Debug.Log("Voice Server responded: " + voiceRecognize.text);
             // Voice Server responded: 인식결과
+
+            // 해당 마인드 맵에 인식한 텍스트 적용. 
+            PlayerInfo.localPlayer.grabObject.GetComponentInChildren<Text>().text = voiceRecognize.text;
         }
     }
 
