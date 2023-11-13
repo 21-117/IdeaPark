@@ -76,6 +76,11 @@ public class OnScreenKeyboard : MonoBehaviour
             beforeCaps = curCaps;
             ChangeKeyboardType(curLang, curCaps);
         }
+
+        if(PlayerInfo.localPlayer.grabObject != null)
+        {
+            SetShowTextField();
+        }
     }
 
     void AddListenerToButtons()
