@@ -19,6 +19,8 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
 
     public GameObject palette, keyboard, ai;
 
+    public MeshRenderer head;
+    public SkinnedMeshRenderer leftHand, rightHand;
     // ¿Þ¼Õ, ¿À¸¥¼Õ
     public GameObject left_Hand_Obj, right_Hand_Obj;
 

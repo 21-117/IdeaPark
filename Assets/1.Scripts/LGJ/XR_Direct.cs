@@ -31,21 +31,23 @@ public class XR_Direct : XRDirectInteractor
         //}
 
         cols = Physics.OverlapSphere(this.transform.position, radius, layerMask);
-        if (cols.Length == 0 && CheckFingerTip.instance.touchTip && PlayerInfo.localPlayer.left_Hand_Obj == null && PlayerInfo.localPlayer.right_Hand_Obj == null)
+        if (cols.Length == 0 && CheckFingerTip.instance.touchTip)
         {
             lerpValue = Mathf.Clamp01(curTime / createTime);
-            if (sampleBubble != null)
-            {
-                sampleBubble.SetActive(true);
-                sampleBubble.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpValue);
-            }
-            curTime += Time.deltaTime;
-            if (curTime > createTime && !PlayerInfo.localPlayer.createBubble)
-            {
-                // 노드를 만들어도 되는 허용치 부여
-                PlayerInfo.localPlayer.createBubble = true;
-                curTime = 0f;
-                //touchTime = 0f;
+            if(PlayerInfo.localPlayer != null && PlayerInfo.localPlayer.left_Hand_Obj == null && PlayerInfo.localPlayer.right_Hand_Obj == null){
+                if (sampleBubble != null)
+                {
+                    sampleBubble.SetActive(true);
+                    sampleBubble.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpValue);
+                }
+                curTime += Time.deltaTime;
+                if (curTime > createTime && !PlayerInfo.localPlayer.createBubble)
+                {
+                    // 노드를 만들어도 되는 허용치 부여
+                    PlayerInfo.localPlayer.createBubble = true;
+                    curTime = 0f;
+                    //touchTime = 0f;
+                }
             }
         }
         else

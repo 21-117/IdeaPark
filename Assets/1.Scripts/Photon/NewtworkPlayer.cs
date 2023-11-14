@@ -17,6 +17,8 @@ public class NewtworkPlayer : MonoBehaviour
     private Transform leftHandRig;
     private Transform rightHandRig;
 
+    public List<Material> bodyMats;
+
     private AudioListener audioListener;
     // Start is called before the first frame update
     void Start()
@@ -29,16 +31,21 @@ public class NewtworkPlayer : MonoBehaviour
 
         audioListener = head.GetComponent<AudioListener>();
 
+
         if (photonView.IsMine)
         {
             if (audioListener != null)
             {
                 audioListener.gameObject.SetActive(true);
             }
-            foreach(var item in GetComponentsInChildren<Renderer>())
+            foreach(var item in GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 item.enabled = false;
             }
+
+            bodyMats.Add(PlayerInfo.localPlayer.head.material);
+            bodyMats.Add(PlayerInfo.localPlayer.leftHand.material);
+            bodyMats.Add(PlayerInfo.localPlayer.rightHand.material);
         }
         else
         {

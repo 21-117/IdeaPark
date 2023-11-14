@@ -6801,6 +6801,7 @@ MonoBehaviour:
   head: {fileID: 3640720567416817428}
   leftHand: {fileID: 6342264103751216554}
   rightHand: {fileID: 697300024884314639}
+  bodyMats: []
 --- !u!114 &4505879236261923472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6856,6 +6857,9 @@ MonoBehaviour:
   palette: {fileID: 6692462825845426751}
   keyboard: {fileID: 355454613596862319}
   ai: {fileID: 6611436737211727353}
+  head: {fileID: 7909349526172707584}
+  leftHand: {fileID: 6477910323987472363}
+  rightHand: {fileID: 5911177143226432985}
   left_Hand_Obj: {fileID: 0}
   right_Hand_Obj: {fileID: 0}
 --- !u!1 &4524643084846665675

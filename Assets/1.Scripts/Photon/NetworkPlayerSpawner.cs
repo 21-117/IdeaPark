@@ -42,7 +42,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         }
 
         spawnedPlayerPrefab = PhotonNetwork.Instantiate("Network Player", spawnPoint.position, spawnPoint.rotation);
-
+        //spawnedPlayerPrefab.GetComponent<NewtworkPlayer>().head.
         //spawnedPlayerPrefab = PhotonNetwork.Instantiate("XR Interaction Hands Setup Variant", transform.position, transform.rotation);
     }
 
