@@ -1,9 +1,11 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.XR.Interaction;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using static System.Net.WebRequestMethods;
 
 public enum PressButton
@@ -14,9 +16,10 @@ public enum PressButton
     keyboard,
     delete,
     voice,
-    stt
+    stt,
+    home
 }
-public class PressMindButton : MonoBehaviour
+public class PressMindButton : MonoBehaviourPunCallbacks
 {
     public PressButton state;
     [HideInInspector]
@@ -25,6 +28,8 @@ public class PressMindButton : MonoBehaviour
     public GameObject palette;
     [HideInInspector]
     public GameObject keyboard;
+    [HideInInspector]
+    public GameObject delete;
 
     private Toggle toggle;
 
@@ -40,6 +45,7 @@ public class PressMindButton : MonoBehaviour
             ai = PlayerInfo.localPlayer.ai;
             palette = PlayerInfo.localPlayer.palette;
             keyboard = PlayerInfo.localPlayer.keyboard;
+            delete = PlayerInfo.localPlayer.delete;
         }
     }
 
@@ -67,6 +73,9 @@ public class PressMindButton : MonoBehaviour
             case PressButton.stt:
                 CallbackMethod(toggle.isOn, PressButton.stt);
                 break; 
+            case PressButton.home:
+                CallbackMethod(toggle.isOn, PressButton.home);
+                break; 
 
         }
 
@@ -82,6 +91,8 @@ public class PressMindButton : MonoBehaviour
             {
                 case PressButton.delete:
                     // 삭제할 메소드 호출.
+                    MindMapController.mindMapController.UpdateDelete();
+                    toggle.isOn = false;
                     break;
                 case PressButton.voice:
                     // 포톤 보이스 활성화 메소드 호출.
@@ -90,6 +101,10 @@ public class PressMindButton : MonoBehaviour
                 case PressButton.stt:
                     // stt 녹음 활성화 메소드 호출. 
                     ClovaMicrophone.onStartSTT();
+                    break;
+                case PressButton.home:
+                    // home 
+                    SceneManager.LoadScene("MJB_MyRoomScene2");
                     break;
             }
         }

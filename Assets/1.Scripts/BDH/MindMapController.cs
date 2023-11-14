@@ -326,7 +326,7 @@ public class MindMapController : MonoBehaviourPun
     public void UpdateDelete()
     {
 
-        GameObject deleteNode = hover;
+        GameObject deleteNode = PlayerInfo.localPlayer.GrabObject;
         MindMapNodeInfo deleteNodeInfo;
 
         if (deleteNode != null)

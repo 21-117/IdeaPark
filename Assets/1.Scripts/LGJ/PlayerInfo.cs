@@ -17,7 +17,7 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
     public FlexibleColorPicker fcp;
     public bool createBubble = false;
 
-    public GameObject palette, keyboard, ai;
+    public GameObject palette, keyboard, ai, delete;
 
     public MeshRenderer head;
     public SkinnedMeshRenderer leftHand, rightHand;

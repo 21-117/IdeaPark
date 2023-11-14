@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class NewtworkPlayer : MonoBehaviour
 {
-    public Transform head;
+    public Transform head, audioListnerObj;
     public Transform leftHand;
     public Transform rightHand;
     private PhotonView photonView;
@@ -29,14 +29,14 @@ public class NewtworkPlayer : MonoBehaviour
         leftHandRig = rig.transform.Find("Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist");
         rightHandRig = rig.transform.Find("Camera Offset/Right Hand/Right Hand Interaction Visual/R_Wrist");
 
-        audioListener = head.GetComponent<AudioListener>();
+        audioListener = audioListnerObj.GetComponent<AudioListener>();
 
 
         if (photonView.IsMine)
         {
             if (audioListener != null)
             {
-                audioListener.gameObject.SetActive(true);
+                audioListnerObj.gameObject.SetActive(true);
             }
             foreach(var item in GetComponentsInChildren<SkinnedMeshRenderer>())
             {
@@ -51,7 +51,7 @@ public class NewtworkPlayer : MonoBehaviour
         {
             if (audioListener != null)
             {
-                audioListener.gameObject.SetActive(false);
+                audioListnerObj.gameObject.SetActive(false);
             }
         }
     }
