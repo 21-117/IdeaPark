@@ -13,7 +13,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     {
 
         // 초기에 스폰 위치 큐를 초기화합니다.
-        InitializeSpawnPointsQueue();
+        //InitializeSpawnPointsQueue();
    
 
     }
@@ -31,19 +31,19 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
-        // 큐에서 다음 스폰 위치를 가져옵니다.
-        if (spawnPointsQueue.Count > 0)
-        {
-            spawnPoint = spawnPointsQueue.Dequeue();
-        }
-        else
-        {
-            Debug.LogError("No more spawn points available!");
-        }
+        //// 큐에서 다음 스폰 위치를 가져옵니다.
+        //if (spawnPointsQueue.Count > 0)
+        //{
+        //    spawnPoint = spawnPointsQueue.Dequeue();
+        //}
+        //else
+        //{
+        //    Debug.LogError("No more spawn points available!");
+        //}
 
-        spawnedPlayerPrefab = PhotonNetwork.Instantiate("Network Player", spawnPoint.position, spawnPoint.rotation);
-        //spawnedPlayerPrefab.GetComponent<NewtworkPlayer>().head.
-        //spawnedPlayerPrefab = PhotonNetwork.Instantiate("XR Interaction Hands Setup Variant", transform.position, transform.rotation);
+        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        spawnedPlayerPrefab = PhotonNetwork.Instantiate("Network Player", spawnPoints[playerCount-1].position, spawnPoints[playerCount-1].rotation);
+        
     }
 
     public override void OnLeftRoom()
