@@ -505,6 +505,8 @@ MonoBehaviour:
     type: 3}
   attachTransform: {fileID: 0}
   parent: {fileID: 3480580635309444957}
+  addMindNodeBtn: {fileID: 6319046261523726129}
+  updateMindNodeBtn: {fileID: 3341547070014195697}
 --- !u!1 &5349820092755119703
 GameObject:
   m_ObjectHideFlags: 0
