@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    // Scene별 BGM 종류 [ 로딩, 마이룸, 프로젝트(워크스페이스), 협업 ]
+    // Scene별 BGM 종류 [ 마이룸, 프로젝트(워크스페이스), 로딩 ]
     public enum EBgm
     {
-        BGM_LODING,
-        BGM_MYROOM,
-        BGM_WORKSPACE,
-        BGM_TEAMSPACE
+        BGM_MYROOM, // Myroom.wav
+        BGM_WORKSPACE, // space.wav
+        BGM_LODING // 미정
     }
 
     // SFX 종류
@@ -50,7 +49,8 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null) { 
+        if (instance == null)
+        {
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -64,22 +64,25 @@ public class SoundManager : MonoBehaviour
     public void PlayBGM(EBgm bgmIdx)
     {
         // 플레이할 bgm Audio Clip을 설정
-        audioBGM.clip = bgms[(int) bgmIdx]; 
+        audioBGM.clip = bgms[(int)bgmIdx];
         // BGM 플레이 
         audioBGM.Play();
+
+        // BGM 플레이 반복.
+        audioBGM.loop = true;
     }
-    
+
     // BGM STOP 
     public void StopBGM()
     {
-        audioBGM.Stop(); 
+        audioBGM.Stop();
     }
 
     // 프로젝트 SFX PLAY 
     public void PlaySFX(ESFX sfxIdx)
     {
         // SFX 플레이 
-        audioSFX.PlayOneShot(sfxs[(int) sfxIdx]);   
+        audioSFX.PlayOneShot(sfxs[(int)sfxIdx]);
     }
 
 }
