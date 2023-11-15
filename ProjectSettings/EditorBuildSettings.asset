@@ -6,10 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/0.Scenes/MJB_MyRoomScene2.unity
+    path: Assets/0.Scenes/01_StartScene.unity
+    guid: bdec50ac767059349ba49b8fcf6a0122
+  - enabled: 1
+    path: Assets/0.Scenes/02_MJB_MyRoomScene2.unity
     guid: 209f005dd567093428fb18dbbd20cb78
   - enabled: 1
-    path: Assets/0.Scenes/IdeaPark_0.4v_Photon.unity
+    path: Assets/0.Scenes/04_IdeaPark_0.4v_Photon.unity
     guid: 7e6c25ada1a6cfb41893f4eb9802c5b4
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 7ef0ad85e22641e4da5eb4589bf8d522,

@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     // Scene별 BGM 종류 [ 마이룸, 프로젝트(워크스페이스), 로딩 ]
     public enum EBgm
     {
+        BGM_OPENING, // 미정
         BGM_MYROOM, // Myroom.wav
         BGM_WORKSPACE, // space.wav
         BGM_LODING // 미정
