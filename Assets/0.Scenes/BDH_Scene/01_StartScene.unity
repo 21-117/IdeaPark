@@ -554,7 +554,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgms:
   - {fileID: 8300000, guid: 812955228878cc34a90e21ce880e2646, type: 3}
+  - {fileID: 8300000, guid: 812955228878cc34a90e21ce880e2646, type: 3}
   - {fileID: 8300000, guid: 3bf0b062ec7c94b4893cb7947adf3454, type: 3}
+  - {fileID: 0}
   sfxs:
   - {fileID: 8300000, guid: 7f0fd3ad6ab65a946af3deb7debbc45c, type: 3}
   - {fileID: 8300000, guid: 3857c2122936b394fb4aa5426907431c, type: 3}
