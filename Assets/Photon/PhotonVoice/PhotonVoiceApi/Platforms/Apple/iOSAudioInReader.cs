@@ -5,41 +5,52 @@ using System.Runtime.InteropServices;
 
 namespace Photon.Voice.IOS
 {
-    public class AudioInReader : IAudioReader<float>
+    public class AudioInReader : IAudioReader<float>, IResettable
     {
         const string lib_name = "__Internal";
         [DllImport(lib_name)]
         private static extern IntPtr Photon_Audio_In_CreateReader(int sessionCategory, int sessionMode, int sessionCategoryOptions);
+        [DllImport(lib_name)]
+        private static extern void Photon_Audio_In_Reset(IntPtr handler);
         [DllImport(lib_name)]
         private static extern void Photon_Audio_In_Destroy(IntPtr handler);
         [DllImport(lib_name)]
         private static extern bool Photon_Audio_In_Read(IntPtr handle, float[] buf, int len);
 
         IntPtr audioIn;
+        private bool initializationFinished;
 
         public AudioInReader(AudioSessionParameters sessParam, ILogger logger)
         {
+            // initialization in a separate thread to avoid 0.5 - 1 sec. pauses in main thread execution
             var t = new Thread(() =>
             {
-                try
+                lock (this)
                 {
-                    var audioIn = Photon_Audio_In_CreateReader((int)sessParam.Category, (int)sessParam.Mode, sessParam.CategoryOptionsToInt());
-                    lock (this)
+                    try
                     {
-                        this.audioIn = audioIn;
+                        var audioIn = Photon_Audio_In_CreateReader((int)sessParam.Category, (int)sessParam.Mode, sessParam.CategoryOptionsToInt());
+                        lock (this)
+                        {
+                            this.audioIn = audioIn;
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Error = e.ToString();
-                    if (Error == null) // should never happen but since Error used as validity flag, make sure that it's not null
+                    catch (Exception e)
                     {
-                        Error = "Exception in AudioInReader constructor";
+                        Error = e.ToString();
+                        if (Error == null) // should never happen but since Error used as validity flag, make sure that it's not null
+                        {
+                            Error = "Exception in AudioInReader constructor";
+                        }
+                        logger.LogError("[PV] AudioInReader: " + Error);
                     }
-                    logger.LogError("[PV] AudioInReader: " + Error);
+                    finally
+                    {
+                        initializationFinished = true;
+                    }
                 }
             });
-            t.Name = "IOS AudioInPusher ctr";
+            Util.SetThreadName(t, "[PV] IOSAudioInReaderCtr");
             t.Start();
         }
         public int Channels { get { return 1; } }
@@ -48,20 +59,31 @@ namespace Photon.Voice.IOS
 
         public string Error { get; private set; }
 
+        public void Reset()
+        {
+            lock (this)
+            {
+                if (audioIn != IntPtr.Zero)
+                {
+                    Photon_Audio_In_Reset(audioIn);
+                }
+            }
+        }
+
         public void Dispose()
         {
             lock (this)
             {
-                if (audioIn == IntPtr.Zero)
+                while (!initializationFinished) // should never happen because of lock if the thread in constructor started before Dispose() call
                 {
-                    return;
+                    Thread.Sleep(1);
                 }
-            }
 
-            if (audioIn != IntPtr.Zero)
-            {
-                Photon_Audio_In_Destroy(audioIn);
-                audioIn = IntPtr.Zero;
+                if (audioIn != IntPtr.Zero)
+                {
+                    Photon_Audio_In_Destroy(audioIn);
+                    audioIn = IntPtr.Zero;
+                }
             }
         }
 

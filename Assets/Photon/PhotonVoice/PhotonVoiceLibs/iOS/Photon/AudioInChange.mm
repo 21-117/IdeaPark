@@ -14,7 +14,9 @@ Photon_Audio_Change* Photon_Audio_In_CreateChangeNotifier(int hostID, Photon_IOS
     Photon_Audio_Change* handle = [[Photon_Audio_Change alloc] init];
     handle->callback = callback;
     handle->hostID = hostID;
-    [handles addObject:handle];
+    @synchronized(handles) {
+        [handles addObject:handle];
+    }
     [[NSNotificationCenter defaultCenter] addObserver:handle
                                                selector:@selector(handleRouteChange:)
                                                    name:AVAudioSessionRouteChangeNotification
@@ -23,7 +25,9 @@ Photon_Audio_Change* Photon_Audio_In_CreateChangeNotifier(int hostID, Photon_IOS
 }
 
 void Photon_Audio_In_DestroyChangeNotifier(Photon_Audio_Change* handle) {
-    [handles removeObject:handle];
+    @synchronized(handles) {
+        [handles removeObject:handle];
+    }
 }
 
 @implementation Photon_Audio_Change
@@ -39,31 +43,29 @@ void Photon_Audio_In_DestroyChangeNotifier(Photon_Audio_Change* handle) {
 {
     UInt8 reasonValue = [[notification.userInfo valueForKey:AVAudioSessionRouteChangeReasonKey] intValue];
 
-    NSLog(@"[PV] [AC] Route change:");
     switch (reasonValue) {
         case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-            NSLog(@"[PV] [AC]      NewDeviceAvailable");
+            NSLog(@"[PV] [AC] Route change: NewDeviceAvailable");
             [self notify];
             break;
         case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-            NSLog(@"[PV] [AC]      OldDeviceUnavailable");
+            NSLog(@"[PV] [AC] Route change: OldDeviceUnavailable");
             [self notify];
             break;
         case AVAudioSessionRouteChangeReasonCategoryChange:
-            NSLog(@"[PV] [AC]      CategoryChange");
-            NSLog(@"[PV] [AC]      New Category: %@", [[AVAudioSession sharedInstance] category]);
+            NSLog(@"[PV] [AC] Route change: CategoryChange: %@", [[AVAudioSession sharedInstance] category]);
             break;
         case AVAudioSessionRouteChangeReasonOverride:
-            NSLog(@"[PV] [AC]      Override");
+            NSLog(@"[PV] [AC] Route change: Override");
             break;
         case AVAudioSessionRouteChangeReasonWakeFromSleep:
-            NSLog(@"[PV] [AC]      WakeFromSleep");
+            NSLog(@"[PV] [AC] Route change: WakeFromSleep");
             break;
         case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory:
-            NSLog(@"[PV] [AC]      NoSuitableRouteForCategory");
+            NSLog(@"[PV] [AC] Route change: NoSuitableRouteForCategory");
             break;
         default:
-            NSLog(@"[PV] [AC]      ReasonUnknown: %d", reasonValue);
+            NSLog(@"[PV] [AC] Route change: ReasonUnknown: %d", reasonValue);
     }
 }
 

@@ -1,4 +1,4 @@
-using POpusCodec.Enums;
+﻿using POpusCodec.Enums;
 using POpusCodec;
 using System;
 
@@ -33,26 +33,12 @@ namespace Photon.Voice
                 else if (typeof(B) == typeof(short[]))
                     return new EncoderShort(i, logger);
                 else
-                    throw new UnsupportedCodecException("Factory.CreateEncoder<" + typeof(B) + ">", i.Codec, logger);
-            }
-        }
-
-        public static class DecoderFactory
-        {
-            public static IEncoder Create<T>(VoiceInfo i, ILogger logger)
-            {
-                var x = new T[1];
-                if (x[0].GetType() == typeof(float))
-                    return new EncoderFloat(i, logger);
-                else if (x[0].GetType() == typeof(short))
-                    return new EncoderShort(i, logger);
-                else
-                    throw new UnsupportedCodecException("EncoderFactory.Create<" + x[0].GetType() + ">", i.Codec, logger);
+                    throw new UnsupportedCodecException("Factory.CreateEncoder<" + typeof(B) + ">", i.Codec);
             }
         }
 
         abstract public class Encoder<T> : IEncoderDirect<T[]>
-        {        
+        {
             protected OpusEncoder encoder;
             protected bool disposed;
             protected Encoder(VoiceInfo i, ILogger logger)
@@ -60,7 +46,7 @@ namespace Photon.Voice
                 try
                 {
                     encoder = new OpusEncoder((SamplingRate)i.SamplingRate, (Channels)i.Channels, i.Bitrate, OpusApplicationType.Voip, (Delay)(i.FrameDurationUs * 2 / 1000));
-                    logger.LogInfo("[PV] OpusCodec.Encoder created. Opus version " + Version + ". Bitrate " + encoder.Bitrate + ". EncoderDelay " + encoder.EncoderDelay);
+                    logger.LogInfo("[PV] OpusCodec.Encoder created. Opus version " + Version + ", " + i);
                 }
                 catch (Exception e)
                 {
@@ -75,7 +61,16 @@ namespace Photon.Voice
 
             public string Error { get; private set; }
 
-            public Action<ArraySegment<byte>> Output { set; get; }
+            Action<ArraySegment<byte>, FrameFlags> output;
+            public Action<ArraySegment<byte>, FrameFlags> Output
+            {
+                set
+                {
+                    output = value;
+                    encoder.Output = value;
+                }
+                get { return output; }
+            }
 
             public void Input(T[] buf)
             {
@@ -88,25 +83,41 @@ namespace Photon.Voice
                     Error = "OpusCodec.Encoder: Output action is not set";
                     return;
                 }
+
                 lock (this)
                 {
                     if (disposed || Error != null) { }
                     else
                     {
-                        var res = encodeTyped(buf);
-                        if (res.Count != 0)
-                        {
-                            Output(res);
-                        }
+                        encodeTyped(buf);
                     }
                 }
             }
 
+            public void EndOfStream()
+            {
+                lock (this)
+                {
+                    if (disposed || Error != null) { }
+                    else
+                    {
+                        Output(EmptyBuffer, FrameFlags.EndOfStream);
+                    }
+                }
+                return;
+            }
+
             private static readonly ArraySegment<byte> EmptyBuffer = new ArraySegment<byte>(new byte[] { });
 
-            public ArraySegment<byte> DequeueOutput() { return EmptyBuffer; }
+            public ArraySegment<byte> DequeueOutput(out FrameFlags flags) { flags = 0; return EmptyBuffer; }
 
-            protected abstract ArraySegment<byte> encodeTyped(T[] buf);
+            protected abstract void encodeTyped(T[] buf);
+
+            public I GetPlatformAPI<I>() where I : class
+            {
+                return null;
+            }
+
             public void Dispose()
             {
                 lock (this)
@@ -118,24 +129,23 @@ namespace Photon.Voice
                     disposed = true;
                 }
             }
-
         }
 
         public class EncoderFloat : Encoder<float>
         {
             internal EncoderFloat(VoiceInfo i, ILogger logger) : base(i, logger) { }
 
-            override protected ArraySegment<byte> encodeTyped(float[] buf)
+            override protected void encodeTyped(float[] buf)
             {
-                return encoder.Encode(buf);
+                encoder.Encode(buf);
             }
         }
         public class EncoderShort : Encoder<short>
         {
             internal EncoderShort(VoiceInfo i, ILogger logger) : base(i, logger) { }
-            override protected ArraySegment<byte> encodeTyped(short[] buf)
+            override protected void encodeTyped(short[] buf)
             {
-                return encoder.Encode(buf);
+                encoder.Encode(buf);
             }
         }
 
@@ -143,7 +153,7 @@ namespace Photon.Voice
         {
             protected OpusDecoder<T> decoder;
             ILogger logger;
-            public Decoder(Action<T[]> output, ILogger logger)
+            public Decoder(Action<FrameOut<T>> output, ILogger logger)
             {
                 this.output = output;
                 this.logger = logger;
@@ -153,8 +163,15 @@ namespace Photon.Voice
             {
                 try
                 {
-                    decoder = new OpusDecoder<T>((SamplingRate)i.SamplingRate, (Channels)i.Channels);
-                    logger.LogInfo("[PV] OpusCodec.Decoder created. Opus version " + Version);
+                    if (Wrapper.AsyncAPI)
+                    {
+                        decoder = new OpusDecoderAsync<T>(output, (SamplingRate)i.SamplingRate, (Channels)i.Channels, i.FrameDurationSamples);
+                    }
+                    else
+                    {
+                        decoder = new OpusDecoder<T>(output, (SamplingRate)i.SamplingRate, (Channels)i.Channels, i.FrameDurationSamples);
+                    }
+                    logger.LogInfo("[PV] OpusCodec.Decoder created. Opus version " + Version + ", " + i);
                 }
                 catch (Exception e)
                 {
@@ -169,7 +186,7 @@ namespace Photon.Voice
 
             public string Error { get; private set; }
 
-            private Action<T[]> output;
+            private Action<FrameOut<T>> output;
 
             public void Dispose()
             {
@@ -179,15 +196,12 @@ namespace Photon.Voice
                 }
             }
 
-            public void Input(byte[] buf)
+            public void Input(ref FrameBuffer buf)
             {
                 if (Error == null)
                 {
-                    var res = decoder.DecodePacket(buf);
-                    if (res.Length != 0)
-                    {
-                        output(res);
-                    }
+                    bool endOfStream = (buf.Flags & FrameFlags.EndOfStream) != 0;
+                    decoder.DecodePacket(ref buf, endOfStream);
                 }
             }
         }

@@ -7,100 +7,60 @@
 // </summary>
 // <author>developer@photonengine.com</author>
 // ----------------------------------------------------------------------------
-//#define USE_ONAUDIOFILTERREAD
 
 using System;
-using System.Collections;
 using UnityEngine;
-
 
 namespace Photon.Voice.Unity
 {
-    /// <summary> Component representing remote audio stream in local scene. </summary>
     [RequireComponent(typeof(AudioSource))]
     [AddComponentMenu("Photon Voice/Speaker")]
+    [DisallowMultipleComponent]
     public class Speaker : VoiceComponent
     {
         #region Private Fields
 
-        private IAudioOut<float> audioOutput;
+        protected IAudioOut<float> audioOutput;
 
-        private RemoteVoiceLink remoteVoiceLink;
-
-        private bool initialized; // awake called
-
-        [SerializeField]
-        private bool playbackOnlyWhenEnabled;
-
-        private bool useSeparateCoroutine = true;
-
-        private Coroutine playbackCoroutine;
-
-        #if USE_ONAUDIOFILTERREAD
-        private AudioSyncBuffer<float> outBuffer;
-        private int outputSampleRate;
-        #endif
+#if UNITY_WEBGL && UNITY_2021_2_OR_NEWER && !UNITY_EDITOR // requires ES6, allows non-WebGL workflow in Editor
+        // apply AudioSource parameters, Speaker position and AudioListener transform to WebAudioAudioOut
+        private WebAudioAudioOut webOut;           // not null if WebAudio is supported
+        private AudioSource webOutAudioSource;     // not null if WebAudio is supported and AudioSource exists, we apply its volume and spatial blend to WebAudioAudioOut
+        private Transform webOutListenerTransform; // not null if WebAudio is supported, AudioListener exists and initial spatialBlend > 0 (3D enabled)
+#endif
 
         [SerializeField]
-        private int playDelayMs = 200;
+        protected AudioOutDelayControl.PlayDelayConfig playDelayConfig = AudioOutDelayControl.PlayDelayConfig.Default;
 
-        #endregion
+        [SerializeField]
+        protected bool restartOnDeviceChange = true;
 
-        #region Public Fields
+#endregion
 
-        ///<summary>Remote audio stream playback delay to compensate packets latency variations. Try 100 - 200 if sound is choppy.</summary> 
-        public int PlayDelayMs 
-        {
-            get
-            {
-                return this.playDelayMs;
-            }
-            set
-            {
-                if (this.playDelayMs != value)
-                {
-                    if (value < 0)
-                    {
-                        if (this.Logger.IsErrorEnabled)
-                        {
-                            this.Logger.LogError("Playback delay cannot be negative ({0})", value);
-                        }
-                    }
-                    else
-                    {
-                        this.playDelayMs = value;
-                        if (this.IsPlaying)
-                        {
-                            this.RestartPlayback();
-                        }
-                    }
-                }
-            }
-        }
+#region Public Fields
 
-        #if UNITY_PS4
-        /// <summary>Set the PS4 User ID to determine on which controller to play audio.</summary> 
+#if UNITY_PS4 || UNITY_PS5
+        /// <summary>Set the PlayStation User ID to determine on which users headphones to play audio.</summary>
         /// <remarks>
-        /// Note: at the moment, only the first Speaker can successfully set the User ID. 
-        /// Subsequently initialized Speakers will play their audio on the controller set with the first Speaker initialized.
-        /// </remarks>
-        public int PS4UserID = 0;
-        #endif
+        /// Note: at the moment, only the first Speaker can successfully set the User ID.
+        /// Subsequently initialized Speakers will play their audio on the headphones that have been set with the first Speaker initialized.
+        public int PlayStationUserID = 0;
+#endif
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>Is the speaker playing right now.</summary>
         public bool IsPlaying
         {
-            get { return this.audioOutput != null && this.audioOutput.IsPlaying; }
+            get { return audioOutput != null && this.audioOutput.IsPlaying; }
         }
 
-        /// <summary>Smoothed difference between (jittering) stream and (clock-driven) audioOutput.</summary>
+        /// <summary>The current difference between positions in the buffer of (jittery) stream writer and (clock-driven) audio output reader in ms.</summary>
         public int Lag
         {
-            get { return this.audioOutput != null ? this.audioOutput.Lag : -1; }
+            get { return this.audioOutput == null ? 0 : this.audioOutput.Lag; }
         }
 
         /// <summary>
@@ -108,340 +68,275 @@ namespace Photon.Voice.Unity
         /// </summary>
         public Action<Speaker> OnRemoteVoiceRemoveAction { get; set; }
 
-        /// <summary>Per room, the connected users/players are represented with a Realtime.Player, also known as Actor.</summary>
-        /// <remarks>Photon Voice calls this Actor, to avoid a name-clash with the Player class in Voice.</remarks>
-        public Realtime.Player Actor { get; protected internal set; }
+        public RemoteVoiceLink RemoteVoice { get; private set; }
 
         /// <summary>
         /// Whether or not this Speaker has been linked to a remote voice stream.
         /// </summary>
         public bool IsLinked
         {
-            get { return this.remoteVoiceLink != null; }
+            get { return this.RemoteVoice != null; }
         }
 
-        #if UNITY_EDITOR
-        /// <summary>
-        /// USE IN EDITOR ONLY
-        /// </summary>
-        public RemoteVoiceLink RemoteVoiceLink
+        /// <summary>Gets or sets jitter buffer config.</summary>
+        /// <remarks>
+        /// Make sure that the new value is fully initialized or built from <see cref="AudioOutDelayControl.PlayDelayConfig.Default"></see>.
+        /// </remarks>
+        public AudioOutDelayControl.PlayDelayConfig PlayDelayConfig
         {
-            get { return this.remoteVoiceLink; }
-        }
-        #endif
-
-        /// <summary> If true, component will work only when enabled and active in hierarchy.  </summary>
-        public bool PlaybackOnlyWhenEnabled
-        {
-            get { return this.playbackOnlyWhenEnabled; }
+            get => this.playDelayConfig;
             set
             {
-                if (this.playbackOnlyWhenEnabled != value)
+                if (this.playDelayConfig.Low != value.Low || this.playDelayConfig.High != value.High || this.playDelayConfig.Max != value.Max)
                 {
-                    this.playbackOnlyWhenEnabled = value;
-                    if (this.IsLinked)
-                    {
-                        if (this.playbackOnlyWhenEnabled)
-                        {
-                            if (this.isActiveAndEnabled != this.PlaybackStarted)
-                            {
-                                if (this.isActiveAndEnabled)
-                                {
-                                    this.StartPlayback();
-                                }
-                                else
-                                {
-                                    this.StopPlayback();
-                                }
-                            }
-                        }
-                        else if (!this.PlaybackStarted)
-                        {
-                            this.StartPlaying();
-                        }
-                    }
+                    this.playDelayConfig = value;
+                    this.RestartPlayback();
                 }
             }
         }
 
-        /// <summary> Returns if the playback is on. </summary>
-        public bool PlaybackStarted { get; private set; }
+        /// <summary>Gets or sets jitter buffer size in ms.</summary>
+        /// <remarks>
+        /// The method updates PlayDelayConfig with reasonable values based on the single value provided.
+        /// Use <see cref="PlayDelayConfig"></see> for more precise control.
+        /// </remarks>
+        public int PlayDelay
+        {
+            get => this.playDelayConfig.Low;
+            set
+            {
+                var l = value;
+                var h = value; // rely on automatic tolerance value
+                var m = 1000; // as in PlayDelayConfig.Default
+                if (this.playDelayConfig.Low != l || this.playDelayConfig.High != h || this.playDelayConfig.Max != m)
+                {
+                    this.playDelayConfig.Low = l;
+                    this.playDelayConfig.High = h;
+                    this.playDelayConfig.Max = m;
+                    this.RestartPlayback();
+                }
+            }
+        }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
         protected override void Awake()
         {
             base.Awake();
-            #if USE_ONAUDIOFILTERREAD
-            this.outBuffer = new AudioSyncBuffer<float>(this.Logger, string.Empty, this.Logger.IsInfoEnabled);
-            this.outputSampleRate = AudioSettings.outputSampleRate;
-            Func<IAudioOut<float>> factory = () => this.outBuffer;
-            #else
-            Func<IAudioOut<float>> factory = () => new UnityAudioOut(this.GetComponent<AudioSource>(), this.Logger, string.Empty, this.Logger.IsInfoEnabled);
-            #endif
-
-            #if !UNITY_EDITOR && UNITY_PS4
-            this.audioOutput = new Photon.Voice.PS4.PS4AudioOut(PS4UserID, factory);
-            #else
-            this.audioOutput = factory();
-            #endif
-            this.initialized = true;
-            if (!this.PlaybackOnlyWhenEnabled && this.IsLinked)
-            {
-                this.StartPlaying();
-            }
+            // update AudioSettings.OnAudioConfigurationChanged
+            RestartOnDeviceChange = restartOnDeviceChange;
         }
 
-        private void OnEnable()
+        private void AudioConfigurationChangeHandler(bool deviceWasChanged)
         {
-            if (this.IsLinked && !this.PlaybackStarted)
-            {
-                this.StartPlaying();
-            }
+            this.Logger.LogInfo("Audio configuration changed. Restarting.");
+            RestartPlayback();
         }
 
-        private void OnDisable()
+        // called from Link() and when restarting
+        private void Initialize()
         {
-            if (this.PlaybackOnlyWhenEnabled && this.PlaybackStarted)
-            {
-                this.StopPlaying();
-            }
+            this.Logger.LogInfo("Initializing.");
+#if !UNITY_EDITOR && (UNITY_PS4 || UNITY_PS5)
+            this.audioOutput = new Photon.Voice.PlayStation.PlayStationAudioOut(this.PlayStationUserID);
+#else
+            this.audioOutput = CreateAudioOut();
+#endif
+            this.Logger.LogInfo("Initialized.");
         }
 
-        internal bool OnRemoteVoiceInfo(RemoteVoiceLink stream)
+        protected virtual IAudioOut<float> CreateAudioOut()
         {
-            if (stream == null)
+#if UNITY_WEBGL && !UNITY_EDITOR // allows non-WebGL workflow in Editor
+#if UNITY_2021_2_OR_NEWER // requires ES6
+            webOutAudioSource = this.GetComponent<AudioSource>();
+            double initSpatialBlend = webOutAudioSource != null ? webOutAudioSource.spatialBlend : 0;
+            webOut = new WebAudioAudioOut(this.playDelayConfig, initSpatialBlend, this.Logger, string.Empty, true);
+            if (initSpatialBlend > 0)
             {
-                if (this.Logger.IsErrorEnabled)
+                var al = FindObjectOfType<AudioListener>();
+                if (al != null)
                 {
-                    this.Logger.LogError("RemoteVoiceLink is null, cancelled linking");
+                    webOutListenerTransform = al.gameObject.transform;
                 }
-                return false;
+                else
+                {
+                    webOutListenerTransform = null;
+                }
             }
-            if (this.Logger.IsDebugEnabled)
-            {
-                this.Logger.LogDebug("OnRemoteVoiceInfo {0}/{1}", stream.PlayerId, stream.PlayerId);
-            }
+
+            return webOut;
+#else
+            this.Logger.LogError("Speaker requies Unity 2021.2 or newer for WebGL");
+            return new AudioOutDummy<float>();
+#endif
+#else
+            return new UnityAudioOut(this.GetComponent<AudioSource>(), this.playDelayConfig, this.Logger, string.Empty, true);
+#endif
+        }
+
+        internal bool Link(RemoteVoiceLink stream)
+        {
             if (this.IsLinked)
             {
-                if (this.Logger.IsWarningEnabled)
-                {
-                    this.Logger.LogWarning("Speaker already linked to {0}/{1}, cancelled linking to {2}/{3}",
-                        this.remoteVoiceLink.PlayerId, this.remoteVoiceLink.VoiceId, stream.PlayerId, stream.VoiceId);
-                }
+                this.Logger.LogWarning("Speaker already linked to {0}, cancelled linking to {1}", this.RemoteVoice, stream);
                 return false;
             }
-            if (stream.Info.Channels <= 0) // early avoid possible crash due to ArgumentException in AudioClip.Create inside UnityAudioOut.Start
+            if (stream.VoiceInfo.Channels <= 0) // early avoid possible crash due to ArgumentException in AudioClip.Create inside UnityAudioOut.Start
             {
-                if (this.Logger.IsErrorEnabled)
-                {
-                    this.Logger.LogError("Received voice info channels is not expected: {0} <= 0, cancelled linking to {1}/{2}", stream.Info.Channels, 
-                        stream.PlayerId, stream.VoiceId);
-                }
+                this.Logger.LogError("Received voice info channels is not expected (<= 0), cancelled linking to {0}", stream);
                 return false;
             }
-            this.remoteVoiceLink = stream;
-            this.remoteVoiceLink.RemoteVoiceRemoved += this.OnRemoteVoiceRemove;
-            return !this.initialized || this.StartPlaying();
+            this.Logger.LogInfo("Link {0}", stream);
+            stream.RemoteVoiceRemoved += OnRemoteVoiceRemove;
+            stream.FloatFrameDecoded += this.OnAudioFrame;
+            this.RemoteVoice = stream;
+            this.Initialize();           // new audioOutput is created
+            return this.StartPlayback(); // starting audioOutput
         }
 
-        internal void OnRemoteVoiceRemove()
+        private void OnRemoteVoiceRemove()
         {
-            if (this.Logger.IsDebugEnabled)
-            {
-                this.Logger.LogDebug("OnRemoteVoiceRemove {0}/{1}", this.remoteVoiceLink.PlayerId, this.remoteVoiceLink.PlayerId);
-            }
-            this.StopPlaying();
+            this.Logger.LogInfo("OnRemoteVoiceRemove {0}", this.RemoteVoice);
+            this.StopPlayback();
             if (this.OnRemoteVoiceRemoveAction != null) { this.OnRemoteVoiceRemoveAction(this); }
-            this.CleanUp();
+            this.Unlink();
         }
 
-        internal void OnAudioFrame(float[] frame)
+        private void OnAudioFrame(FrameOut<float> frame)
         {
-            this.audioOutput.Push(frame);
+            this.audioOutput.Push(frame.Buf);
+            if (frame.EndOfStream)
+            {
+                this.audioOutput.Flush();
+            }
         }
-        
-        private bool StartPlaying()
+
+        private bool StartPlayback()
         {
-            if (!this.IsLinked)
+            if (this.RemoteVoice == null)
             {
-                if (this.Logger.IsWarningEnabled)
-                {
-                    this.Logger.LogWarning("Cannot start playback because speaker is not linked");
-                }
+                this.Logger.LogWarning("Cannot start playback because speaker is not linked");
                 return false;
             }
-            if (this.PlaybackStarted)
+            if (audioOutput == null)
             {
-                if (this.Logger.IsWarningEnabled)
-                {
-                    this.Logger.LogWarning("Playback is already started");
-                }
+                this.Logger.LogWarning("Cannot start playback because not initialized yet");
                 return false;
             }
-            if (!this.initialized)
-            {
-                if (this.Logger.IsWarningEnabled)
-                {
-                    this.Logger.LogWarning("Cannot start playback because not initialized yet");
-                }
-                return false;
-            }
-            if (this.audioOutput == null)
-            {
-                if (this.Logger.IsErrorEnabled)
-                {
-                    this.Logger.LogWarning("Cannot start playback because audioOutput is null");
-                }
-                return false;
-            }
-            if (this.Logger.IsDebugEnabled)
-            {
-                this.Logger.LogDebug("StartPlaying {0}/{1}", this.remoteVoiceLink.PlayerId, this.remoteVoiceLink.PlayerId);
-            }
-            VoiceInfo voiceInfo = this.remoteVoiceLink.Info;
-            if (voiceInfo.Channels == 0)
-            {
-                if (this.Logger.IsErrorEnabled)
-                {
-                    this.Logger.LogError("Cannot start playback because remoteVoiceLink.Info.Channels == 0");
-                }
-                return false;
-            } 
-            this.audioOutput.Start(voiceInfo.SamplingRate, voiceInfo.Channels, voiceInfo.FrameDurationSamples, this.PlayDelayMs);
-            this.remoteVoiceLink.FloatFrameDecoded += this.OnAudioFrame;
-            this.PlaybackStarted = true;
-            if (this.useSeparateCoroutine)
-            {
-                this.playbackCoroutine = this.StartCoroutine(this.PlaybackCoroutine());
-            }
+            var vi = this.RemoteVoice.VoiceInfo;
+            this.audioOutput.Start(vi.SamplingRate, vi.Channels, vi.FrameDurationSamples);
+            this.Logger.LogInfo("Speaker started playback: {0}, delay {1}", vi, this.playDelayConfig);
             return true;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
-            if (this.Logger.IsDebugEnabled)
-            {
-                this.Logger.LogDebug("OnDestroy");
-            }
-            if (this.PlaybackStarted)
-            {
-                this.StopPlaying();
-            }
-            this.CleanUp();
+            this.Logger.LogInfo("OnDestroy");
+            this.StopPlayback();
+            this.Unlink();
+            AudioSettings.OnAudioConfigurationChanged -= AudioConfigurationChangeHandler;
         }
-        
-        private bool StopPlaying()
+
+        // stopping audioOutput releases its resources
+        private void StopPlayback()
         {
-            if (this.Logger.IsDebugEnabled)
-            {
-                this.Logger.LogDebug("StopPlaying");
-            }
-            if (!this.PlaybackStarted)
-            {
-                if (this.Logger.IsWarningEnabled)
-                {
-                    this.Logger.LogWarning("Cannot stop playback because it's not started");
-                }
-                return false;
-            }
-            if (this.IsLinked)
-            {
-                this.remoteVoiceLink.FloatFrameDecoded -= this.OnAudioFrame;
-            }
-            else if (this.Logger.IsWarningEnabled)
-            {
-                this.Logger.LogWarning("Speaker not linked while stopping playback");
-            }
+            this.Logger.LogInfo("StopPlayback");
             if (this.audioOutput != null)
             {
                 this.audioOutput.Stop();
             }
-            else if (this.Logger.IsWarningEnabled)
-            {
-                this.Logger.LogWarning("audioOutput is null while stopping playback");
-            }
-            if (this.useSeparateCoroutine || this.playbackCoroutine != null)
-            {
-                this.StopCoroutine(this.playbackCoroutine);
-                this.playbackCoroutine = null;
-            }
-            this.PlaybackStarted = false;
-            return true;
         }
 
-        private void CleanUp()
+        private void Unlink()
         {
-            if (this.Logger.IsDebugEnabled)
+            if (this.RemoteVoice != null)
             {
-                this.Logger.LogDebug("CleanUp");
+                this.RemoteVoice.FloatFrameDecoded -= this.OnAudioFrame;
+                this.RemoteVoice.RemoteVoiceRemoved -= this.OnRemoteVoiceRemove;
+                this.RemoteVoice = null;
             }
-            if (this.remoteVoiceLink != null)
-            {
-                this.remoteVoiceLink.RemoteVoiceRemoved -= this.OnRemoteVoiceRemove;
-                this.remoteVoiceLink = null;
-            }
-            this.Actor = null;
         }
-
-        private IEnumerator PlaybackCoroutine()
+        protected void Update()
         {
-            while (this.PlaybackStarted && this.useSeparateCoroutine)
+            if (System.Threading.Interlocked.Exchange(ref this.restartPlaybackPending, 0) != 0)
+            {
+                this.Logger.LogInfo("Restarting playback");
+                this.StopPlayback();  // stopping audioOutput releases its resources
+                this.Initialize();    // new audioOutput is created
+                this.StartPlayback(); // starting audioOutput
+            }
+
+            if (this.audioOutput != null)
             {
                 this.audioOutput.Service();
-                yield return null;
             }
-        }
 
-        private IEnumerator Start()
-        {
-            while (!this.useSeparateCoroutine)
+#if UNITY_WEBGL && UNITY_2021_2_OR_NEWER && !UNITY_EDITOR // requires ES6, allows non-WebGL workflow in Editor
+            // if AudioSource is available, update audio node with its parameters
+            if (webOutAudioSource != null)
             {
-                this.audioOutput.Service();
-                yield return null;
-            }
-        }
+                webOut.SetVolume(webOutAudioSource.volume);
 
-        #if USE_ONAUDIOFILTERREAD
-        private void OnAudioFilterRead(float[] data, int channels)
-        {
-            this.outBuffer.Read(data, channels, this.outputSampleRate);
+                // spatialBlend is needed only in 3D mode
+                if (webOutListenerTransform != null)
+                {
+                    webOut.SetSpatialBlend(webOutAudioSource.spatialBlend);
+                }
+            }
+            // update audio listener
+            if (webOutListenerTransform != null)
+            {
+                var p = webOutListenerTransform.position;
+                var f = webOutListenerTransform.forward;
+                var u = webOutListenerTransform.up;
+                // Unity is left-handed, y-up
+                // WebAudio is right-hand, y-down
+                webOut.SetListenerPosition(p.x, -p.y, p.z);
+                webOut.SetListenerOrientation(f.x, -f.y, f.z, u.x, -u.y, u.z);
+
+                // Speaker position
+                p = gameObject.transform.position;
+                webOut.SetPosition(p.x, p.y, p.z);
+            }
+#endif
         }
-        #endif
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>
-        /// Starts the audio playback of the linked incoming remote audio stream via AudioSource component.
-        /// </summary>
-        /// <returns>True if playback is successfully started.</returns>
-        public bool StartPlayback()
-        {
-            return this.StartPlaying();
-        }
-
-        /// <summary>
-        /// Stops the audio playback of the linked incoming remote audio stream via AudioSource component.
-        /// </summary>
-        /// <returns>True if playback is successfully stopped.</returns>
-        public bool StopPlayback()
-        {
-            return this.StopPlaying();
-        }
+        // prevents multiple restarts per Update()
+        // int instead of bool to use Interlocked.Exchange()
+        int restartPlaybackPending = 0;
 
         /// <summary>
         /// Restarts the audio playback of the linked incoming remote audio stream via AudioSource component.
         /// </summary>
         /// <returns>True if playback is successfully restarted.</returns>
-        public bool RestartPlayback()
+        public void RestartPlayback()
         {
-            return this.StopPlayback() && this.StartPlayback();
+            restartPlaybackPending = 1;
         }
 
-        #endregion
+        public bool RestartOnDeviceChange
+        {
+            get => restartOnDeviceChange;
+            set
+            {
+                restartOnDeviceChange = value;
+                AudioSettings.OnAudioConfigurationChanged -= AudioConfigurationChangeHandler;
+                if (restartOnDeviceChange)
+                {
+                    AudioSettings.OnAudioConfigurationChanged += AudioConfigurationChangeHandler;
+                }
+            }
+        }
+
+#endregion
     }
 }
+
+

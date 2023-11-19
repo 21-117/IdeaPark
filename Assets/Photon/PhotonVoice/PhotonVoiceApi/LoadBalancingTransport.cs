@@ -3,7 +3,7 @@
 //   Photon Voice API Framework for Photon - Copyright (C) 2015 Exit Games GmbH
 // </copyright>
 // <summary>
-//   Extends Photon Realtime API with audio streaming functionality.
+//   Extends Photon Realtime API with media streaming functionality.
 // </summary>
 // <author>developer@photonengine.com</author>
 // ----------------------------------------------------------------------------
@@ -23,76 +23,73 @@ namespace Photon.Voice
         /// Single event used for voice communications.
         /// </summary>
         /// Change if it conflicts with other event codes used in the same Photon room.
-        public const byte Code = 202; // audio events had this code w
-        public const byte FrameCode = 203; // audio events had this code w
+        public const byte Code = 202; // all photon voice events use single event code
+        public const byte FrameCode = 203; // LoadBalancingTransport2 uses separate code for frame event serialized as byte[]
     }
 
     /// <summary>
-    /// Extends LoadBalancingClient with audio streaming functionality.
+    /// Extends LoadBalancingClient with media streaming functionality.
     /// </summary>
     /// <remarks>
-    /// Use your normal LoadBalancing workflow to join a Voice room. 
+    /// Use your normal LoadBalancing workflow to join a Voice room.
     /// All standard LoadBalancing features are available.
-    ///
-    /// To work with audio:
-    /// - Create outgoing audio streams with Client.CreateLocalVoice.
-    /// - Handle new incoming audio streams info with <see cref="OnRemoteVoiceInfoAction"/> .
-    /// - Handle incoming audio streams data with <see cref="OnAudioFrameAction"/> .
-    /// - Handle closing of incoming audio streams with <see cref="OnRemoteVoiceRemoved">.
+    /// Use <see cref="VoiceClient"/> to work with media streams.
     /// </remarks>
-    public class LoadBalancingTransport : LoadBalancingClient, IVoiceTransport, IDisposable
+    public class LoadBalancingTransport : LoadBalancingClient, IVoiceTransport, ILogger, IDisposable
     {
-        internal const int VOICE_CHANNEL = 0;
+        // Channel is used only by local voice (to specify Enet channel) and ignored by remote voices which are all on the same channel.
+        // Join / leave per channel is not supported.
+        // It's important to call onJoinAllChannels() instead of onJoinChannel() to avoid ignoring local non-0 channel voices.
+        internal const int REMOTE_VOICE_CHANNEL = 0;
+
+        public virtual int GetPayloadFragmentSize(SendFrameParams par)
+        {
+            // rough estimate, no need to improve because this transport is obsolete
+            int overhead = 3 * 2; // possible InterestGroup and Receivers: key, type, value
+            if (par.TargetPlayers != null)
+            {
+                overhead += 3 + par.TargetPlayers.Length; // key, type, compressed ength and array
+            }
+
+            return 1114 - overhead; // <- protocol 18 theoretical encoded; experimental encrypted: 1115, non-encrypted: 1130
+        }
 
         /// <summary>The <see cref="VoiceClient"></see> implementation associated with this LoadBalancingTransport.</summary>
         public VoiceClient VoiceClient { get { return this.voiceClient; } }
 
         protected VoiceClient voiceClient;
         private PhotonTransportProtocol protocol;
+        protected readonly bool cppCompatibilityMode;
 
         public void LogError(string fmt, params object[] args) { this.DebugReturn(DebugLevel.ERROR, string.Format(fmt, args)); }
         public void LogWarning(string fmt, params object[] args) { this.DebugReturn(DebugLevel.WARNING, string.Format(fmt, args)); }
         public void LogInfo(string fmt, params object[] args) { this.DebugReturn(DebugLevel.INFO, string.Format(fmt, args)); }
         public void LogDebug(string fmt, params object[] args) { this.DebugReturn(DebugLevel.ALL, string.Format(fmt, args)); }
 
-        // send different media type to different channels for efficiency
-        internal byte photonChannelForCodec(Codec c)
-        {
-            return (byte)(1 + Array.IndexOf(Enum.GetValues(typeof(Codec)), c));
-        }
-
         public bool IsChannelJoined(int channelId) { return this.State == ClientState.Joined; }
-
-        public void SetDebugEchoMode(LocalVoice v)
-        {
-            if (this.State == ClientState.Joined)
-            {
-                if (v.DebugEchoMode)
-                {
-                    SendVoicesInfo(new List<LocalVoice>() { v }, v.channelId, this.LocalPlayer.ActorNumber);
-                }
-                else
-                {
-                    SendVoiceRemove(v, v.channelId, this.LocalPlayer.ActorNumber);
-                }
-            }
-        }
 
         /// <summary>
         /// Initializes a new <see cref="LoadBalancingTransport"/>.
         /// </summary>
+        /// <param name="logger">ILogger instance. If null, this instance LoadBalancingClient.DebugReturn implementation is used.<see cref="ConnectionProtocol"></see></param>
         /// <param name="connectionProtocol">Connection protocol (UDP or TCP). <see cref="ConnectionProtocol"></see></param>
-        public LoadBalancingTransport(ConnectionProtocol connectionProtocol = ConnectionProtocol.Udp) : base(connectionProtocol)
+        /// <param name="cppCompatibilityMode">Use a protocol compatible with Voice C++ API.</param>
+        public LoadBalancingTransport(ILogger logger = null, ConnectionProtocol connectionProtocol = ConnectionProtocol.Udp, bool cppCompatibilityMode = false) : base(connectionProtocol)
         {
+            if (logger == null)
+            {
+                logger = this;
+            }
+            this.cppCompatibilityMode = cppCompatibilityMode;
             base.EventReceived += onEventActionVoiceClient;
             base.StateChanged += onStateChangeVoiceClient;
-            this.voiceClient = new VoiceClient(this);
+            this.voiceClient = new VoiceClient(this, logger);
             var voiceChannelsCount = Enum.GetValues(typeof(Codec)).Length + 1; // channel per stream type, channel 0 is for user events
             if (LoadBalancingPeer.ChannelCount < voiceChannelsCount)
             {
                 this.LoadBalancingPeer.ChannelCount = (byte)voiceChannelsCount;
             }
-            this.protocol = new PhotonTransportProtocol(voiceClient, this);
+            this.protocol = new PhotonTransportProtocol(voiceClient, logger);
         }
 
         /// <summary>
@@ -111,128 +108,95 @@ namespace Photon.Voice
             return this.LoadBalancingPeer.OpChangeGroups(groupsToRemove, groupsToAdd);
         }
 
-        [Obsolete("Use GlobalInterestGroup.")]
-        public byte GlobalAudioGroup
+        // Photon transport:
+        // Empty TargetActors works the same as null: all players are targeted (as opposed to empty Voice's targetPlayers meaning no targets at all)
+        // if TargetActors is not null and non-empty, InterestGroup and ReceiverGroup are ignored
+        // if TargetActors is null or empty and InterestGroup is set, ReceiverGroup is ignored
+        RaiseEventOptions buildEvOptFromTargets(bool targetMe, int[] targetPlayers)
         {
-            get { return GlobalInterestGroup; }
-            set { GlobalInterestGroup = value; }
-        }
-        /// <summary>
-        /// Set global audio group for this client. This call sets InterestGroup for existing local voices and for created later to given value.
-        /// Client set as listening to this group only until LoadBalancingPeer.OpChangeGroups() called. This method can be called any time.
-        /// </summary>
-        /// <see cref="LocalVoice.InterestGroup"/>
-        /// <see cref="LoadBalancingPeer.OpChangeGroups(byte[], byte[])"/>
-        public byte GlobalInterestGroup
-        {
-            get { return this.voiceClient.GlobalInterestGroup; }
-            set
+            var opt = new RaiseEventOptions();
+            if (targetMe)
             {
-                this.voiceClient.GlobalInterestGroup = value;
-                if (this.State == ClientState.Joined)
+                if (targetPlayers == null) // all others and me
                 {
-                    if (this.voiceClient.GlobalInterestGroup != 0)
-                    {
-                        this.LoadBalancingPeer.OpChangeGroups(new byte[0], new byte[] { this.voiceClient.GlobalInterestGroup });
-                    }
-                    else
-                    {
-                        this.LoadBalancingPeer.OpChangeGroups(new byte[0], null);
-                    }
-                }                
+                    opt.Receivers = ReceiverGroup.All;
+                }
+                else if (targetPlayers.Length == 0) // only me
+                {
+                    opt.TargetActors = new int[] { this.LocalPlayer.ActorNumber };
+                }
+                else // some others and me
+                {
+                    opt.TargetActors = new int[targetPlayers.Length + 1];
+                    Array.Copy(targetPlayers, opt.TargetActors, targetPlayers.Length);
+                    opt.TargetActors[targetPlayers.Length] = this.LocalPlayer.ActorNumber;
+                }
             }
+            else
+            {
+                opt.TargetActors = targetPlayers;
+            }
+
+            return opt;
         }
-
-
         #region nonpublic
 
-        object sendLock = new object();
-
-        //
-        public void SendVoicesInfo(IEnumerable<LocalVoice> voices, int channelId, int targetPlayerId)
+        public void SendVoiceInfo(LocalVoice voice, int channelId, bool targetMe, int[] targetPlayers)
         {
-            object content = protocol.buildVoicesInfo(voices, true);
+            object content = protocol.buildVoicesInfo(voice);
 
             var sendOpt = new SendOptions()
             {
-                Reliability = true,
+                DeliveryMode = DeliveryMode.Reliable,
+                Channel = (byte)channelId,
             };
 
-            var opt = new RaiseEventOptions();
-            if (targetPlayerId != 0)
-            {
-                opt.TargetActors = new int[] { targetPlayerId };
-            }
-            lock (sendLock)
-            {
-                this.OpRaiseEvent(VoiceEvent.Code, content, opt, sendOpt);
-            }
+            var opt = buildEvOptFromTargets(targetMe, targetPlayers);
 
-            if (targetPlayerId == 0) // send debug echo infos to myself if broadcast requested
-            {
-                SendDebugEchoVoicesInfo(channelId);
-            }
+            this.OpRaiseEvent(VoiceEvent.Code, content, opt, sendOpt);
         }
 
-        /// <summary>Send VoicesInfo events to the local player for all voices that have DebugEcho enabled.</summary>
-        /// This function will call <see cref="SendVoicesInfo"></see> for all local voices of our <see cref="VoiceClient"></see>
-        /// that have DebugEchoMode set to true, with the given channel ID, and the local Player's ActorNumber as target.
-        /// <param name="channelId">Transport Channel ID</param>
-        public void SendDebugEchoVoicesInfo(int channelId)
-        {
-            var voices = voiceClient.LocalVoices.Where(x => x.DebugEchoMode);
-            if (voices.Count() > 0)
-            { 
-                SendVoicesInfo(voices, channelId, this.LocalPlayer.ActorNumber);
-            }
-        }
-
-        public void SendVoiceRemove(LocalVoice voice, int channelId, int targetPlayerId)
+        public void SendVoiceRemove(LocalVoice voice, int channelId, bool targetMe, int[] targetPlayers)
         {
             object content = protocol.buildVoiceRemoveMessage(voice);
             var sendOpt = new SendOptions()
             {
-                Reliability = true,
+                DeliveryMode = DeliveryMode.Reliable,
+                Channel = (byte)channelId,
             };
 
-            var opt = new RaiseEventOptions();
-            if (targetPlayerId != 0)
-            {
-                opt.TargetActors = new int[] { targetPlayerId };
-            }
-            if (voice.DebugEchoMode)
-            {
-                opt.Receivers = ReceiverGroup.All;
-            }
-            lock (sendLock)
-            {
+            var opt = buildEvOptFromTargets(targetMe, targetPlayers);
 
-                this.OpRaiseEvent(VoiceEvent.Code, content, opt, sendOpt);
-            }
+            this.OpRaiseEvent(VoiceEvent.Code, content, opt, sendOpt);
         }
 
-        public virtual void SendFrame(ArraySegment<byte> data, byte evNumber, byte voiceId, int channelId, LocalVoice localVoice)
+        protected virtual byte FrameCode => VoiceEvent.Code;
+
+        protected virtual object buildFrameMessage(byte voiceId, byte evNumber, byte frNumber, ArraySegment<byte> data, FrameFlags flags)
         {
-            object[] content = protocol.buildFrameMessage(voiceId, evNumber, data);
+            return protocol.buildFrameMessage(voiceId, evNumber, frNumber, data, flags);
+        }
+
+        public void SendFrame(ArraySegment<byte> data, FrameFlags flags, byte evNumber, byte frNumber, byte voiceId, int channelId, SendFrameParams par)
+        {
+            object content = buildFrameMessage(voiceId, evNumber, frNumber, data, flags);
 
             var sendOpt = new SendOptions()
             {
-                Reliability = localVoice.Reliable,
-                Channel = photonChannelForCodec(localVoice.info.Codec),
-                Encrypt = localVoice.Encrypt
+                DeliveryMode = ((flags & FrameFlags.Config) != 0) ? DeliveryMode.Reliable : // config frame should be send in sync with voice info
+                    cppCompatibilityMode ?
+                        par.Reliable ? DeliveryMode.Reliable : DeliveryMode.Unreliable :
+                        par.Reliable ? DeliveryMode.ReliableUnsequenced : DeliveryMode.UnreliableUnsequenced,
+                Channel = (byte)channelId,
+                Encrypt = par.Encrypt,
             };
 
-            var opt = new RaiseEventOptions();
-            if (localVoice.DebugEchoMode)
-            {
-                opt.Receivers = ReceiverGroup.All;
-            }
-            opt.InterestGroup = localVoice.InterestGroup;
-            lock (sendLock)
-            {
-                this.OpRaiseEvent(VoiceEvent.Code, content, opt, sendOpt);
-            }
-            this.LoadBalancingPeer.SendOutgoingCommands();
+            var opt = buildEvOptFromTargets(par.TargetMe, par.TargetPlayers);
+
+            opt.InterestGroup = par.InterestGroup;
+
+            this.OpRaiseEvent(FrameCode, content, opt, sendOpt);
+            while (this.LoadBalancingPeer.SendOutgoingCommands()) ;
         }
 
         public string ChannelIdStr(int channelId) { return null; }
@@ -243,8 +207,8 @@ namespace Photon.Voice
             // check for voice event first
             if (ev.Code == VoiceEvent.Code)
             {
-                // Payloads are arrays. If first array element is 0 than next is event subcode. Otherwise, the event is data frame with voiceId in 1st element.                    
-                protocol.onVoiceEvent(ev[(byte)ParameterCode.CustomEventContent], VOICE_CHANNEL, (int)ev[ParameterCode.ActorNr], this.LocalPlayer.ActorNumber);
+                // Payloads are arrays. If first array element is 0 than next is event subcode. Otherwise, the event is data frame with voiceId in 1st element.
+                protocol.onVoiceEvent(ev[(byte)ParameterCode.CustomEventContent], REMOTE_VOICE_CHANNEL, ev.Sender, ev.Sender == this.LocalPlayer.ActorNumber);
             }
             else
             {
@@ -252,28 +216,28 @@ namespace Photon.Voice
                 switch (ev.Code)
                 {
                     case (byte)EventCode.Join:
-                        playerId = (int)ev[ParameterCode.ActorNr];
+                        playerId = ev.Sender;
                         if (playerId == this.LocalPlayer.ActorNumber)
                         {
                         }
                         else
                         {
-                            this.voiceClient.onPlayerJoin(VOICE_CHANNEL, playerId);                            
+                            this.voiceClient.onPlayerJoin(playerId);
                         }
                         break;
                     case (byte)EventCode.Leave:
+                    {
+                        playerId = ev.Sender;
+                        if (playerId == this.LocalPlayer.ActorNumber)
                         {
-                            playerId = (int)ev[ParameterCode.ActorNr];
-                            if (playerId == this.LocalPlayer.ActorNumber)
-                            {
-                                this.voiceClient.onLeaveAllChannels();
-                            }
-                            else
-                            {
-                                this.voiceClient.onPlayerLeave(VOICE_CHANNEL, playerId);
-                            }
+                            this.voiceClient.onLeaveAllChannels();
                         }
-                        break;
+                        else
+                        {
+                            this.voiceClient.onPlayerLeave(playerId);
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -283,21 +247,17 @@ namespace Photon.Voice
             switch (fromState)
             {
                 case ClientState.Joined:
-                    this.voiceClient.onLeaveChannel(VOICE_CHANNEL);
+                    this.voiceClient.onLeaveAllChannels();
                     break;
             }
 
             switch (state)
             {
                 case ClientState.Joined:
-                    this.voiceClient.onJoinChannel(VOICE_CHANNEL);
-                    if (this.voiceClient.GlobalInterestGroup != 0)
-                    {
-                        this.LoadBalancingPeer.OpChangeGroups(new byte[0], new byte[] { this.voiceClient.GlobalInterestGroup });
-                    }
+                    this.voiceClient.onJoinAllChannels();
                     break;
             }
-        }        
+        }
 
         #endregion
 

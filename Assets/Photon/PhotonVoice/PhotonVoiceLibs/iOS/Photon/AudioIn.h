@@ -19,5 +19,7 @@ extern "C" {
     
     Photon_Audio_In* Photon_Audio_In_CreatePusher(int hostID, Photon_IOSAudio_PushCallback pushCallback,  int sessionCategory, int sessionMode, int sessionCategoryOptions);
     
+	void Photon_Audio_In_Reset(Photon_Audio_In* handle);
+
     void Photon_Audio_In_Destroy(Photon_Audio_In* handle);
 }

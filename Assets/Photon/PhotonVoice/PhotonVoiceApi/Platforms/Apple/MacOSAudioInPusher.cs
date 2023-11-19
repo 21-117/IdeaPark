@@ -5,12 +5,6 @@ using System.Runtime.InteropServices;
 
 namespace Photon.Voice.MacOS
 {
-    public class MonoPInvokeCallbackAttribute : System.Attribute
-    {
-        private Type type;
-        public MonoPInvokeCallbackAttribute(Type t) { type = t; }
-    }
-
     public class AudioInPusher : IAudioPusher<float>
     {
         const string lib_name = "AudioIn";
@@ -63,19 +57,22 @@ namespace Photon.Voice.MacOS
         // Otherwise recreate native object (instead of adding 'set callback' method to native interface)
         public void SetCallback(Action<float[]> callback, ObjectFactory<float[], int> bufferFactory)
         {
-            this.pushCallback = callback;
             this.bufferFactory = bufferFactory;
+            this.pushCallback = callback;
         }
         private void push(IntPtr buf, int len)
-        {            
-            var bufManaged = bufferFactory.New(len);
-            Marshal.Copy(buf, bufManaged, 0, len);
-            pushCallback(bufManaged);
+        {
+            if (this.pushCallback != null)
+            {
+                var bufManaged = bufferFactory.New(len);
+                Marshal.Copy(buf, bufManaged, 0, len);
+                pushCallback(bufManaged);
+            }
         }
 
         public int Channels { get { return 1; } }
 
-		public int SamplingRate { get { return 44100; } }
+        public int SamplingRate { get { return 44100; } }
 
         public string Error { get; private set; }
 

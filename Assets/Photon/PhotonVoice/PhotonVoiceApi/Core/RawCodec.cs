@@ -1,112 +1,131 @@
-using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
 
 namespace Photon.Voice
 {
-	public class RawCodec
-	{
-		public class Encoder<T> : IEncoderDirect<T[]>
-		{
-			public string Error { get; private set; }
+    public class RawCodec
+    {
+        public class Encoder<T> : IEncoderDirect<T[]>
+        {
+            public string Error { get; private set; }
 
-			public Action<ArraySegment<byte>> Output { set; get; }
+            public Action<ArraySegment<byte>, FrameFlags> Output { set; get; }
 
-			private static readonly ArraySegment<byte> EmptyBuffer = new ArraySegment<byte>(new byte[] { });
+            int sizeofT = System.Runtime.InteropServices.Marshal.SizeOf(default(T));
+            byte[] byteBuf = new byte[0];
+            private static readonly ArraySegment<byte> EmptyBuffer = new ArraySegment<byte>(new byte[] { });
 
-			public ArraySegment<byte> DequeueOutput()
-			{
-				return EmptyBuffer;
-			}
+            public ArraySegment<byte> DequeueOutput(out FrameFlags flags)
+            {
+                flags = 0;
+                return EmptyBuffer;
+            }
 
-			public void Dispose()
-			{				
-			}			
+            public void EndOfStream()
+            {
+            }
 
-			public void Input(T[] buf)
-			{
-				if (Error != null)
-				{
-					return;
-				}
-				if (Output == null)
-				{
-					Error = "RawCodec.Encoder: Output action is not set";
-					return;
-				}
-				if (buf == null)
-				{
-					return;
-				}
-				if (buf.Length == 0)
-				{
-					return;
-				}
-				BinaryFormatter bf = new BinaryFormatter();
-				MemoryStream stream = new MemoryStream();
-				bf.Serialize(stream, buf);
-				Output(new ArraySegment<byte>(stream.GetBuffer(), 0, (int)stream.Length));
-			}
-		}
+            public I GetPlatformAPI<I>() where I : class
+            {
+                return null;
+            }
 
-		public class Decoder<T> : IDecoder
-		{
-			public string Error { get; private set; }
+            public void Dispose()
+            {
+            }
 
-			public Decoder(Action<T[]> output)
-			{
-				this.output = output;
-			}
+            public void Input(T[] buf)
+            {
+                if (Error != null)
+                {
+                    return;
+                }
+                if (Output == null)
+                {
+                    Error = "RawCodec.Encoder: Output action is not set";
+                    return;
+                }
+                if (buf == null)
+                {
+                    return;
+                }
+                if (buf.Length == 0)
+                {
+                    return;
+                }
 
-			public void Open(VoiceInfo info)
-			{
-			}
-			
-			private Type outType = (new T[1])[0].GetType();
-			
-			public void Input(byte[] buf)
-			{
-				if (buf == null)
-				{
-					return;
-				}
-				if (buf.Length == 0)
-				{
-					return;
-				}
-				BinaryFormatter bf = new BinaryFormatter();
-				MemoryStream stream = new MemoryStream(buf);
-				var obj = bf.Deserialize(stream);
-				if (obj.GetType() != outType)
-				{
-					var objFloat = obj as float[];
-					if (objFloat != null)
-					{
-						var objShort = new short[objFloat.Length];
-						AudioUtil.Convert(objFloat, objShort, objFloat.Length);
-						output((T[])(object)objShort);
-					}
-					else
-					{
-						var objShort = obj as short[];
-						if (objShort != null)
-						{
-							objFloat = new float[objShort.Length];
-							AudioUtil.Convert(objShort, objFloat, objShort.Length);
-							output((T[])(object)objFloat);
-						}
-					}
-				}
-				else
-				{
-					output((T[])obj);
-				}
-			}
-			public void Dispose()
-			{
-			}
+                var s = buf.Length * sizeofT;
+                if (byteBuf.Length < s)
+                {
+                    byteBuf = new byte[s];
+                }
+                Buffer.BlockCopy(buf, 0, byteBuf, 0, s);
+                Output(new ArraySegment<byte>(byteBuf, 0, s), 0);
+            }
+        }
 
-			private Action<T[]> output;
-		}
-	}
+        public class Decoder<T> : IDecoder
+        {
+            public string Error { get; private set; }
+
+            public Decoder(Action<FrameOut<T>> output)
+            {
+                this.output = output;
+            }
+
+            public void Open(VoiceInfo info)
+            {
+            }
+
+            T[] buf = new T[0];
+            int sizeofT = System.Runtime.InteropServices.Marshal.SizeOf(default(T));
+
+            public void Input(ref FrameBuffer byteBuf)
+            {
+                if (byteBuf.Array == null)
+                {
+                    return;
+                }
+                if (byteBuf.Length == 0)
+                {
+                    return;
+                }
+
+                var s = byteBuf.Length / sizeofT;
+                if (buf.Length < s)
+                {
+                    buf = new T[s];
+                }
+                Buffer.BlockCopy(byteBuf.Array, byteBuf.Offset, buf, 0, byteBuf.Length);
+
+                output(new FrameOut<T>((T[])(object)buf, false));
+            }
+            public void Dispose()
+            {
+            }
+
+            private Action<FrameOut<T>> output;
+        }
+
+        // Adapts FrameOut<float> output to FrameOut<short> decoder
+        // new RawCodec.Decoder<short>(new RawCodec.ShortToFloat(output as Action<FrameOut<float>>).Output);
+        public class ShortToFloat
+        {
+            public ShortToFloat(Action<FrameOut<float>> output)
+            {
+                this.output = output;
+            }
+            public void Output(FrameOut<short> shortBuf)
+            {
+                if (buf.Length < shortBuf.Buf.Length)
+                {
+                    buf = new float[shortBuf.Buf.Length];
+                }
+                AudioUtil.Convert(shortBuf.Buf, buf, shortBuf.Buf.Length);
+                output(new FrameOut<float>((float[])(object)buf, false));
+            }
+
+            Action<FrameOut<float>> output;
+            float[] buf = new float[0];
+        }
+    }
 }
