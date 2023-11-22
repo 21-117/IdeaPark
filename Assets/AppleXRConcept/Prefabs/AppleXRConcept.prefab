@@ -1,0 +1,244 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &643183713545599428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 643183713545599431}
+  m_Layer: 0
+  m_Name: iPad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &643183713545599431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643183713545599428}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 643183714179593434}
+  m_Father: {fileID: 643183715167204135}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &643183715167204132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 643183715167204135}
+  - component: {fileID: 643183715167204134}
+  m_Layer: 0
+  m_Name: AppleXRConcept
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &643183715167204135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643183715167204132}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0002, y: 0.0002, z: 0.0002}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 643183713545599431}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &643183715167204134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643183715167204132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9207f6c21106cd1489d7a4351ce506d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TabletViewLauncher: {fileID: 5737473531443972937}
+  VideoPlayer: {fileID: 0}
+  Notification: {fileID: 0}
+  Siri: {fileID: 0}
+  MessageComposer: {fileID: 0}
+  TabletFollowController: {fileID: 643183714179593413}
+  FadeOutPassthroughDuration: 0.5
+  FadeOutPassthroughAnimation:
+    OnAnimationUpdate:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: OVRPassthroughLayer, Oculus.VR
+          m_MethodName: set_textureOpacity
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    ModifyingFunction:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: -1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: -1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  HyperspaceAnimation: {fileID: 0}
+  SceneToLoad: 
+--- !u!1001 &7858264734221890386
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 643183713545599431}
+    m_Modifications:
+    - target: {fileID: 1295001032809211086, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -235.41388
+      objectReference: {fileID: 0}
+    - target: {fileID: 2995101008447072229, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 410.12646
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337353064915388035, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: layout.Size.X.Raw
+      value: 230.35835
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337353064915388035, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: layout.Position.X.Raw
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 3544895606226099749, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -15.789375
+      objectReference: {fileID: 0}
+    - target: {fileID: 6208051270558279716, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -401.76575
+      objectReference: {fileID: 0}
+    - target: {fileID: 6659719322797401601, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: layout.Size.X.Raw
+      value: 199.78336
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341753642920953737, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: m_Name
+      value: iPadUIFollowRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 8182156396987540184, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+      propertyPath: layout.Size.X.Raw
+      value: 462.1417
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+--- !u!114 &643183714179593413 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7341753642920953751, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+  m_PrefabInstance: {fileID: 7858264734221890386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec670bbceb0145b4680a4e3f483ebfcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &643183714179593434 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7341753642920953736, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+  m_PrefabInstance: {fileID: 7858264734221890386}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5737473531443972937 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2490969857922365467, guid: c97c9f941f0c146f89e4fef0e4000113, type: 3}
+  m_PrefabInstance: {fileID: 7858264734221890386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37784ad566f03e1488a5299fd740598a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

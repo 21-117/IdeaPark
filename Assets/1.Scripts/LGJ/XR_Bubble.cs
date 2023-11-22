@@ -1,5 +1,3 @@
-using Nova;
-using NovaSamples.UIControls;
 using Photon.Pun;
 using System;
 using System.Collections;
@@ -33,9 +31,9 @@ public class XR_Bubble : XRGrabInteractable
         //// 이 스크립트를 가진 게임 오브젝트의 자식들 중 Toggle 컴포넌트를 가진 오브젝트들을 찾기
         //buttonToggles = buttonMind.GetComponentsInChildren<Toggle>();
     }
+
     private void Update()
     {
-
         if (PlayerInfo.localPlayer != null)
         {
             buttonMind = PlayerInfo.localPlayer.buttonMind;
@@ -44,7 +42,6 @@ public class XR_Bubble : XRGrabInteractable
             // 이 스크립트를 가진 게임 오브젝트의 자식들 중 Toggle 컴포넌트를 가진 오브젝트들을 찾기
             buttonToggles = buttonMind.GetComponentsInChildren<Toggle>();
         }
-
     }
 
     [System.Obsolete]
@@ -93,6 +90,3 @@ public class XR_Bubble : XRGrabInteractable
         }
     }
 }
-
-
-
