@@ -13,7 +13,7 @@ public class MindMapNodeInfo : MonoBehaviour
     private Transform tr; // 노드의 생성 위치 
     private Color color; // 색 정보.
     private string aiData; // AI 키워드 추천 정보. 
-    public bool isSelected; // 선택 여부.
+   
 
     // 자식 마인드맵 노드에 대한 정보를 리스트 형식 저장. 
     public List<MindMapNodeInfo> Children = new List<MindMapNodeInfo>();

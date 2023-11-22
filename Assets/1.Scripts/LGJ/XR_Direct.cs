@@ -34,7 +34,8 @@
 //        if (cols.Length == 0 && CheckFingerTip.instance.touchTip)
 //        {
 //            lerpValue = Mathf.Clamp01(curTime / createTime);
-//            if(PlayerInfo.localPlayer != null && PlayerInfo.localPlayer.left_Hand_Obj == null && PlayerInfo.localPlayer.right_Hand_Obj == null){
+//            if (PlayerInfo.localPlayer != null && PlayerInfo.localPlayer.left_Hand_Obj == null && PlayerInfo.localPlayer.right_Hand_Obj == null)
+//            {
 //                if (sampleBubble != null)
 //                {
 //                    sampleBubble.SetActive(true);
@@ -87,11 +88,11 @@
 
 //        if (args.interactableObject != null)
 //        {
-//            if(handpos == HandPos.Left)
+//            if (handpos == HandPos.Left)
 //            {
-//                PlayerInfo.localPlayer.left_Hand_Obj = args.interactableObject.transform.gameObject; 
+//                PlayerInfo.localPlayer.left_Hand_Obj = args.interactableObject.transform.gameObject;
 //            }
-//            else if(handpos == HandPos.Right)
+//            else if (handpos == HandPos.Right)
 //            {
 //                PlayerInfo.localPlayer.right_Hand_Obj = args.interactableObject.transform.gameObject;
 //            }
