@@ -1,11 +1,12 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 {
-    private GameObject spawnedPlayerPrefab;
+    private GameObject spawnedPlayerPrefab, xrOrigin;
     private static Queue<Transform> spawnPointsQueue = new Queue<Transform>();
     public Transform[] spawnPoints;
 
@@ -14,7 +15,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
 
         // 초기에 스폰 위치 큐를 초기화합니다.
         //InitializeSpawnPointsQueue();
-   
+        xrOrigin = GameObject.Find("XR Interaction Hands Setup Variant");
 
     }
     void InitializeSpawnPointsQueue()
@@ -42,7 +43,10 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
         //}
 
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        xrOrigin.transform.position = spawnPoints[playerCount - 1].position;
+        xrOrigin.transform.rotation = spawnPoints[playerCount - 1].rotation;
         spawnedPlayerPrefab = PhotonNetwork.Instantiate("Network Player", spawnPoints[playerCount-1].position, spawnPoints[playerCount-1].rotation);
+        
         
     }
 
