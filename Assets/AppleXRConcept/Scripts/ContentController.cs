@@ -161,8 +161,13 @@ namespace NovaSamples.AppleXRConcept
                 }*/
 
         [Button("Open Tablet View")]
-        private void OpenTabletView()
+        public void OpenTabletView()
         {
+            if (TabletViewLauncher.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
             TabletFollowController.gameObject.SetActive(true);
 
             TabletViewLauncher.gameObject.SetActive(true);
@@ -171,7 +176,7 @@ namespace NovaSamples.AppleXRConcept
         }
 
         [Button("Close Tablet View")]
-        private void CloseTabletView()
+        public void CloseTabletView()
         {
             if (!TabletViewLauncher.gameObject.activeInHierarchy)
             {

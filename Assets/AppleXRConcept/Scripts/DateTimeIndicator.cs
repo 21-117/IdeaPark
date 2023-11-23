@@ -10,6 +10,7 @@ namespace NovaSamples.AppleXRConcept
     public class DateTimeIndicator : MonoBehaviour
     {
         public float UpdateEverXSeconds = 60;
+
         [SerializeField]
         private Timer Visuals = default;
 
@@ -31,7 +32,7 @@ namespace NovaSamples.AppleXRConcept
             public TextBlock Time;
             public TextBlock Date;
 
-            public void Update(float percentDone) 
+            public void Update(float percentDone)
             {
                 if (percentDone > 0)
                 {
@@ -39,8 +40,8 @@ namespace NovaSamples.AppleXRConcept
                 }
 
                 DateTime local = DateTime.UtcNow.ToLocalTime();
-                Time.Text = $"{local.ToString("h:mm tt")}";
-                Date.Text = $"{local.ToString("ddd").ToUpper()} {local.ToString("MMM dd")}";
+                Time.Text = $"{local.ToString("tt h:mm")}";
+                Date.Text = $"{local.ToString("MMM dd¿œ")} {local.ToString("dddd").ToUpper()}";
             }
         }
     }
