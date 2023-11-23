@@ -1242,7 +1242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TabletViewLauncher: {fileID: 5148342152146360092}
   TabletFollowController: {fileID: 1707845776}
-  FadeOutPassthroughDuration: 0
+  FadeOutPassthroughDuration: 0.5
   FadeOutPassthroughAnimation:
     OnAnimationUpdate:
       m_PersistentCalls:
@@ -1308,7 +1308,7 @@ Transform:
   m_GameObject: {fileID: 788076825}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 232, y: 0, z: -7}
+  m_LocalPosition: {x: 232, y: 0, z: 0}
   m_LocalScale: {x: 5000, y: 5000, z: 5000}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -40486,7 +40486,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Z:
-        Raw: 52
+        Raw: -0
         Type: 0
     Padding:
       Left:
@@ -43339,7 +43339,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &4013697439732472188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45982,7 +45982,7 @@ Transform:
   m_GameObject: {fileID: 3667933173955490750}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -52}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -49881,7 +49881,7 @@ MonoBehaviour:
   visibility:
     ZIndex: 0
     BlockType: 1
-    Visible: 1
+    Visible: 0
   surface:
     specularColor: {r: 1, g: 1, b: 1, a: 1}
     param1: 0.5
@@ -52744,7 +52744,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Z:
-        Raw: -17
+        Raw: 0
         Type: 0
     Padding:
       Left:
@@ -65253,7 +65253,7 @@ Transform:
   m_GameObject: {fileID: 3849388573142125008}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -17}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -67516,7 +67516,7 @@ Transform:
   m_GameObject: {fileID: 2121427170807669173}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -743, z: -57}
+  m_LocalPosition: {x: 0, y: -743, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -93611,7 +93611,7 @@ MonoBehaviour:
         Raw: 8
         Type: 0
       Z:
-        Raw: -57
+        Raw: 0
         Type: 0
     Padding:
       Left:
