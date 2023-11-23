@@ -5,26 +5,25 @@ public class FCP_ExampleScript : MonoBehaviour {
     public bool getStartingColorFromMaterial;
     public FlexibleColorPicker fcp;
     public Material material;
+    private bool findLocalPlayer;
+    private void Start()
+    {
 
-    private void Start() {
-
-        //fcp = FindObjectOfType<FlexibleColorPicker>();
-        ////fcp = PlayerInfo.localPlayer.fcp;
-        //if (getStartingColorFromMaterial)
-        //    fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
-
-        //fcp.onColorChange.AddListener(OnChangeColor);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (PlayerInfo.localPlayer != null)
         {
-            fcp = PlayerInfo.localPlayer.fcp;
-            if (getStartingColorFromMaterial)
-                fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
+            if (!findLocalPlayer)
+            {
+                fcp = PlayerInfo.localPlayer.fcp;
+                if (getStartingColorFromMaterial)
+                    fcp.color = material.GetColor("Color_cf12b49411d94583a269f83e6981abd1");
 
-            fcp.onColorChange.AddListener(OnChangeColor);
+                fcp.onColorChange.AddListener(OnChangeColor);
+                findLocalPlayer = true;
+            }
         }
     }
 
