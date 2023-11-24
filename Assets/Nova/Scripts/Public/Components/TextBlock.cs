@@ -196,6 +196,10 @@ namespace Nova
             int InternalVar_2 = 0;
             for (int InternalVar_3 = 0; InternalVar_3 < InternalParameter_80.meshInfo.Length; InternalVar_3++)
             {
+                if (InternalVar_3 != 0)
+                {
+                    InternalParameter_80.meshInfo[InternalVar_3].ClearUnusedVertices();
+                }
                 InternalVar_2 += InternalParameter_80.meshInfo[InternalVar_3].vertices.Length;
             }
 

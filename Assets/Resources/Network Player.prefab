@@ -6848,6 +6848,8 @@ MonoBehaviour:
   buttonMind: {fileID: 0}
   fcp: {fileID: 3369334135760329176}
   createBubble: 0
+  bubbleMat: {fileID: 2100000, guid: 96aad9865c39c704aa4324d8da77ce22, type: 2}
+  lineMat: {fileID: 2100000, guid: b180a72646694d243a727a85bdf166a6, type: 2}
   palette: {fileID: 6692462825845426751}
   keyboard: {fileID: 355454613596862319}
   ai: {fileID: 6611436737211727353}

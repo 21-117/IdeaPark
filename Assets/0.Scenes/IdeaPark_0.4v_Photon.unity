@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0007876151, g: 0.004127566, b: 0.0200601, a: 1}
+  m_IndirectSpecularColor: {r: 0.0008095468, g: 0.004161891, b: 0.02006406, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,6 +167,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &93073037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 93073038}
+  - component: {fileID: 93073039}
+  m_Layer: 0
+  m_Name: '[ IDEAPARK MANAGER ]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &93073038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93073037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &93073039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93073037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82665b663b7ebc04188ef6c4845947ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skyMat: {fileID: 2100000, guid: 369b9ebe3a62b904dbc19bd332b44086, type: 2}
 --- !u!1 &195827476
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &238929651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,16 +498,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2599289540210724451, guid: 93960d0b15433294da99b1ba3742c2af,
-        type: 3}
-      propertyPath: state
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3433541936955263987, guid: 93960d0b15433294da99b1ba3742c2af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4229082527412176130, guid: 93960d0b15433294da99b1ba3742c2af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -808,12 +843,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91175dcc15224463780e01a8a98b1b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logLevel: 3
+  ignoreGlobalLogLevel: 0
   voiceDetection: 0
   voiceDetectionThreshold: 0.01
   voiceDetectionDelayMs: 500
+  unityMicrophoneDevice: Headset Microphone (Oculus Virtual Audio Device)
+  photonMicrophoneDeviceId: 1
   interestGroup: 0
-  useTargetPlayers: 0
-  targetPlayers: 
   debugEchoMode: 1
   reliableMode: 0
   encrypt: 0
@@ -825,20 +862,12 @@ MonoBehaviour:
   microphoneType: 1
   audioClip: {fileID: 0}
   loopAudioClip: 1
-  recordingEnabled: 1
-  audioSessionParameters:
-    Category: 4
-    Mode: 0
-    CategoryOptions: 0800000004000000
-  editorAudioSessionPreset: 0
-  androidMicrophoneSettings:
-    EnableAEC: 1
-    EnableAGC: 1
-    EnableNS: 1
+  reactOnSystemChanges: 0
+  autoStart: 1
+  recordOnlyWhenEnabled: 0
+  skipDeviceChangeChecks: 0
   stopRecordingWhenPaused: 0
-  useOnAudioFilterRead: 0
-  useMicrophoneTypeFallback: 1
-  recordWhenJoined: 1
+  TrySamplingRateMatch: 0
 --- !u!4 &1155248448
 Transform:
   m_ObjectHideFlags: 0
@@ -1318,50 +1347,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2126179815
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2126179817}
-  - component: {fileID: 2126179816}
-  m_Layer: 0
-  m_Name: '[ GAMESCENE BGM ]'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2126179816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126179815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d1a43713ee73c34b88284ac8817ac38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &2126179817
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126179815}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1451477, y: 1.4561136, z: 0.46245253}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1373,8 +1358,8 @@ SceneRoots:
   - {fileID: 1823739951}
   - {fileID: 1941961365}
   - {fileID: 942481553}
+  - {fileID: 93073038}
   - {fileID: 238929653}
-  - {fileID: 2126179817}
   - {fileID: 1152614286}
   - {fileID: 1155248448}
   - {fileID: 1766387893}

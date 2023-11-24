@@ -17,7 +17,7 @@ using static Nova.InternalNamespace_17.InternalNamespace_20.InternalType_592;
 
 namespace Nova.InternalNamespace_17.InternalNamespace_18
 {
-    [CustomEditor(typeof(UIBlock)), CanEditMultipleObjects]
+    [CanEditMultipleObjects]
     internal abstract class InternalType_547<T68> : InternalType_539<T68>
         where T68 : UIBlock
     {

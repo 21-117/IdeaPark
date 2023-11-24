@@ -69,7 +69,8 @@ namespace Nova.InternalNamespace_17.InternalNamespace_24
         private bool InternalMethod_3321(string InternalParameter_3124)
         {
             if (!InternalMethod_3323(InternalParameter_3124, out InternalNamespace_0.InternalType_104 InternalVar_1) ||
-                !InternalMethod_3322(InternalParameter_3124, out InternalType_266 InternalVar_2))
+                !InternalMethod_3322(InternalParameter_3124, out InternalType_266 InternalVar_2) ||
+                !InternalNamespace_0.InternalType_24.InternalProperty_1040)
             {
                 return false;
             }
