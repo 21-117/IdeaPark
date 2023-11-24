@@ -11,8 +11,10 @@ namespace NovaSamples.AppleXRConcept
         [Header("Trigger")]
         [Tooltip("The interactable root of the homebar")]
         public UIBlock Homebar = null;
+
         [Tooltip("The reference volume to calculate the drag percentage.\n\"Drag Trigger Threshold Percent\" refers to a percent of this volume.")]
         public UIBlock ThresholdVolume = null;
+
         [Min(0)]
         [Tooltip("The percent of the threshold volume the user must drag to trigger a complete homebar gesture")]
         public float DragTriggerThresholdPercent = 0.2f;
@@ -29,7 +31,7 @@ namespace NovaSamples.AppleXRConcept
         protected virtual void OnEnable()
         {
             if (Homebar != null)
-            { 
+            {
                 // Subscribe to gesture events
                 Homebar.AddGestureHandler<Gesture.OnPress>(HandleHomebarPressed);
                 Homebar.AddGestureHandler<Gesture.OnDrag>(HandleHomebarDragged);
@@ -41,7 +43,7 @@ namespace NovaSamples.AppleXRConcept
         protected virtual void OnDisable()
         {
             if (Homebar != null)
-            { 
+            {
                 // Unsubscribe from gesture events
                 Homebar.RemoveGestureHandler<Gesture.OnPress>(HandleHomebarPressed);
                 Homebar.RemoveGestureHandler<Gesture.OnDrag>(HandleHomebarDragged);
@@ -175,7 +177,9 @@ namespace NovaSamples.AppleXRConcept
         private static float SmoothDragDelta(float current, float newDelta) => current * 0.5f + newDelta * 0.5f;
 
         protected abstract void HandleDrag(float dragDelta);
+
         protected abstract void RunFadeAnimation(bool fadeIn, ref AnimationHandle fadeAnimation);
+
         protected abstract void RunAllAnimations(int dragDirection, ref AnimationHandle dragAnimation, ref AnimationHandle fadeAnimation);
     }
 }

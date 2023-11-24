@@ -5,17 +5,21 @@ using UnityEngine.XR.Hands;
 namespace NovaSamples.AppleXRConcept
 {
     /// <summary>
-    /// Creates a finger proximity effect using the gradient of a UIBlock2D 
+    /// Creates a finger proximity effect using the gradient of a UIBlock2D
     /// </summary>
     [DisallowMultipleComponent]
     public class TouchIndicator : NovaBehaviour2D
     {
         [Tooltip("The hand which will activate this indicator.")]
         public Handedness Handedness = Handedness.Right;
+
         [Tooltip("The radius of the proximity indicator at \"Enable Indicator Distance\".")]
         public float MaxIndicatorRadius = 250;
+
         [Tooltip("The max distance in local space from the attached UI Block that the indicator is visible.")]
         public float EnableIndicatorDistance = 200;
+
+        public CanvasGroup canvasGroup = null;
 
         private void LateUpdate()
         {
@@ -26,7 +30,7 @@ namespace NovaSamples.AppleXRConcept
 
             // Get the finger world position
             Vector3 touchPointWorldSpace = Handedness == Handedness.Left ? XRHandsInputManager.LeftFingerPosition : XRHandsInputManager.RightFingerPosition;
-            
+
             // Convert to local position
             Vector3 touchPointLocalSpace = transform.InverseTransformPoint(touchPointWorldSpace);
             float touchRadiusLocalSpace = XRHandsInputManager.ColliderRadius / transform.lossyScale.x;

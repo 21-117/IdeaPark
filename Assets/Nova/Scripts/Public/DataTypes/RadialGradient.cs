@@ -19,13 +19,15 @@ namespace Nova
         /// </summary>
         [SerializeField]
         public Color Color;
+
         /// <summary>
         /// The <see cref="Length2"/> configuration for the center position of the gradient in its parent element's local space.
         /// </summary>
         [SerializeField]
         public Length2 Center;
+
         /// <summary>
-        /// A <see cref="Length2"/> configuration for the radii along the gradient's X and Y axes, determines the gradient's size. 
+        /// A <see cref="Length2"/> configuration for the radii along the gradient's X and Y axes, determines the gradient's size.
         /// </summary>
         /// <remarks>
         /// Setting a radius to <c>0</c> is equivalent to setting the radius to <c>float.PositiveInfinity</c> and
@@ -33,11 +35,13 @@ namespace Nova
         /// </remarks>
         [SerializeField]
         public Length2 Radius;
+
         /// <summary>
         /// The counter-clockwise rotation of the gradient (in degrees) around its <see cref="Center"/>.
         /// </summary>
         [SerializeField]
         public float Rotation;
+
         /// <summary>
         /// A flag to toggle the gradient's visibility.
         /// </summary>
@@ -53,6 +57,7 @@ namespace Nova
                 lhs.Rotation.Equals(rhs.Rotation) &&
                 lhs.Enabled.Equals(rhs.Enabled);
         }
+
         public static bool operator !=(RadialGradient lhs, RadialGradient rhs) => !(rhs == lhs);
 
         /// <summary>
@@ -123,6 +128,7 @@ namespace Nova
         {
             [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             public readonly Length2.Calculated Center;
+
             [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             public readonly Length2.Calculated Radius;
 

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Nova;
 using System;
 using UnityEngine;
@@ -22,26 +23,33 @@ namespace NovaSamples.AppleXRConcept
         [Header("Visuals")]
         [Tooltip("The parent of the tablet content and status bar.")]
         public UIBlock ContentRoot = null;
+
         [Tooltip("The tablet content root.")]
         public UIBlock HomescreenRoot = null;
+
         [Tooltip("The Clip Mask to fade in/out as the tablet content comes in/out of view.")]
         public ClipMask HomescreenMask = null;
+
         [Tooltip("The bounding box effect to fade in/out as the tablet contents comes in/out of view")]
         public BoundingBoxEffect BoundingBox = null;
+
         [Tooltip("The app icon grid.")]
         public UIBlock GridRoot = null;
 
         [Header("Positioning")]
         [Tooltip("The follow configuration to use when only the status bar is visible.")]
         public Follow CollapsedFollow = null;
+
         [Tooltip("The follow configuration to use when whole iPad view is visible.")]
         public Follow ExpandedFollow = null;
 
         [Header("Animations")]
         [Tooltip("The duration of the expand/collapse animation")]
         public float AnimationDuration = 0.5f;
+
         [Tooltip("The animation curve to use when animating the size of the expanding/collapsing content.")]
         public AnimationCurve SizeCurve = AnimationUtil.SpringEase;
+
         [Tooltip("The animation curve to use when fading in/out the bounding box effect.")]
         public AnimationCurve BoxFadeCurve = AnimationUtil.Loopable;
 
@@ -67,13 +75,22 @@ namespace NovaSamples.AppleXRConcept
         /// Increase the Y size of the <see cref="HomescreenRoot"/> by the
         /// amount dragged and fade in the box effect by the total percent dragged.
         /// </summary>
+        ///
+        public CanvasGroup canvasGroup;
+
         protected override void HandleDrag(float dragDelta)
         {
             float total = HomescreenRoot.CalculatedSize.Y.Value + dragDelta;
             float percent = Mathf.Clamp01(total / ThresholdVolume.CalculatedSize.Y.Value);
 
-            HomescreenRoot.Size.Y = total;
+            //HomeScreenSize y가 작아지는 만큼 작아지는 2배 만큼 canvasgroup alpha값을 지정한다.
+            //percent가 1일때
 
+            if (percent >= 0.5f) canvasGroup.DOFade(1, 0.5f);
+            if (percent < 0.5f) canvasGroup.DOFade(0, 0.5f);
+
+            HomescreenRoot.Size.Y = total;
+            print(HomescreenMask.enabled);
             HomescreenMask.enabled = true;
 
             SizeAnimationSingleAxis contentAnimation = GetContentRootAnimation(ContentRoot.SizeMinMax.X.Max);
@@ -86,12 +103,12 @@ namespace NovaSamples.AppleXRConcept
         }
 
         /// <summary>
-        /// Handle click by firing non-UI events for components outside the UIBlock hierarchy to subscribe to. 
+        /// Handle click by firing non-UI events for components outside the UIBlock hierarchy to subscribe to.
         /// </summary>
         private void HandleFullScreenButtonClicked(Gesture.OnClick evt, FullScreenButtonVisuals visuals) => OnFullScreenButtonClicked?.Invoke();
-        
+
         /// <summary>
-        /// Handle click by firing non-UI events for components outside the UIBlock hierarchy to subscribe to. 
+        /// Handle click by firing non-UI events for components outside the UIBlock hierarchy to subscribe to.
         /// </summary>
         private void HandleImmersiveAppLaunched(Gesture.OnClick evt, ImmersiveAppButtonVisuals visuals) => OnImmersiveAppSelected?.Invoke();
 
@@ -196,6 +213,7 @@ namespace NovaSamples.AppleXRConcept
             };
         }
 
-        protected override void RunFadeAnimation(bool fadeIn, ref AnimationHandle fadeAnimation) { }
+        protected override void RunFadeAnimation(bool fadeIn, ref AnimationHandle fadeAnimation)
+        { }
     }
 }
