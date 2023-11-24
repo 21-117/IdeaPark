@@ -16,7 +16,7 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
     public GameObject buttonMind;
     public FlexibleColorPicker fcp;
     public bool createBubble = false;
-
+    public Material bubbleMat, lineMat;
     public GameObject palette, keyboard, ai, delete;
 
     public MeshRenderer head;
@@ -45,6 +45,11 @@ public class PlayerInfo : MonoBehaviourPunCallbacks
         buttonMind = rig.transform.Find("Camera Offset/Left Hand/UIs/Button_Mind").gameObject;
 
         fcp.transform.parent.GetComponent<Canvas>().worldCamera = Camera.main;
+    }
+
+    private void Update()
+    {
+        lineMat.SetColor("Color_365294aa63504c3d8850a85d02e3fff8", bubbleMat.GetColor("Color_cf12b49411d94583a269f83e6981abd1"));
     }
 
     public GameObject GrabObject
