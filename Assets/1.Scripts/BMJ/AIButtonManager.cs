@@ -40,7 +40,7 @@ public class AIButtonManager : MonoBehaviour
     {
         "VR,AR 경험",
         "소셜 네트워킹",
-        "경제 시스템",
+        "몰입감",
         "XR 콘텐츠 공유",
         "가상 교육"
     };
