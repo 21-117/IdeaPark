@@ -104,7 +104,7 @@ public class PressMindButton : MonoBehaviourPunCallbacks
                     break;
                 case PressButton.home:
                     // home 
-                    SceneManager.LoadScene("MJB_MyRoomScene2");
+                    SceneManager.LoadScene("MJB_MyRoomScene2_WebView");
                     break;
             }
         }

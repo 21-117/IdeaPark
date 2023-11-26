@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class SampleWebView : MonoBehaviour
 {
-    private const string DEFAULT_URL = "https://www.google.com";
+    private const string DEFAULT_URL = "https://thinkwideapp-3sfddbys8spa5g4dqmmaaa.streamlit.app/";
 
     public InputField urlInput;
     public InputField titleInput;
@@ -64,6 +64,14 @@ public class SampleWebView : MonoBehaviour
         maskViewVisibleToggle.isOn = false;
         autoRotationToggle.isOn = false;
 #endif
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            OpenWebView();
+        }
     }
 
     public void OpenWebView()

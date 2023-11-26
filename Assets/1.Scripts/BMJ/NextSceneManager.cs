@@ -10,4 +10,8 @@ public class NextSceneManager : MonoBehaviour
     {
         SceneManager.LoadScene("IdeaPark_0.4v_Photon");
     }
+    public void SecondScene()
+    {
+        SceneManager.LoadScene("IdeaPark_0.4v_Photon_Save");
+    }
 }
