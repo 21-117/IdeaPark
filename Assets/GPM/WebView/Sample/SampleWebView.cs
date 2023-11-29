@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class SampleWebView : MonoBehaviour
 {
-    private const string DEFAULT_URL = "https://thinkwideapp-3sfddbys8spa5g4dqmmaaa.streamlit.app/";
+    private const string DEFAULT_URL = "https://thinkwide-app1.onrender.com";
 
     public InputField urlInput;
     public InputField titleInput;
@@ -65,14 +65,11 @@ public class SampleWebView : MonoBehaviour
         autoRotationToggle.isOn = false;
 #endif
     }
-
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            OpenWebView();
-        }
+        OpenWebView();
     }
+
 
     public void OpenWebView()
     {
@@ -174,10 +171,10 @@ public class SampleWebView : MonoBehaviour
             hasValue = true;
         }
 
-        int x = 0;
+        int x = (int)Camera.main.transform.localPosition.x;
         int.TryParse(popupXInput.text, out x);
 
-        int y = 0;
+        int y = (int)Camera.main.transform.localPosition.y + 1;
         int.TryParse(popupYInput.text, out y);
 
         return new GpmWebViewRequest.Position
